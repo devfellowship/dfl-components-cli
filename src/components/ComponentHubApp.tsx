@@ -33,7 +33,7 @@ const ComponentHubApp: React.FC = () => {
           acc[category] = categoryComponents;
         }
         return acc;
-      }, {} as Record<string, Component[]])
+      }, {} as Record<string, Component[]>)
     : { [selectedCategory]: filteredComponents };
 
   const handleCopyCode = (code: string) => {
