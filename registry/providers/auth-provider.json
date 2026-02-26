@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "auth-provider",
+  "type": "registry:component",
+  "title": "AuthProvider",
+  "description": "Context provider for application-wide authentication state",
+  "category": "Providers",
+  "version": "1.3.0",
+  "tags": ["auth", "context", "provider"],
+  "dependencies": [],
+  "registryDependencies": ["use-hybrid-auth"],
+  "files": [
+    {
+      "path": "auth-provider.tsx",
+      "type": "registry:component",
+      "content": "import React, { createContext, useContext, ReactNode } from 'react';\nimport { useHybridAuth } from '../hooks/use-hybrid-auth';\n\ninterface User {\n  id: string;\n  email: string;\n  name: string;\n  provider: 'email' | 'google' | 'github';\n}\n\ninterface AuthContextType {\n  user: User | null;\n  loading: boolean;\n  error: string | null;\n  login: (email: string, password: string) => Promise<void>;\n  loginWithGoogle: () => Promise<void>;\n  loginWithGithub: () => Promise<void>;\n  logout: () => Promise<void>;\n  register: (email: string, password: string, name: string) => Promise<void>;\n}\n\nconst AuthContext = createContext<AuthContextType | undefined>(undefined);\n\ninterface AuthProviderProps {\n  children: ReactNode;\n}\n\nexport const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {\n  const auth = useHybridAuth();\n\n  return (\n    <AuthContext.Provider value={auth}>\n      {children}\n    </AuthContext.Provider>\n  );\n};\n\nexport const useAuth = (): AuthContextType => {\n  const context = useContext(AuthContext);\n  if (!context) {\n    throw new Error('useAuth must be used within an AuthProvider');\n  }\n  return context;\n};\n\n// Usage example:\n// Wrap your app with <AuthProvider>\n// Then use useAuth() in any component to access auth state and methods"
+    }
+  ]
+}

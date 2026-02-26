@@ -1,0 +1,96 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "dfl-components",
+  "homepage": "https://github.com/taigfs/dfl-components-cli",
+  "items": [
+    {
+      "name": "button",
+      "type": "registry:component",
+      "title": "Button",
+      "description": "Reusable button component with variants and states",
+      "category": "UI",
+      "version": "1.2.0",
+      "registryDependencies": [],
+      "dependencies": []
+    },
+    {
+      "name": "card",
+      "type": "registry:component",
+      "title": "Card",
+      "description": "Flexible card container with header and content areas",
+      "category": "UI",
+      "version": "1.1.0",
+      "registryDependencies": [],
+      "dependencies": []
+    },
+    {
+      "name": "input",
+      "type": "registry:component",
+      "title": "Input",
+      "description": "Form input with validation and error states",
+      "category": "UI",
+      "version": "1.0.5",
+      "registryDependencies": [],
+      "dependencies": []
+    },
+    {
+      "name": "use-hybrid-auth",
+      "type": "registry:hook",
+      "title": "useHybridAuth",
+      "description": "Custom hook for handling multiple authentication providers",
+      "category": "Hooks",
+      "version": "2.0.1",
+      "registryDependencies": [],
+      "dependencies": []
+    },
+    {
+      "name": "auth-provider",
+      "type": "registry:component",
+      "title": "AuthProvider",
+      "description": "Context provider for application-wide authentication state",
+      "category": "Providers",
+      "version": "1.3.0",
+      "registryDependencies": ["use-hybrid-auth"],
+      "dependencies": []
+    },
+    {
+      "name": "feature-flag-provider",
+      "type": "registry:component",
+      "title": "FeatureFlagProvider",
+      "description": "Provider for managing feature flags across the application",
+      "category": "Providers",
+      "version": "1.1.2",
+      "registryDependencies": [],
+      "dependencies": []
+    },
+    {
+      "name": "auth-pages",
+      "type": "registry:block",
+      "title": "Authentication Pages",
+      "description": "Complete authentication flow with login and register pages",
+      "category": "Pages",
+      "version": "1.0.0",
+      "registryDependencies": ["button", "input", "card"],
+      "dependencies": []
+    },
+    {
+      "name": "observability-provider",
+      "type": "registry:component",
+      "title": "ObservabilityProvider",
+      "description": "Browser observability SDK that auto-initializes OpenTelemetry for React apps with tracing, metrics, Web Vitals, fetch instrumentation, and error reporting",
+      "category": "Providers",
+      "version": "1.0.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@opentelemetry/api",
+        "@opentelemetry/sdk-trace-web",
+        "@opentelemetry/exporter-trace-otlp-http",
+        "@opentelemetry/sdk-metrics",
+        "@opentelemetry/exporter-metrics-otlp-http",
+        "@opentelemetry/resources",
+        "@opentelemetry/semantic-conventions",
+        "web-vitals"
+      ]
+    }
+  ]
+}
