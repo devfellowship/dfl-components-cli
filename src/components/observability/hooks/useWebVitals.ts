@@ -22,10 +22,6 @@ export function useWebVitals(): void {
       description: "Largest Contentful Paint (ms)",
       unit: "ms",
     });
-    const fidHistogram = meter.createHistogram("web_vital.fid", {
-      description: "First Input Delay (ms)",
-      unit: "ms",
-    });
     const clsHistogram = meter.createHistogram("web_vital.cls", {
       description: "Cumulative Layout Shift",
       unit: "",
@@ -50,9 +46,8 @@ export function useWebVitals(): void {
     };
 
     // Dynamic import so tree-shaking can drop web-vitals entirely when unused.
-    import("web-vitals").then(({ onLCP, onFID, onCLS, onINP, onTTFB }) => {
+    import("web-vitals").then(({ onLCP, onCLS, onINP, onTTFB }) => {
       onLCP((m) => report(lcpHistogram, m));
-      onFID((m) => report(fidHistogram, m));
       onCLS((m) => report(clsHistogram, m));
       onINP((m) => report(inpHistogram, m));
       onTTFB((m) => report(ttfbHistogram, m));

@@ -78,7 +78,8 @@ export function ObservabilityProvider({
     import.meta as ImportMeta & { env: Record<string, string | boolean> }
   ).env;
 
-  const isEnabled = enabled ?? (env?.PROD === true);
+  const isEnabled =
+    enabled ?? (env?.VITE_OTEL_ENABLED === "true" || env?.PROD === true);
 
   const providersRef = useRef<OtelProviders | null>(null);
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { trace, SpanStatusCode } from "@opentelemetry/api";
 import { getDynamicAttributes } from "../lib/resource-attributes";
 
@@ -7,12 +7,19 @@ import { getDynamicAttributes } from "../lib/resource-attributes";
  * Subscribes to the React Query cache and creates OTel error spans
  * whenever a query transitions to the `error` state.
  *
- * Relies on the global tracer registered by the ObservabilityProvider.
+ * Safe to use outside QueryClientProvider — gracefully no-ops.
  */
 export function useQueryErrorReporter(): void {
-  const queryClient = useQueryClient();
+  let queryClient: QueryClient | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    queryClient = useQueryClient();
+  } catch {
+    // Not inside a QueryClientProvider — query error reporting disabled
+  }
 
   useEffect(() => {
+    if (!queryClient) return;
     const tracer = trace.getTracer("@dfl/observability");
 
     const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
