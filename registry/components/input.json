@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input",
+  "type": "registry:component",
+  "title": "Input",
+  "description": "Form input with validation and error states",
+  "category": "UI",
+  "version": "1.0.5",
+  "tags": ["input", "form", "validation"],
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "input.tsx",
+      "type": "registry:component",
+      "content": "import React from 'react';\n\ninterface InputProps {\n  label?: string;\n  placeholder?: string;\n  value: string;\n  onChange: (value: string) => void;\n  error?: string;\n  type?: 'text' | 'email' | 'password' | 'number';\n  required?: boolean;\n  disabled?: boolean;\n}\n\nexport const Input: React.FC<InputProps> = ({\n  label,\n  placeholder,\n  value,\n  onChange,\n  error,\n  type = 'text',\n  required = false,\n  disabled = false\n}) => {\n  return (\n    <div className=\"space-y-1\">\n      {label && (\n        <label className=\"block text-sm font-medium text-gray-700\">\n          {label}\n          {required && <span className=\"text-red-500 ml-1\">*</span>}\n        </label>\n      )}\n      <input\n        type={type}\n        value={value}\n        onChange={(e) => onChange(e.target.value)}\n        placeholder={placeholder}\n        disabled={disabled}\n        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${\n          error ? 'border-red-300' : 'border-gray-300'\n        } ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}\n      />\n      {error && (\n        <p className=\"text-sm text-red-600\">{error}</p>\n      )}\n    </div>\n  );\n};"
+    }
+  ]
+}

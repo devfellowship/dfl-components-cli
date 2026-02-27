@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "feature-flag-provider",
+  "type": "registry:component",
+  "title": "FeatureFlagProvider",
+  "description": "Provider for managing feature flags across the application",
+  "category": "Providers",
+  "version": "1.1.2",
+  "tags": ["feature-flags", "context", "provider"],
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "feature-flag-provider.tsx",
+      "type": "registry:component",
+      "content": "import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';\n\ninterface FeatureFlags {\n  [key: string]: boolean;\n}\n\ninterface FeatureFlagContextType {\n  flags: FeatureFlags;\n  isEnabled: (flag: string) => boolean;\n  toggleFlag: (flag: string) => void;\n  loading: boolean;\n}\n\nconst FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined);\n\ninterface FeatureFlagProviderProps {\n  children: ReactNode;\n  initialFlags?: FeatureFlags;\n}\n\nexport const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ \n  children, \n  initialFlags = {} \n}) => {\n  const [flags, setFlags] = useState<FeatureFlags>(initialFlags);\n  const [loading, setLoading] = useState(true);\n\n  useEffect(() => {\n    // TODO: Replace with actual feature flag service call\n    const loadFeatureFlags = async () => {\n      try {\n        // Mock API call\n        const mockFlags: FeatureFlags = {\n          newDashboard: true,\n          betaFeatures: false,\n          advancedSearch: true,\n          darkMode: true,\n          ...initialFlags\n        };\n        \n        setFlags(mockFlags);\n      } catch (error) {\n        console.error('Failed to load feature flags:', error);\n      } finally {\n        setLoading(false);\n      }\n    };\n\n    loadFeatureFlags();\n  }, [initialFlags]);\n\n  const isEnabled = (flag: string): boolean => {\n    return Boolean(flags[flag]);\n  };\n\n  const toggleFlag = (flag: string): void => {\n    setFlags(prev => ({\n      ...prev,\n      [flag]: !prev[flag]\n    }));\n  };\n\n  const contextValue: FeatureFlagContextType = {\n    flags,\n    isEnabled,\n    toggleFlag,\n    loading\n  };\n\n  return (\n    <FeatureFlagContext.Provider value={contextValue}>\n      {children}\n    </FeatureFlagContext.Provider>\n  );\n};\n\nexport const useFeatureFlags = (): FeatureFlagContextType => {\n  const context = useContext(FeatureFlagContext);\n  if (!context) {\n    throw new Error('useFeatureFlags must be used within a FeatureFlagProvider');\n  }\n  return context;\n};\n\n// Usage example:\n// const { isEnabled } = useFeatureFlags();\n// if (isEnabled('newDashboard')) {\n//   return <NewDashboard />;\n// }"
+    }
+  ]
+}

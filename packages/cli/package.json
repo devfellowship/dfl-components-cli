@@ -1,0 +1,49 @@
+{
+  "name": "dfl-components",
+  "version": "0.1.0",
+  "description": "CLI for adding DevFellowship components to your project",
+  "type": "module",
+  "bin": {
+    "dfl-components": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "cosmiconfig": "^9.0.0",
+    "fs-extra": "^11.2.0",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1",
+    "prompts": "^2.4.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.0.0",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "devfellowship",
+    "components",
+    "cli",
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taigfs/dfl-components-cli.git"
+  },
+  "license": "MIT"
+}
