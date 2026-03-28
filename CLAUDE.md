@@ -1,100 +1,59 @@
-# CLAUDE.md
+# CLAUDE.md — dfl-components-cli
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Project Overview
-
-DevFellowship Component Hub - A dark-themed React micro-app for browsing, previewing, and copying reusable frontend components. Components are displayed in a grid with category filtering, search, and one-click code copying.
-
-## Commands
-
-```bash
-# Hub App
-npm run dev      # Start dev server at localhost:8080
-npm run build    # Production build
-npm run lint     # Run ESLint
-npm run preview  # Preview production build
-
-# CLI Package
-npm run cli:build  # Build CLI package
-npm run cli:dev    # Build CLI in watch mode
-```
-
-## CLI Usage
-
-The `dfl-components` CLI allows users to add components to their projects:
-
-```bash
-npx dfl-components init           # Initialize config
-npx dfl-components add button     # Add single component
-npx dfl-components add card input # Add multiple components
-npx dfl-components add --all      # Add all components
-```
+## Quick Context
+Component Hub + CLI — browse, preview, and install shared DFL frontend components.
+Two parts: (1) Vite React showcase app, (2) CLI tool (`packages/cli/`) for `npx dfl-components add`.
+Uses a JSON registry pattern (like shadcn/ui CLI).
 
 ## Architecture
-
-### Tech Stack
-- React 18 + TypeScript + Vite
-- Tailwind CSS + shadcn/ui components
-- React Router for routing
-- TanStack Query for data fetching
-
-### Path Alias
-`@/` maps to `./src/` (configured in tsconfig.json and vite.config.ts)
-
-### Key Files
-- `src/components/ComponentHubApp.tsx` - Main hub component (embeddable)
-- `src/data/mockComponents.ts` - Component registry with code samples
-- `src/types/component.ts` - Component type definition
-
-### Component Data Model
-Components in the hub follow this structure:
-```typescript
-interface Component {
-  id: string;
-  name: string;
-  description: string;
-  category: 'UI' | 'Hooks' | 'Providers' | 'Pages';
-  tags: string[];
-  version: string;
-  filePath: string;
-  code: string;
-  previewComponent?: React.ComponentType;
-  subPages?: { name: string; filePath: string; code: string; previewComponent?: React.ComponentType; }[];
-}
+```
+src/                          # Showcase web app
+├── components/
+│   ├── ComponentHubApp.tsx   # Main hub: grid browser + detail modal
+│   ├── ComponentCard.tsx     # Card with preview + copy-to-clipboard
+│   ├── ComponentDetailModal.tsx # Full preview + source code
+│   ├── auth/                 # LoginPage, RegisterPage (placeholders)
+│   ├── observability/        # OTel tracing
+│   └── ui/                   # shadcn/ui primitives
+├── data/mockComponents.ts    # Component catalog (mock)
+├── types/component.ts        # Component type definition
+packages/cli/                 # CLI tool
+├── src/
+│   ├── index.ts              # Entry point (Commander.js)
+│   ├── commands/add.ts       # `add` command — install component from registry
+│   ├── commands/init.ts      # `init` command — setup project config
+│   ├── types/                # config.ts, registry.ts
+│   └── utils/                # get-config, get-registry, resolve-alias, logger
+├── tsup.config.ts            # CLI build config
+registry/                     # JSON component registry
+├── registry.json             # Master index
+├── components/               # button.json, card.json, input.json
+├── hooks/                    # use-hybrid-auth.json
+├── providers/                # auth-provider, feature-flag-provider, observability-provider
+└── pages/                    # auth-pages.json
 ```
 
-### Adding New Components
-Add entries to `mockComponents` array in `src/data/mockComponents.ts`. Include category, tags, version, source code as string, and optional preview component.
+## How to Work Here
+- `npm run dev` — showcase app (Vite)
+- CLI: `cd packages/cli && npm run build` (tsup)
+- Registry JSON files define components with: name, type, files, dependencies
+- CLI reads registry.json, resolves aliases, copies files into target project
+- Showcase app uses mock data — update `data/mockComponents.ts` to add demos
 
-### UI Component Structure
-- `src/components/ui/` - shadcn/ui primitives
-- `src/components/auth/` - Authentication page components
-- `src/components/sample/` - Sample preview components for the hub
+## Contracts
+- **Registry format**: `{ name, type, files: [{ path, content }], dependencies }` per component
+- **CLI config**: `dfl-components.json` in target project (aliases, paths, style)
+- **Component types**: UI, Hooks, Providers, Pages
+- **CLI commands**: `init` (create config), `add <component>` (install from registry)
 
-### App Providers (src/App.tsx)
-Root wraps with: QueryClientProvider → TooltipProvider → Toasters → BrowserRouter
+## Ecosystem Context
+- Provides shared components to ALL DFL apps
+- Registry includes: auth-provider, observability-provider, feature-flag-provider
+- Pattern inspired by shadcn/ui CLI
+- Consumers: dfl-learn, dfl-tracks, dfl-dbms, dfl-ventures, etc.
 
-## Monorepo Structure
-
-```
-/dfl-components-cli
-├── /registry           # Component definitions for distribution
-│   ├── registry.json   # Index of all components
-│   ├── /components     # UI component JSONs
-│   ├── /hooks          # Hook JSONs
-│   ├── /providers      # Provider JSONs
-│   └── /pages          # Page/block JSONs
-├── /packages/cli       # CLI package (published to npm)
-│   └── /src
-│       ├── index.ts    # CLI entry point
-│       ├── /commands   # init.ts, add.ts
-│       └── /utils      # Helper utilities
-└── /src                # Hub app source
-```
-
-### Registry Component Format
-Each component in `/registry` has a JSON file with:
-- `name`, `type`, `title`, `description`, `category`, `version`
-- `registryDependencies` - other registry components it depends on
-- `files` - array of `{ path, type, content }` for source files
+## Rules
+- Don't touch `src/components/ui/` — shadcn/ui managed
+- New shared components: add to `registry/` + update `registry.json`
+- CLI must remain zero-dependency-at-runtime (bundle with tsup)
+- Test CLI commands manually: `npx tsx packages/cli/src/index.ts add button`
