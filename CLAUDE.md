@@ -1,3 +1,8 @@
+# Managed merge scaffold for dfl-components-cli/CLAUDE.md
+# Human edits belong only inside MANUAL blocks.
+
+<!-- BEGIN GENERATED:claude/base -->
+<!-- render-meta: repo=dfl-components-cli; mode=merge; hash=94693dea164222f3fd6c73ef7d8df6d8e66bab56d91f4815e51b37332a636ada -->
 # CLAUDE.md — dfl-components-cli
 
 ## Quick Context
@@ -57,32 +62,8 @@ registry/                     # JSON component registry
 - New shared components: add to `registry/` + update `registry.json`
 - CLI must remain zero-dependency-at-runtime (bundle with tsup)
 - Test CLI commands manually: `npx tsx packages/cli/src/index.ts add button`
+<!-- END GENERATED:claude/base -->
 
-## Post-Sprint Updates
-
-> Added by dev-dfl agent — reflects post-sprint reality (CI, contracts, Infisical, agent context).
-
-### Testing
-- Test framework: **Vitest** is configured in this repo
-- Run tests with `npm test` or `npx vitest` (or `npx jest` for Jest repos)
-- Write tests alongside source files or in `__tests__/` directories
-
-### CI / Continuous Integration
-- CI runs **build + test + verify-docs** via the `dfl-ci` reusable workflow
-- Workflow file: `.github/workflows/ci.yml` — uses `devfellowship/dfl-ci/.github/workflows/ci.yml@main`
-- PRs must pass CI before merge
-
-### Contracts
-- `repo-contract.yaml` exists at repo root — defines the repo's role, ownership, and integration points
-- Keep this file in sync when changing the repo's scope or dependencies
-
-### Agent Context
-- `AGENTS.md` — instructions for AI agents working in this repo
-- `AGENT-PROGRESS.md` — tracks agent task progress and status
-- Update these files when making significant architectural changes
-
-### Secrets & Configuration (Infisical)
-- Secrets are managed via **Infisical** at `infisical.devfellowship.com`
-- Shared secrets path: `/shared/`
-- Do NOT commit secrets to the repo — use Infisical for environment variables
-- Check `repo-contract.yaml` for required environment variables
+<!-- BEGIN MANUAL:repo/local-notes -->
+<!-- repo-specific notes live here -->
+<!-- END MANUAL:repo/local-notes -->
