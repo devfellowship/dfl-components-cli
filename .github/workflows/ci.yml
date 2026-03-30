@@ -1,13 +1,50 @@
 name: CI
-
 on:
   pull_request:
-
 permissions:
   contents: read
   pull-requests: write
-
+concurrency:
+  group: ci-pr-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 jobs:
-  review:
-    uses: devfellowship/dfl-ci/.github/workflows/ci.yml@main
-    secrets: inherit
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci || (rm package-lock.json && npm install)
+          elif [ -f package.json ]; then
+            npm install
+          fi
+      - name: Build
+        id: build
+        run: |
+          if jq -e '.scripts.build' package.json &>/dev/null; then
+            npm run build
+          else
+            echo "No build script"
+          fi
+        continue-on-error: true
+      - name: Test
+        id: tests
+        run: |
+          if jq -e '.scripts.test' package.json &>/dev/null; then
+            npm test
+          else
+            echo "No test script"
+          fi
+        continue-on-error: true
+      - name: Gate
+        if: always()
+        run: |
+          F=0
+          [ "${{ steps.build.outcome }}" = "failure" ] && echo "❌ Build" && F=1
+          [ "${{ steps.tests.outcome }}" = "failure" ] && echo "❌ Tests" && F=1
+          [ "$F" = "1" ] && exit 1
+          echo "✅ CI passed"
