@@ -1,3 +1,8 @@
+# Managed merge scaffold for dfl-components-cli/AGENTS.md
+# Human edits belong only inside MANUAL blocks.
+
+<!-- BEGIN GENERATED:agents/base -->
+<!-- render-meta: repo=dfl-components-cli; mode=merge; hash=645b65308d03d83b5b42df25de4d9b52490ed850466909dfbcde2c08ade038d3 -->
 # AGENTS.md — Rules for AI Agents in dfl-components-cli
 
 > Read this before touching anything. Non-negotiable.
@@ -34,3 +39,8 @@
 2. Check dfl-hq for ADRs
 3. Look at similar DFL repos
 4. If still stuck, say so clearly — don't guess and ship
+<!-- END GENERATED:agents/base -->
+
+<!-- BEGIN MANUAL:repo/agent-notes -->
+<!-- repo-specific notes live here -->
+<!-- END MANUAL:repo/agent-notes -->
