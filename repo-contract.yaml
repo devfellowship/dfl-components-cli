@@ -1,39 +1,173 @@
-# Managed merge scaffold for dfl-components-cli/repo-contract.yaml
-# Human edits belong only inside MANUAL blocks.
-
-<!-- BEGIN GENERATED:repo-contract/base -->
-<!-- render-meta: repo=dfl-components-cli; mode=merge; hash=e7b1884f500a17b811b0618e9cc1b4ad4412bfd98a11e3b5ac49a77c252b9e83 -->
 # repo-contract.yaml — Machine-readable contract for dfl-components-cli
+# This repo has TWO parts: a Vite showcase app and a CLI tool (packages/cli/).
 
 name: dfl-components-cli
-description: Generated contract scaffold for dfl-components-cli
+description: >
+  Shared component distribution system for the DFL ecosystem.
+  Provides a CLI tool (npx dfl-components) and a JSON registry that lets
+  any DFL React app install pre-built UI components, hooks, providers, and
+  page templates with a single command — inspired by the shadcn/ui pattern.
 
 type: platform
 
+# ─── What this repo provides to the ecosystem ───────────────────────────
+
 provides:
-  # - type: api|package|webhook|ui
-  #   name: auth-endpoints
-  #   description: Authentication and session management
-  []
+  - type: package
+    name: dfl-components-cli
+    description: >
+      Node.js CLI published as "dfl-components" (Commander.js + tsup).
+      Two commands: `init` (scaffold dfl-components.json config) and
+      `add <component>` (fetch from registry, resolve deps, write files).
+    entry: packages/cli/dist/index.js
+    bin: dfl-components
+
+  - type: registry
+    name: component-registry
+    description: >
+      JSON registry hosted on GitHub raw serving component definitions.
+      Each item has name, type, version, files (with inline content),
+      registryDependencies (intra-registry), and npm dependencies.
+    base_url: https://raw.githubusercontent.com/taigfs/dfl-components-cli/main/registry
+    index: registry/registry.json
+
+  - type: ui
+    name: component-hub-showcase
+    description: >
+      Vite React app that lets developers browse the registry visually —
+      grid browser, detail modal with live preview and source code view.
+    dev_port: 8080
+
+# ─── Registry items (components distributed to consumer repos) ──────────
+
+registry_items:
+  components:
+    - name: button
+      version: "1.2.0"
+      description: Reusable button with variants and states
+    - name: card
+      version: "1.1.0"
+      description: Flexible card container with header and content
+    - name: input
+      version: "1.0.5"
+      description: Form input with validation and error states
+
+  hooks:
+    - name: use-hybrid-auth
+      version: "2.0.1"
+      description: Hook for multiple authentication providers
+
+  providers:
+    - name: auth-provider
+      version: "1.3.0"
+      description: Context provider for app-wide auth state
+      depends_on: [use-hybrid-auth]
+    - name: feature-flag-provider
+      version: "1.1.2"
+      description: Provider for managing feature flags
+    - name: observability-provider
+      version: "1.0.0"
+      description: OpenTelemetry auto-init for React apps (tracing, metrics, Web Vitals)
+      npm_dependencies:
+        - "@opentelemetry/api"
+        - "@opentelemetry/sdk-trace-web"
+        - "@opentelemetry/exporter-trace-otlp-http"
+        - "@opentelemetry/sdk-metrics"
+        - "@opentelemetry/exporter-metrics-otlp-http"
+        - "@opentelemetry/resources"
+        - "@opentelemetry/semantic-conventions"
+        - "web-vitals"
+
+  pages:
+    - name: auth-pages
+      version: "1.0.0"
+      description: Complete login + register flow
+      depends_on: [button, input, card]
+
+# ─── CLI commands reference ─────────────────────────────────────────────
+
+cli_commands:
+  init:
+    usage: npx dfl-components init [--yes]
+    description: >
+      Creates dfl-components.json in the target project. Interactive prompts
+      for TypeScript toggle and alias paths (components, hooks, providers,
+      pages). Use --yes for defaults.
+    config_file: dfl-components.json
+    default_aliases:
+      components: "@/components/dfl"
+      hooks: "@/hooks"
+      providers: "@/providers"
+      pages: "@/pages"
+
+  add:
+    usage: npx dfl-components add <component...> [--all] [--overwrite] [--yes]
+    description: >
+      Fetches component JSON from registry, resolves registryDependencies
+      recursively, writes files into the target project at configured alias
+      paths. Prompts before overwriting existing files unless --overwrite.
+    flags:
+      --all: Install every component in the registry
+      --overwrite: Replace existing files without prompting
+      --yes: Skip all confirmation prompts
+
+# ─── What this repo consumes ────────────────────────────────────────────
 
 consumes:
-  # - repo: dfl-schema
-  #   resource: supabase-tables
-  #   tables: [users, courses]
-  # - external: true
-  #   name: stripe
-  []
+  - external: true
+    name: github-raw-content
+    description: >
+      Registry JSON is served from GitHub raw URLs. The CLI fetches
+      registry.json and individual component JSONs at runtime.
+
+# ─── Consumer repos (who uses this CLI) ─────────────────────────────────
+
+consumers:
+  - dfl-learn
+  - dfl-tracks
+  - dfl-dbms
+  - dfl-iam
+  - dfl-apps
+  - dfl-financing
+  - dfl-documents
+  - dfl-event-management
+  - dfl-reviews
+  - dfl-skill-evals
+  - dfl-social-proof
+  - dfl-wiki
+  - dfl-flows
+  - dfl-notifications
+  - dfl-seo
+  - dfl-bmcanvas
+  - dfl-thumbify
+  - dfl-vaults
+  - dfl-course-shaper
+  - dfl-lesson-studio
+
+# ─── Environment variables ──────────────────────────────────────────────
 
 environment:
   required: []
-  optional: []
+  optional:
+    - name: VITE_REGISTRY_URL
+      description: Override default registry URL for the showcase app
+      default: https://raw.githubusercontent.com/taigfs/dfl-components-cli/main/registry
+    - name: VITE_PORT
+      description: Dev server port override
+      default: "8080"
+
+# ─── Health & entry points ──────────────────────────────────────────────
 
 health_check:
   command: npm run build
+  cli_check: cd packages/cli && npm run build
+
+scripts:
+  dev: vite (showcase app on port 8080)
+  build: vite build (showcase app)
+  lint: eslint .
+  test: vitest run
+  cli_build: cd packages/cli && tsup
+  cli_dev: cd packages/cli && tsup --watch
 
 agent_entry_point: CLAUDE.md
-<!-- END GENERATED:repo-contract/base -->
-
-<!-- BEGIN MANUAL:repo-contract/local -->
-<!-- repo-specific notes live here -->
-<!-- END MANUAL:repo-contract/local -->
