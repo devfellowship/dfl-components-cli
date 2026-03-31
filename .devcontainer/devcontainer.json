@@ -1,6 +1,8 @@
 {
   "name": "dfl-components-cli",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/app",
   "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
