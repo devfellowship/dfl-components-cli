@@ -1,2 +1,58 @@
-# Placeholder for dfl-components-cli/.claude/manifest.yaml
-# Assumption: canonical source is not available yet in dfl-hq.
+# .claude/manifest.yaml — dfl-components-cli
+# AI-inferred structured metadata for context sync
+
+name: dfl-components-cli
+display_name: Component Hub + CLI
+description: >
+  Shared component distribution system for the DFL ecosystem. Two parts:
+  (1) Vite React showcase app for browsing components, (2) Node.js CLI
+  tool (npx dfl-components) that installs shared UI components, hooks,
+  providers, and page templates into any DFL React project.
+
+type: platform
+status: active
+
+tech_stack:
+  showcase:
+    runtime: browser
+    framework: react-18.3.1
+    bundler: vite-5
+    language: typescript-5
+    styling: tailwindcss + shadcn/ui
+  cli:
+    runtime: node->=18
+    framework: commander-12
+    bundler: tsup-8
+    language: typescript-5
+    dependencies:
+      - chalk
+      - ora
+      - prompts
+      - fs-extra
+      - cosmiconfig
+      - zod
+
+schemas: []
+
+primary_domain: developer-tooling
+personas:
+  - dfl-developer: Installs shared components into their app via CLI
+  - platform-engineer: Adds new components to the registry
+
+entry_points:
+  showcase: src/components/ComponentHubApp.tsx
+  cli: packages/cli/src/index.ts
+  registry: registry/registry.json
+
+key_files:
+  - packages/cli/src/commands/add.ts
+  - packages/cli/src/commands/init.ts
+  - packages/cli/src/types/config.ts
+  - packages/cli/src/types/registry.ts
+  - registry/registry.json
+  - src/data/mockComponents.ts
+
+cross_repo_impact: high
+impact_description: >
+  Every DFL React app can consume components from this registry.
+  Changes to registry format or CLI behavior affect all 20+ consumer repos.
