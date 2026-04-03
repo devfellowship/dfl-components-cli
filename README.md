@@ -11,6 +11,8 @@ A dark-themed, minimalist micro-app for browsing, previewing, and copying reusab
 - **Multi-Page Components**: Support for components with multiple sub-pages
 - **Dark Theme**: Professional dark-only interface optimized for developers
 - **Embeddable**: Self-contained component ready for integration
+- **Observability**: Built-in Sentry error tracking and OpenTelemetry integration
+- **Containerized**: Docker and devcontainer support for consistent development environments
 
 ## Tech Stack
 
@@ -19,20 +21,26 @@ A dark-themed, minimalist micro-app for browsing, previewing, and copying reusab
 - shadcn/ui components
 - Lucide React icons
 - Vite for development and building
+- Vitest for testing
+- Sentry (`@sentry/react`) for error tracking
+- OpenTelemetry for distributed tracing
+- Docker for containerized development and deployment
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20+ and npm
 - Modern web browser
+- (Optional) Docker and Docker Compose for containerized development
+- (Optional) VS Code with the Dev Containers extension
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
-cd devfellowship-component-hub
+git clone https://github.com/devfellowship/dfl-components-cli.git
+cd dfl-components-cli
 
 # Install dependencies
 npm install
@@ -43,6 +51,32 @@ npm run dev
 
 Open [http://localhost:8080](http://localhost:8080) to view the app.
 
+### Running with Docker
+
+You can run the entire application inside a Docker container without installing Node.js locally:
+
+```bash
+# Build and start with Docker Compose
+docker compose up
+
+# Or build the image directly
+docker build -t dfl-components-cli .
+docker run -p 8080:8080 dfl-components-cli
+```
+
+The app will be available at [http://localhost:8080](http://localhost:8080).
+
+### Using the Dev Container
+
+This project includes a VS Code devcontainer configuration for a fully sandboxed development environment:
+
+1. Open the repository in VS Code.
+2. When prompted, click **Reopen in Container** (or run the command **Dev Containers: Reopen in Container** from the command palette).
+3. VS Code will build the Docker image, install dependencies via `npm install`, and open a terminal inside the container.
+4. The workspace is mounted at `/app` with ESLint and Prettier extensions pre-installed.
+
+The devcontainer uses the same `docker-compose.yml` as the standalone Docker workflow, so behavior is consistent across environments.
+
 ### Building for Production
 
 ```bash
@@ -52,6 +86,64 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+### Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start the Vite development server |
+| `npm run dev:portless` | Start dev server via the portless proxy |
+| `npm run build` | Production build |
+| `npm run build:dev` | Development build (unminified) |
+| `npm run lint` | Run ESLint |
+| `npm run preview` | Preview the production build locally |
+| `npm test` | Run tests with Vitest |
+| `npm run test:watch` | Run tests in watch mode |
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and adjust values as needed:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_REGISTRY_URL` | Override the component registry URL | GitHub raw URL |
+| `VITE_PORT` | Dev server port | `8080` |
+| `VITE_SENTRY_DSN` | Sentry DSN for error tracking | _(disabled if empty)_ |
+| `VITE_OTEL_API_KEY` | API key for the OpenTelemetry collector | _(none)_ |
+| `VITE_OTEL_ENABLED` | Enable observability in non-production builds | `false` |
+| `VITE_APP_NAME` | Service name reported to collectors | `"unknown"` |
+| `VITE_APP_VERSION` | Service version reported to collectors | `"0.0.0"` |
+
+## Observability (Sentry and OpenTelemetry)
+
+The app ships with an `ObservabilityProvider` component that initializes both Sentry and OpenTelemetry when enabled. It is located at `src/components/observability/`.
+
+### What it provides
+
+- **Sentry error tracking** -- automatic capture of uncaught exceptions and unhandled promise rejections.
+- **React Error Boundary** -- wraps the component tree so render errors are caught, reported, and displayed gracefully.
+- **OpenTelemetry tracing** -- browser spans sent to the DevFellowship collector.
+- **Core Web Vitals** -- LCP, FID, CLS metrics collected automatically.
+- **Fetch instrumentation** -- outgoing HTTP requests are traced.
+- **React Query error reporting** -- failed queries are reported as spans.
+
+### Usage
+
+Wrap your app with `ObservabilityProvider`:
+
+```tsx
+import { ObservabilityProvider } from "./components/observability";
+
+function App() {
+  return (
+    <ObservabilityProvider sentryDsn="https://...@sentry.io/...">
+      <YourApp />
+    </ObservabilityProvider>
+  );
+}
+```
+
+All configuration props are optional; the provider reads `VITE_*` environment variables as defaults. Set `enabled={false}` or omit the Sentry DSN to disable tracking entirely.
 
 ## Embedding the Component Hub
 
@@ -64,7 +156,7 @@ function SuperApp() {
   return (
     <div className="app-container">
       {/* Your existing app content */}
-      
+
       {/* Embed the Component Hub */}
       <ComponentHubApp />
     </div>
