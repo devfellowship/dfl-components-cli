@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "storybook": "npm run storybook --prefix packages/ui",
+    "build-storybook": "npm run build-storybook --prefix packages/ui"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

@@ -150,3 +150,36 @@ body {
   color: var(--foreground);
   line-height: 1.5;
 }
+
+/* ─── Custom theme (Alto Contraste) ─────────────────────────────────────── */
+.custom-theme {
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0 0 0);
+
+  --card: oklch(0.95 0 0);
+  --card-foreground: oklch(0 0 0);
+
+  --popover: oklch(0.95 0 0);
+  --popover-foreground: oklch(0 0 0);
+
+  --primary: oklch(0.35 0.22 250);             /* deep blue */
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.85 0 0);
+  --secondary-foreground: oklch(0 0 0);
+
+  --muted: oklch(0.90 0 0);
+  --muted-foreground: oklch(0.30 0 0);
+
+  --accent: oklch(0.35 0.22 250);
+  --accent-foreground: oklch(1 0 0);
+
+  --destructive: oklch(0.50 0.25 25);
+  --destructive-foreground: oklch(1 0 0);
+
+  --border: oklch(0.60 0 0);
+  --input: oklch(0.60 0 0);
+  --ring: oklch(0.35 0.22 250);
+
+  --brand-accent: oklch(0.35 0.22 250);
+}
