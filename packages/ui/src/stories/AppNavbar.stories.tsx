@@ -54,8 +54,7 @@ export const WithActions: Story = {
   },
 };
 
-export const Interactive: Story = {
-  render: () => {
+const InteractiveRender = () => {
     const [theme, setTheme] = useState<"light" | "dark">("light");
     return (
       <div
@@ -73,7 +72,10 @@ export const Interactive: Story = {
         />
       </div>
     );
-  },
+};
+
+export const Interactive: Story = {
+  render: () => <InteractiveRender />,
 };
 
 export const NoBreadcrumbs: Story = {
