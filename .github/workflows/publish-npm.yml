@@ -1,0 +1,71 @@
+name: Publish @dfl/components to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version bump type (patch | minor | major) or explicit version (e.g. 0.2.0)'
+        required: true
+        default: 'patch'
+      tag:
+        description: 'NPM dist-tag (latest | next | beta)'
+        required: false
+        default: 'latest'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/ui
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install --include=dev
+
+      - name: Bump version
+        id: version
+        run: |
+          INPUT="${{ github.event.inputs.version }}"
+          # If input is semver-like (contains dots), use it directly
+          if [[ "$INPUT" =~ ^[0-9]+\.[0-9]+\.[0-9] ]]; then
+            npm version "$INPUT" --no-git-tag-version
+          else
+            npm version "$INPUT" --no-git-tag-version
+          fi
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to NPM
+        run: npm publish --access public --tag ${{ github.event.inputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Commit and tag version bump
+        run: |
+          cd ${{ github.workspace }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/ui/package.json
+          git commit -m "chore(release): @dfl/components v${{ steps.version.outputs.version }}"
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin HEAD --tags
