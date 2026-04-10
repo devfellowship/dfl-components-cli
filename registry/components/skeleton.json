@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "skeleton",
+  "type": "registry:component",
+  "title": "Skeleton",
+  "description": "Loading placeholder animation",
+  "category": "UI",
+  "version": "0.1.0",
+  "tags": [
+    "skeleton"
+  ],
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "skeleton.tsx",
+      "type": "registry:component",
+      "content": "import { cn } from \"../lib/utils\";\n\nfunction Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div className={cn(\"animate-pulse rounded-md bg-muted\", className)} {...props} />;\n}\n\nexport { Skeleton };\n"
+    }
+  ]
+}

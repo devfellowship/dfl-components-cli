@@ -3,17 +3,19 @@
   "name": "input",
   "type": "registry:component",
   "title": "Input",
-  "description": "Form input with validation and error states",
+  "description": "Text input field",
   "category": "UI",
-  "version": "1.0.5",
-  "tags": ["input", "form", "validation"],
+  "version": "0.1.0",
+  "tags": [
+    "input"
+  ],
   "dependencies": [],
   "registryDependencies": [],
   "files": [
     {
       "path": "input.tsx",
       "type": "registry:component",
-      "content": "import React from 'react';\n\ninterface InputProps {\n  label?: string;\n  placeholder?: string;\n  value: string;\n  onChange: (value: string) => void;\n  error?: string;\n  type?: 'text' | 'email' | 'password' | 'number';\n  required?: boolean;\n  disabled?: boolean;\n}\n\nexport const Input: React.FC<InputProps> = ({\n  label,\n  placeholder,\n  value,\n  onChange,\n  error,\n  type = 'text',\n  required = false,\n  disabled = false\n}) => {\n  return (\n    <div className=\"space-y-1\">\n      {label && (\n        <label className=\"block text-sm font-medium text-gray-700\">\n          {label}\n          {required && <span className=\"text-red-500 ml-1\">*</span>}\n        </label>\n      )}\n      <input\n        type={type}\n        value={value}\n        onChange={(e) => onChange(e.target.value)}\n        placeholder={placeholder}\n        disabled={disabled}\n        className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${\n          error ? 'border-red-300' : 'border-gray-300'\n        } ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}\n      />\n      {error && (\n        <p className=\"text-sm text-red-600\">{error}</p>\n      )}\n    </div>\n  );\n};"
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"../lib/utils\";\n\nconst Input = React.forwardRef<HTMLInputElement, React.ComponentProps<\"input\">>(\n  ({ className, type, ...props }, ref) => {\n    return (\n      <input\n        type={type}\n        className={cn(\n          \"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm\",\n          className,\n        )}\n        ref={ref}\n        {...props}\n      />\n    );\n  },\n);\nInput.displayName = \"Input\";\n\nexport { Input };\n"
     }
   ]
 }
