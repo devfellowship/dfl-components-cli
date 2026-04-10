@@ -27,3 +27,6 @@ export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";
 export * from "./protected-route";
+
+// ─── Organisms ────────────────────────────────────────────────────────────────
+export * from "./organisms";
