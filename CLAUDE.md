@@ -71,7 +71,8 @@ When adding a new component or hook to @dfl/components:
 
 1. **Add the component source** — create `registry/components/<name>.json` (or `hooks/`, `providers/`, `pages/`) following the existing JSON schema: `{ name, type, title, description, category, version, tags, dependencies, registryDependencies, files: [{ path, content }] }`
 2. **Update the registry index** — add an entry to `registry/registry.json` items array with: name, type, title, description, category, version, registryDependencies, dependencies
-3. **Verify the Component Hub** — `npm run dev` and confirm the new component appears on the hub. The hub auto-reads from registry JSON files via `src/data/registryComponents.ts` (no manual mockComponents editing needed)
-4. **Verify after deploy** — confirm it appears on components.devfellowship.com
-5. **If it doesn't appear** — check that both the individual JSON file AND the registry.json entry exist, and that the JSON structure matches the schema
+3. **Update the Component Hub data** — re-generate `src/data/designSystemData.json` by running: `node scripts/generate-design-data.mjs`
+4. **Verify the Component Hub** — `npm run dev` and confirm the new component appears on the hub listing AND detail page
+5. **Verify after deploy** — confirm it appears on components.devfellowship.com
+6. **If it doesn't appear** — check that the individual JSON file, the registry.json entry, AND the designSystemData.json all include the component
 <!-- END MANUAL:repo/local-notes -->
