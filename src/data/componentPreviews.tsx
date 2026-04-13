@@ -202,6 +202,10 @@ import {
   AlertTriangle,
   Eye,
   EyeOff,
+  MoreVertical,
+  Copy,
+  Plus,
+  X,
 } from 'lucide-react';
 
 // --- Preview components ---
@@ -522,39 +526,94 @@ function BreadcrumbPreview() {
 }
 
 function CalendarPreview() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const today = 13;
+  const days = Array.from({ length: 30 }, (_, i) => i + 1);
   return (
-    <Calendar
-      mode="single"
-      selected={date}
-      onSelect={setDate}
-      className="rounded-md border border-border"
-    />
+    <div className="rounded-xl p-4" style={{ background: '#161B22', border: '1px solid #21262D' }}>
+      <div className="flex items-center justify-between mb-3">
+        <button style={{ color: '#8B949E' }}><ChevronLeft size={14} /></button>
+        <span style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 600, fontFamily: "'Barlow Condensed', sans-serif" }}>April 2026</span>
+        <button style={{ color: '#8B949E' }}><ChevronRight size={14} /></button>
+      </div>
+      <div className="grid grid-cols-7 gap-1 text-center">
+        {['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => (
+          <div key={d} style={{ color: '#8B949E', fontSize: 10, fontWeight: 600, padding: 4 }}>{d}</div>
+        ))}
+        {/* offset for April 2026 starting on Wednesday */}
+        {[0,0,0].map((_, i) => <div key={`blank-${i}`} />)}
+        {days.map((d) => (
+          <div
+            key={d}
+            className="flex items-center justify-center rounded-lg"
+            style={{
+              width: 28, height: 28,
+              fontSize: 11,
+              fontWeight: d === today ? 700 : 400,
+              color: d === today ? '#0D1117' : '#C6CDD5',
+              background: d === today ? '#F39325' : 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            {d}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
 function CarouselPreview() {
-  const colors = ['bg-[#F39325]/20', 'bg-[#A371F7]/20', 'bg-[#4AADE8]/20'];
-  const labels = ['Design', 'Develop', 'Deploy'];
+  const slides = [
+    { label: 'Stage 1 \u2014 Onboarding', color: '#F39325', sub: 'Weeks 1\u20134' },
+    { label: 'Stage 2 \u2014 Builder', color: '#4AADE8', sub: 'Weeks 5\u20138' },
+    { label: 'Stage 3 \u2014 Architect', color: '#A371F7', sub: 'Weeks 9\u201312' },
+  ];
+  const activeIdx = 0;
   return (
-    <Carousel className="w-full max-w-xs">
-      <CarouselContent>
-        {[0, 1, 2].map((i) => (
-          <CarouselItem key={i}>
-            <div className="p-1">
-              <div className={`flex aspect-square items-center justify-center rounded-md border border-border ${colors[i]}`}>
-                <div className="text-center">
-                  <span className="text-3xl font-bold">{i + 1}</span>
-                  <p className="text-sm text-muted-foreground mt-1">{labels[i]}</p>
-                </div>
-              </div>
+    <div className="flex flex-col gap-4 w-full max-w-sm">
+      <div className="relative overflow-hidden rounded-xl" style={{ height: 120 }}>
+        {/* Show first slide statically */}
+        <div className="flex h-full">
+          {slides.map((slide, i) => (
+            <div
+              key={slide.label}
+              className="flex-shrink-0 w-full h-full flex flex-col items-center justify-center gap-2"
+              style={{
+                background: `linear-gradient(135deg, ${slide.color}18, ${slide.color}08)`,
+                border: `1px solid ${slide.color}30`,
+                display: i === activeIdx ? 'flex' : 'none',
+              }}
+            >
+              <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: 18, color: slide.color }}>{slide.label}</p>
+              <p style={{ color: '#8B949E', fontSize: 13 }}>{slide.sub}</p>
             </div>
-          </CarouselItem>
+          ))}
+        </div>
+        {/* Arrows */}
+        <div
+          className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+          style={{ background: 'rgba(13,17,23,0.7)', border: '1px solid #21262D', color: '#8B949E' }}
+        >
+          <ChevronLeft size={14} />
+        </div>
+        <div
+          className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+          style={{ background: 'rgba(13,17,23,0.7)', border: '1px solid #21262D', color: '#8B949E' }}
+        >
+          <ChevronRight size={14} />
+        </div>
+      </div>
+      {/* Dots */}
+      <div className="flex items-center justify-center gap-2">
+        {slides.map((slide, i) => (
+          <div
+            key={i}
+            className="rounded-full"
+            style={{ width: i === activeIdx ? 20 : 6, height: 6, background: i === activeIdx ? slide.color : '#21262D', transition: 'width 0.2s' }}
+          />
         ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+      </div>
+    </div>
   );
 }
 
@@ -604,58 +663,82 @@ function CheckboxPreview() {
 }
 
 function CollapsiblePreview() {
-  const [open, setOpen] = useState(false);
   return (
-    <Collapsible open={open} onOpenChange={setOpen} className="w-full max-w-sm space-y-2">
-      <div className="flex items-center justify-between space-x-4">
-        <h4 className="text-sm font-semibold">3 items</h4>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm">
-            <ChevronsUpDown className="h-4 w-4" />
-          </Button>
-        </CollapsibleTrigger>
+    <div className="w-full max-w-sm flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <span style={{ color: '#E6EDF3', fontSize: 14, fontWeight: 600 }}>3 items</span>
+        <button
+          className="p-1.5 rounded-lg"
+          style={{ background: '#161B22', border: '1px solid #21262D', color: '#8B949E' }}
+        >
+          <ChevronsUpDown size={14} />
+        </button>
       </div>
-      <div className="rounded-md border border-border px-4 py-2 text-sm">Item 1</div>
-      <CollapsibleContent className="space-y-2">
-        <div className="rounded-md border border-border px-4 py-2 text-sm">Item 2</div>
-        <div className="rounded-md border border-border px-4 py-2 text-sm">Item 3</div>
-      </CollapsibleContent>
-    </Collapsible>
+      {['Item 1', 'Item 2', 'Item 3'].map((item) => (
+        <div
+          key={item}
+          className="rounded-xl px-4 py-2"
+          style={{ background: '#161B22', border: '1px solid #21262D', color: '#C6CDD5', fontSize: 13 }}
+        >
+          {item}
+        </div>
+      ))}
+    </div>
   );
 }
 
 function CommandPreview() {
   return (
-    <Command className="rounded-lg border border-border shadow-md w-full max-w-sm">
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Actions">
-          <CommandItem>Create new project</CommandItem>
-          <CommandItem>Deploy to production</CommandItem>
-          <CommandItem>View analytics</CommandItem>
-        </CommandGroup>
-        <CommandGroup heading="Navigation">
-          <CommandItem>Dashboard</CommandItem>
-          <CommandItem>Settings</CommandItem>
-        </CommandGroup>
-      </CommandList>
-    </Command>
+    <div
+      className="rounded-xl w-full max-w-sm overflow-hidden"
+      style={{ background: '#161B22', border: '1px solid #21262D', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
+    >
+      <div className="px-3 py-2.5" style={{ borderBottom: '1px solid #21262D' }}>
+        <p style={{ color: '#8B949E', fontSize: 13 }}>Type a command or search...</p>
+      </div>
+      <div className="flex flex-col p-1.5">
+        <p style={{ color: '#8B949E', fontSize: 11, fontWeight: 600, padding: '6px 8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Actions</p>
+        {['Create new project', 'Deploy to production', 'View analytics'].map((item) => (
+          <div key={item} className="px-3 py-2 rounded-lg" style={{ color: '#E6EDF3', fontSize: 13 }}>
+            {item}
+          </div>
+        ))}
+        <p style={{ color: '#8B949E', fontSize: 11, fontWeight: 600, padding: '6px 8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Navigation</p>
+        {['Dashboard', 'Settings'].map((item) => (
+          <div key={item} className="px-3 py-2 rounded-lg" style={{ color: '#E6EDF3', fontSize: 13 }}>
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
 function ContextMenuPreview() {
   return (
-    <ContextMenu>
-      <ContextMenuTrigger className="flex h-[80px] w-full max-w-sm items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground">
+    <div className="flex flex-col gap-3 w-full max-w-sm">
+      <div
+        className="flex h-[60px] items-center justify-center rounded-xl"
+        style={{ background: '#161B22', border: '1px dashed #30363D', color: '#8B949E', fontSize: 13 }}
+      >
         Right click here
-      </ContextMenuTrigger>
-      <ContextMenuContent>
-        <ContextMenuItem>Back</ContextMenuItem>
-        <ContextMenuItem>Forward</ContextMenuItem>
-        <ContextMenuItem>Reload</ContextMenuItem>
-      </ContextMenuContent>
-    </ContextMenu>
+      </div>
+      {/* Static context menu preview */}
+      <div
+        className="flex flex-col gap-0.5 p-1.5 rounded-xl"
+        style={{ background: '#1C2128', border: '1px solid #21262D', minWidth: 160, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
+      >
+        {['Back', 'Forward', 'Reload'].map((label) => (
+          <div
+            key={label}
+            className="px-3 py-2 rounded-lg"
+            style={{ color: '#C6CDD5', fontSize: 13 }}
+          >
+            {label}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -729,19 +812,40 @@ function DrawerPreview() {
 
 function DropdownMenuPreview() {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">
-          Open Menu <ChevronDown className="ml-2 h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-destructive">Log out</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="relative">
+      <button
+        className="flex items-center gap-2 px-3 py-2 rounded-xl"
+        style={{ background: '#161B22', border: '1px solid #21262D', color: '#C6CDD5', fontSize: 13 }}
+      >
+        <MoreVertical size={14} />
+        Actions
+        <ChevronDown size={12} />
+      </button>
+      {/* Static visible menu */}
+      <div
+        className="mt-1 flex flex-col gap-0.5 p-1.5 rounded-xl"
+        style={{ background: '#1C2128', border: '1px solid #21262D', minWidth: 180, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
+      >
+        {[
+          { icon: Eye, label: 'View details', color: '#C6CDD5' },
+          { icon: Copy, label: 'Duplicate', color: '#C6CDD5' },
+          { icon: Settings, label: 'Settings', color: '#C6CDD5' },
+          { icon: XCircle, label: 'Delete', color: '#EF4444' },
+        ].map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.label}
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg"
+              style={{ color: item.color, fontSize: 13 }}
+            >
+              <Icon size={13} />
+              {item.label}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -955,15 +1059,18 @@ function ResizablePreview() {
 
 function ScrollAreaPreview() {
   return (
-    <ScrollArea className="h-[120px] w-full max-w-sm rounded-md border border-border p-4">
-      <div className="space-y-2">
+    <div
+      className="h-[120px] w-full max-w-sm rounded-xl overflow-auto p-4"
+      style={{ background: '#161B22', border: '1px solid #21262D' }}
+    >
+      <div className="flex flex-col gap-2">
         {Array.from({ length: 15 }, (_, i) => (
-          <p key={i} className="text-sm text-muted-foreground">
+          <p key={i} style={{ color: '#8B949E', fontSize: 13 }}>
             Scrollable item {i + 1}
           </p>
         ))}
       </div>
-    </ScrollArea>
+    </div>
   );
 }
 
@@ -1069,58 +1176,39 @@ function SidebarPreview() {
 }
 
 function SonnerPreview() {
+  const toastDefs = [
+    { type: 'success', label: 'Success', icon: CheckCircle2, color: '#22C55E', bg: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.3)', msg: 'Task approved successfully.' },
+    { type: 'error', label: 'Error', icon: XCircle, color: '#EF4444', bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.3)', msg: 'Something went wrong. Try again.' },
+    { type: 'warning', label: 'Warning', icon: AlertTriangle, color: '#F4C542', bg: 'rgba(244,197,66,0.1)', border: 'rgba(244,197,66,0.3)', msg: 'Submission pending review.' },
+    { type: 'info', label: 'Info', icon: Info, color: '#06B6D4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.3)', msg: 'New batch starts Monday.' },
+  ];
   return (
-    <div className="space-y-3">
-      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Toast Notifications</p>
-      <div className="flex flex-wrap items-center gap-2">
-        <Button
-          size="sm"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white"
-          onClick={() => {
-            import('sonner').then(({ toast }) => {
-              toast.success('Task completed successfully');
-            });
-          }}
-        >
-          <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
-          Success
-        </Button>
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={() => {
-            import('sonner').then(({ toast }) => {
-              toast.error('Something went wrong');
-            });
-          }}
-        >
-          <XCircle className="mr-1 h-3.5 w-3.5" />
-          Error
-        </Button>
-        <Button
-          size="sm"
-          className="bg-amber-500 hover:bg-amber-600 text-black"
-          onClick={() => {
-            import('sonner').then(({ toast }) => {
-              toast.warning('Please review before continuing');
-            });
-          }}
-        >
-          <AlertTriangle className="mr-1 h-3.5 w-3.5" />
-          Warning
-        </Button>
-        <Button
-          size="sm"
-          className="bg-[#4AADE8] hover:bg-[#4AADE8]/80 text-black"
-          onClick={() => {
-            import('sonner').then(({ toast }) => {
-              toast.info('New version available');
-            });
-          }}
-        >
-          <Info className="mr-1 h-3.5 w-3.5" />
-          Info
-        </Button>
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex flex-wrap gap-2">
+        {toastDefs.map((t) => {
+          const Icon = t.icon;
+          return (
+            <button
+              key={t.type}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
+              style={{ background: t.bg, border: `1px solid ${t.border}`, color: t.color, fontSize: 12, fontWeight: 600, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.04em' }}
+            >
+              <Icon size={13} />
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+      {/* Sample toast card */}
+      <div
+        className="flex items-center gap-3 px-4 py-3 rounded-xl w-full max-w-xs"
+        style={{ background: '#1C2128', border: '1px solid rgba(34,197,94,0.3)', boxShadow: '0 0 24px rgba(34,197,94,0.1)' }}
+      >
+        <CheckCircle2 size={16} color="#22C55E" className="shrink-0" />
+        <p style={{ color: '#E6EDF3', fontSize: 13, flex: 1 }}>Task approved successfully.</p>
+        <button style={{ color: '#6B7280' }}>
+          <X size={13} />
+        </button>
       </div>
     </div>
   );
@@ -1327,16 +1415,22 @@ function TextareaPreview() {
 
 function ToastPreview() {
   return (
-    <div className="w-full max-w-sm border border-border rounded-md p-4 bg-muted/10 flex items-center justify-center min-h-[60px]">
-      <p className="text-sm text-muted-foreground">Toast primitive — use with Toaster component</p>
+    <div
+      className="w-full max-w-sm rounded-xl p-4 flex items-center justify-center min-h-[60px]"
+      style={{ background: '#161B22', border: '1px solid #21262D' }}
+    >
+      <p style={{ color: '#8B949E', fontSize: 13 }}>Toast primitive — use with Toaster component</p>
     </div>
   );
 }
 
 function ToasterPreview() {
   return (
-    <div className="w-full max-w-sm border border-border rounded-md p-4 bg-muted/10 flex items-center justify-center min-h-[60px]">
-      <p className="text-sm text-muted-foreground">Toaster — renders toast notifications globally</p>
+    <div
+      className="w-full max-w-sm rounded-xl p-4 flex items-center justify-center min-h-[60px]"
+      style={{ background: '#161B22', border: '1px solid #21262D' }}
+    >
+      <p style={{ color: '#8B949E', fontSize: 13 }}>Toaster — renders toast notifications globally</p>
     </div>
   );
 }
@@ -1344,29 +1438,54 @@ function ToasterPreview() {
 function TogglePreview() {
   return (
     <div className="flex gap-2">
-      <Toggle aria-label="Toggle bold">
-        <Bold className="h-4 w-4" />
-      </Toggle>
-      <Toggle aria-label="Toggle italic">
-        <Italic className="h-4 w-4" />
-      </Toggle>
+      {[
+        { icon: Bold, label: 'Bold', active: true },
+        { icon: Italic, label: 'Italic', active: false },
+      ].map((t) => {
+        const Icon = t.icon;
+        return (
+          <button
+            key={t.label}
+            className="p-2 rounded-lg"
+            style={{
+              background: t.active ? 'rgba(163,113,247,0.12)' : '#161B22',
+              border: `1px solid ${t.active ? 'rgba(163,113,247,0.35)' : '#21262D'}`,
+              color: t.active ? '#A371F7' : '#8B949E',
+            }}
+          >
+            <Icon size={14} />
+          </button>
+        );
+      })}
     </div>
   );
 }
 
 function ToggleGroupPreview() {
+  const items = [
+    { icon: AlignLeft, value: 'left', active: true },
+    { icon: AlignCenter, value: 'center', active: false },
+    { icon: AlignRight, value: 'right', active: false },
+  ];
   return (
-    <ToggleGroup type="single" defaultValue="left">
-      <ToggleGroupItem value="left" aria-label="Align left">
-        <AlignLeft className="h-4 w-4" />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="center" aria-label="Align center">
-        <AlignCenter className="h-4 w-4" />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="right" aria-label="Align right">
-        <AlignRight className="h-4 w-4" />
-      </ToggleGroupItem>
-    </ToggleGroup>
+    <div className="flex rounded-xl overflow-hidden" style={{ border: '1px solid #21262D' }}>
+      {items.map((t) => {
+        const Icon = t.icon;
+        return (
+          <button
+            key={t.value}
+            className="p-2.5"
+            style={{
+              background: t.active ? 'rgba(163,113,247,0.12)' : '#161B22',
+              color: t.active ? '#A371F7' : '#8B949E',
+              borderRight: '1px solid #21262D',
+            }}
+          >
+            <Icon size={14} />
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -1387,12 +1506,17 @@ function TooltipPreview() {
 
 function ProgressPreview() {
   return (
-    <div className="w-full max-w-sm space-y-2">
-      <div className="flex justify-between text-sm">
-        <Label>Processing tasks</Label>
-        <span className="text-muted-foreground font-medium">68%</span>
+    <div className="w-full max-w-sm flex flex-col gap-2">
+      <div className="flex justify-between">
+        <span style={{ color: '#8B949E', fontSize: 12 }}>Processing tasks</span>
+        <span style={{ color: '#A371F7', fontSize: 12, fontWeight: 700 }}>68%</span>
       </div>
-      <Progress value={68} />
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#21262D' }}>
+        <div
+          className="h-full rounded-full"
+          style={{ width: '68%', background: 'linear-gradient(90deg, #A371F7, #06B6D4)' }}
+        />
+      </div>
     </div>
   );
 }
@@ -1650,6 +1774,45 @@ function CardGridPreview() {
   );
 }
 
+function ButtonGroupPreview() {
+  return (
+    <div className="flex flex-wrap gap-3">
+      {/* Brand orange variant */}
+      <div className="flex items-stretch rounded-xl overflow-hidden" style={{ border: '1px solid rgba(243,147,37,0.4)' }}>
+        <button
+          className="flex items-center gap-2 px-4 py-2.5"
+          style={{ background: 'rgba(243,147,37,0.12)', color: '#F39325', fontSize: 13, fontWeight: 700, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.04em', borderRight: '1px solid rgba(243,147,37,0.3)' }}
+        >
+          <Plus size={14} />
+          New Task
+        </button>
+        <button
+          className="flex items-center px-3 py-2.5"
+          style={{ background: 'rgba(243,147,37,0.07)', color: '#F39325' }}
+        >
+          <ChevronDown size={14} />
+        </button>
+      </div>
+      {/* Stage3 purple variant */}
+      <div className="flex items-stretch rounded-xl overflow-hidden" style={{ border: '1px solid rgba(163,113,247,0.4)' }}>
+        <button
+          className="flex items-center gap-2 px-4 py-2.5"
+          style={{ background: 'rgba(163,113,247,0.12)', color: '#A371F7', fontSize: 13, fontWeight: 700, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.04em', borderRight: '1px solid rgba(163,113,247,0.3)' }}
+        >
+          <Shield size={14} />
+          Approve
+        </button>
+        <button
+          className="flex items-center px-3 py-2.5"
+          style={{ background: 'rgba(163,113,247,0.07)', color: '#A371F7' }}
+        >
+          <ChevronDown size={14} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // --- Data maps ---
 
 export interface ComponentPreviewData {
@@ -1745,6 +1908,19 @@ export const componentPreviews: Record<string, ComponentPreviewData> = {
 <Button variant="secondary">Secondary</Button>
 <Button variant="destructive">Delete</Button>
 <Button variant="outline" size="sm">Small</Button>`,
+  },
+  'Button Group': {
+    preview: <ButtonGroupPreview />,
+    usage: `{/* Split button: primary action + dropdown */}
+<div className="flex items-stretch rounded-xl overflow-hidden"
+     style={{ border: '1px solid rgba(243,147,37,0.4)' }}>
+  <button style={{ background: 'rgba(243,147,37,0.12)', color: '#F39325' }}>
+    <Plus size={14} /> New Task
+  </button>
+  <button style={{ background: 'rgba(243,147,37,0.07)', color: '#F39325' }}>
+    <ChevronDown size={14} />
+  </button>
+</div>`,
   },
   Calendar: {
     preview: <CalendarPreview />,
