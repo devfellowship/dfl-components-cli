@@ -20,7 +20,7 @@ src/                          # Showcase web app
 │   ├── auth/                 # LoginPage, RegisterPage (placeholders)
 │   ├── observability/        # OTel tracing
 │   └── ui/                   # shadcn/ui primitives
-├── data/mockComponents.ts    # Component catalog (mock)
+├── data/registryComponents.ts # Component catalog (auto-generated from registry/)
 ├── types/component.ts        # Component type definition
 packages/cli/                 # CLI tool
 ├── src/
@@ -43,7 +43,7 @@ registry/                     # JSON component registry
 - CLI: `cd packages/cli && npm run build` (tsup)
 - Registry JSON files define components with: name, type, files, dependencies
 - CLI reads registry.json, resolves aliases, copies files into target project
-- Showcase app uses mock data — update `data/mockComponents.ts` to add demos
+- Showcase app reads from registry — data auto-generated from `registry/` JSON files via `src/data/registryComponents.ts`
 
 ## Contracts
 - **Registry format**: `{ name, type, files: [{ path, content }], dependencies }` per component
@@ -65,5 +65,13 @@ registry/                     # JSON component registry
 <!-- END GENERATED:claude/base -->
 
 <!-- BEGIN MANUAL:repo/local-notes -->
-<!-- repo-specific notes live here -->
+## Adding a New Component or Hook
+
+When adding a new component or hook to @dfl/components:
+
+1. **Add the component source** — create `registry/components/<name>.json` (or `hooks/`, `providers/`, `pages/`) following the existing JSON schema: `{ name, type, title, description, category, version, tags, dependencies, registryDependencies, files: [{ path, content }] }`
+2. **Update the registry index** — add an entry to `registry/registry.json` items array with: name, type, title, description, category, version, registryDependencies, dependencies
+3. **Verify the Component Hub** — `npm run dev` and confirm the new component appears on the hub. The hub auto-reads from registry JSON files via `src/data/registryComponents.ts` (no manual mockComponents editing needed)
+4. **Verify after deploy** — confirm it appears on components.devfellowship.com
+5. **If it doesn't appear** — check that both the individual JSON file AND the registry.json entry exist, and that the JSON structure matches the schema
 <!-- END MANUAL:repo/local-notes -->

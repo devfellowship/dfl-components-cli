@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Component } from '@/types/component';
-import { mockComponents } from '@/data/mockComponents';
+import { registryComponents } from '@/data/registryComponents';
 import { ComponentHeader } from './ComponentHeader';
 import { ComponentCard } from './ComponentCard';
 import { ComponentDetailModal } from './ComponentDetailModal';
@@ -18,7 +18,7 @@ const ComponentHubApp: React.FC = () => {
 
   const categories = ['all', 'UI', 'Hooks', 'Providers', 'Pages'];
 
-  const filteredComponents = mockComponents.filter(component => {
+  const filteredComponents = registryComponents.filter(component => {
     const matchesSearch = component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          component.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === 'all' || component.category === selectedCategory;
@@ -45,7 +45,7 @@ const ComponentHubApp: React.FC = () => {
   };
 
   const handleBulkCopy = () => {
-    const selectedComponentsData = mockComponents.filter(comp => 
+    const selectedComponentsData = registryComponents.filter(comp =>
       selectedComponents.has(comp.id)
     );
 
