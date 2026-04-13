@@ -7,8 +7,27 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Component } from '@/types/component';
 import { mockComponents } from '@/data/mockComponents';
+import designSystemData from '@/data/designSystemData.json';
 import { ComponentSidebar } from '@/components/ComponentSidebar';
 import { CategoryIcon } from '@/components/CategoryIcon';
+
+// Merge: use designSystemData for all components, enrich with mockComponents for previews/code
+const allComponents: Component[] = designSystemData.components.map((ds, idx) => {
+  const slug = ds.name.toLowerCase().replace(/\s+/g, '-');
+  const mock = mockComponents.find(m => m.name.toLowerCase() === ds.name.toLowerCase());
+  return {
+    id: mock?.id || `ds-${idx}`,
+    name: ds.name,
+    description: mock?.description || `${ds.name} component`,
+    category: (ds.category || 'UI') as Component['category'],
+    tags: mock?.tags || [ds.name.toLowerCase()],
+    version: mock?.version || '1.0.0',
+    filePath: `src/components/ui/${ds.file}`,
+    code: mock?.code || `import { ${ds.name.replace(/\s+/g, '')} } from '@/components/ui/${ds.file.replace('.tsx', '')}';`,
+    previewComponent: mock?.previewComponent,
+    subPages: mock?.subPages,
+  };
+});
 
 function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -17,7 +36,7 @@ function slugify(name: string): string {
 const ComponentsListing: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredComponents = mockComponents.filter(component => {
+  const filteredComponents = allComponents.filter(component => {
     if (!searchTerm) return true;
     const q = searchTerm.toLowerCase();
     return (
@@ -37,7 +56,7 @@ const ComponentsListing: React.FC = () => {
 
   return (
     <SidebarProvider>
-      <ComponentSidebar components={mockComponents} />
+      <ComponentSidebar components={allComponents} />
       <SidebarInset>
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-6 py-3">

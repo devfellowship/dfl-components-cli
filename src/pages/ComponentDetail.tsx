@@ -14,7 +14,27 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { mockComponents } from '@/data/mockComponents';
+import { Component } from '@/types/component';
+import designSystemData from '@/data/designSystemData.json';
 import { ComponentSidebar } from '@/components/ComponentSidebar';
+
+// Merge all components (same logic as ComponentsListing)
+const allComponents: Component[] = designSystemData.components.map((ds, idx) => {
+  const slug = ds.name.toLowerCase().replace(/\s+/g, '-');
+  const mock = mockComponents.find(m => m.name.toLowerCase() === ds.name.toLowerCase());
+  return {
+    id: mock?.id || `ds-${idx}`,
+    name: ds.name,
+    description: mock?.description || `${ds.name} component`,
+    category: (ds.category || 'UI') as Component['category'],
+    tags: mock?.tags || [ds.name.toLowerCase()],
+    version: mock?.version || '1.0.0',
+    filePath: `src/components/ui/${ds.file}`,
+    code: mock?.code || `import { ${ds.name.replace(/\s+/g, '')} } from '@/components/ui/${ds.file.replace('.tsx', '')}';`,
+    previewComponent: mock?.previewComponent,
+    subPages: mock?.subPages,
+  };
+});
 
 function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -59,12 +79,12 @@ function CodeBlock({ code, label }: { code: string; label?: string }) {
 
 const ComponentDetail: React.FC = () => {
   const { name } = useParams<{ name: string }>();
-  const component = mockComponents.find(c => slugify(c.name) === name);
+  const component = allComponents.find(c => slugify(c.name) === name);
 
   if (!component) {
     return (
       <SidebarProvider>
-        <ComponentSidebar components={mockComponents} />
+        <ComponentSidebar components={allComponents} />
         <SidebarInset>
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
@@ -96,7 +116,7 @@ const ComponentDetail: React.FC = () => {
 
   return (
     <SidebarProvider>
-      <ComponentSidebar components={mockComponents} />
+      <ComponentSidebar components={allComponents} />
       <SidebarInset>
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-6 py-3">
