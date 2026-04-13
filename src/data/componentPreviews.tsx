@@ -174,9 +174,15 @@ import {
   Bold,
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronsUpDown,
+  FileText,
+  Folder,
+  Home,
   Italic,
   Minus,
+  Star,
   Terminal,
   Bell,
   AlignLeft,
@@ -433,21 +439,32 @@ function AvatarPreview() {
 
 function BreadcrumbPreview() {
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Home</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Stage 2</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <span className="text-foreground font-medium">Sprint 4</span>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
+    <div className="flex items-center gap-1.5" style={{ fontFamily: "'Inter', sans-serif" }}>
+      {/* Home */}
+      <button className="flex items-center gap-1" style={{ color: '#8B949E', fontSize: 13, background: 'none', border: 'none', cursor: 'pointer' }}>
+        <Home size={13} />
+        <span>Home</span>
+      </button>
+      <ChevronRight size={12} style={{ color: '#30363D', flexShrink: 0 }} />
+      {/* Stage 2 with dropdown indicator */}
+      <button
+        className="flex items-center gap-1 px-2 py-1 rounded-lg"
+        style={{ color: '#C6CDD5', fontSize: 13, background: 'transparent', border: '1px solid transparent', cursor: 'pointer' }}
+      >
+        <Folder size={13} />
+        <span>Stage 2</span>
+        <ChevronDown size={11} />
+      </button>
+      <ChevronRight size={12} style={{ color: '#30363D', flexShrink: 0 }} />
+      {/* Active page */}
+      <span
+        className="flex items-center gap-1 px-2 py-1 rounded-lg"
+        style={{ background: 'rgba(74,173,232,0.1)', color: '#4AADE8', fontSize: 13, fontWeight: 600 }}
+      >
+        <FileText size={13} />
+        Sprint 4
+      </span>
+    </div>
   );
 }
 
@@ -591,58 +608,69 @@ function ContextMenuPreview() {
 
 function DialogPreview() {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Open Modal</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Confirm Action</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to proceed? This will apply changes to all selected items in the current workspace.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4">
-          <p className="text-sm text-muted-foreground">Review the changes carefully before confirming. This operation may take a few seconds to complete.</p>
+    <div className="flex flex-col gap-4">
+      <Button style={{ background: '#161B22', border: '1px solid #21262D', color: '#E6EDF3' }}>Open Modal</Button>
+      {/* Static modal preview */}
+      <div
+        className="rounded-xl p-5 w-full max-w-sm"
+        style={{ background: '#1C2128', border: '1px solid #21262D', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
+      >
+        <h3 style={{ color: '#E6EDF3', fontSize: 15, fontWeight: 600, marginBottom: 6 }}>Confirm action</h3>
+        <p style={{ color: '#8B949E', fontSize: 13, lineHeight: 1.5, marginBottom: 16 }}>
+          This will permanently delete the selected batch and all associated data. This action cannot be undone.
+        </p>
+        <div className="flex items-center gap-2 justify-end">
+          <button
+            className="px-4 py-2 rounded-lg"
+            style={{ background: 'transparent', border: '1px solid #21262D', color: '#C6CDD5', fontSize: 13, cursor: 'pointer' }}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 rounded-lg"
+            style={{ background: 'rgba(248,81,73,0.15)', border: '1px solid rgba(248,81,73,0.4)', color: '#F85149', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+          >
+            Delete Batch
+          </button>
         </div>
-        <DialogFooter>
-          <Button variant="outline">Cancel</Button>
-          <Button>Confirm</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }
 
 function DrawerPreview() {
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button variant="outline">Open Drawer</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Edit Profile</DrawerTitle>
-          <DrawerDescription>Make changes to your profile here.</DrawerDescription>
-        </DrawerHeader>
-        <div className="p-4 space-y-3">
-          <div className="space-y-1.5">
-            <Label htmlFor="drawer-name">Display name</Label>
-            <Input id="drawer-name" defaultValue="Tainan Fidelis" />
+    <div className="flex flex-col gap-4">
+      <Button style={{ background: '#161B22', border: '1px solid #21262D', color: '#E6EDF3' }}>Open Drawer</Button>
+      {/* Static drawer preview */}
+      <div
+        className="rounded-xl p-5 w-full max-w-sm"
+        style={{ background: '#161B22', border: '1px solid #21262D' }}
+      >
+        {/* Drag handle */}
+        <div className="flex justify-center mb-3">
+          <div style={{ width: 32, height: 4, borderRadius: 2, background: '#30363D' }} />
+        </div>
+        <h3 style={{ color: '#E6EDF3', fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Edit Profile</h3>
+        <p style={{ color: '#8B949E', fontSize: 13, lineHeight: 1.5, marginBottom: 16 }}>
+          Make changes to your profile here.
+        </p>
+        <div className="flex flex-col gap-3">
+          <div>
+            <label style={{ color: '#C6CDD5', fontSize: 12, fontWeight: 500, display: 'block', marginBottom: 4 }}>Display name</label>
+            <div className="rounded-lg px-3 py-2" style={{ background: '#0D1117', border: '1px solid #21262D', color: '#E6EDF3', fontSize: 13 }}>Tainan Fidelis</div>
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="drawer-bio">Bio</Label>
-            <Textarea id="drawer-bio" placeholder="Tell us about yourself..." />
+          <div className="flex items-center gap-2">
+            <button className="flex-1 px-4 py-2 rounded-lg" style={{ background: 'rgba(243,147,37,0.12)', border: '1px solid rgba(243,147,37,0.3)', color: '#F39325', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+              Save Changes
+            </button>
+            <button className="px-4 py-2 rounded-lg" style={{ background: 'transparent', border: '1px solid #21262D', color: '#C6CDD5', fontSize: 13, cursor: 'pointer' }}>
+              Cancel
+            </button>
           </div>
         </div>
-        <DrawerFooter>
-          <Button>Save Changes</Button>
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+      </div>
+    </div>
   );
 }
 
@@ -714,83 +742,106 @@ function LabelPreview() {
 }
 
 function MenubarPreview() {
+  const menus = ['File', 'Edit', 'View', 'Help'];
   return (
-    <Menubar>
-      <MenubarMenu>
-        <MenubarTrigger>File</MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>New Tab</MenubarItem>
-          <MenubarItem>New Window</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Print</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-      <MenubarMenu>
-        <MenubarTrigger>Edit</MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>Undo</MenubarItem>
-          <MenubarItem>Redo</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Cut</MenubarItem>
-          <MenubarItem>Copy</MenubarItem>
-          <MenubarItem>Paste</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-    </Menubar>
+    <div
+      className="flex items-center gap-0 rounded-xl px-1"
+      style={{ background: '#0D1117', border: '1px solid #21262D' }}
+    >
+      {menus.map((menu, i) => (
+        <button
+          key={menu}
+          className="px-3 py-2 rounded-lg"
+          style={{
+            fontSize: 13,
+            color: i === 0 ? '#E6EDF3' : '#8B949E',
+            background: i === 0 ? '#161B22' : 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            fontWeight: i === 0 ? 500 : 400,
+          }}
+        >
+          {menu}
+        </button>
+      ))}
+    </div>
   );
 }
 
 function NavigationMenuPreview() {
+  const navItems = ['Dashboard', 'Kanban', 'Materials', 'Exams'];
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuLink className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground" href="#">
-            Home
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground" href="#">
-            About
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink className="px-3 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground" href="#">
-            Contact
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <div className="w-full overflow-x-auto">
+      <div
+        className="flex items-center gap-4 px-5 py-3 rounded-xl"
+        style={{ background: '#0D1117', border: '1px solid #21262D', minWidth: 480 }}
+      >
+        {/* Logo */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(243,147,37,0.2)' }}>
+            <Star size={13} style={{ color: '#F39325' }} />
+          </div>
+          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: '#F39325', fontSize: 15, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>DEVFELLOWSHIP</span>
+        </div>
+        {/* Nav links */}
+        <nav className="flex items-center gap-1 ml-6 shrink-0">
+          {navItems.map((item, i) => (
+            <button
+              key={item}
+              className="px-3 py-1.5 rounded-lg"
+              style={i === 0
+                ? { background: 'rgba(243,147,37,0.12)', color: '#F39325', fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer' }
+                : { color: '#8B949E', fontSize: 13, background: 'none', border: 'none', cursor: 'pointer' }
+              }
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
+        {/* User actions */}
+        <div className="flex items-center gap-2 ml-auto shrink-0">
+          <button className="p-1.5 rounded-lg" style={{ color: '#8B949E', background: 'none', border: 'none', cursor: 'pointer' }}>
+            <Bell size={15} />
+          </button>
+          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: 'rgba(163,113,247,0.18)', border: '1.5px solid rgba(163,113,247,0.35)' }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: '#A371F7' }}>JP</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
 function PaginationPreview() {
+  const activePage = 2;
+  const pages: (number | string)[] = [1, 2, 3, '…', 8];
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItemComp>
-          <PaginationPrevious href="#" />
-        </PaginationItemComp>
-        <PaginationItemComp>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItemComp>
-        <PaginationItemComp>
-          <PaginationLink href="#" isActive>2</PaginationLink>
-        </PaginationItemComp>
-        <PaginationItemComp>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItemComp>
-        <PaginationItemComp>
-          <PaginationEllipsis />
-        </PaginationItemComp>
-        <PaginationItemComp>
-          <PaginationLink href="#">8</PaginationLink>
-        </PaginationItemComp>
-        <PaginationItemComp>
-          <PaginationNext href="#" />
-        </PaginationItemComp>
-      </PaginationContent>
-    </Pagination>
+    <div className="flex flex-wrap items-center gap-1">
+      <button
+        className="flex items-center gap-1 px-3 py-1.5 rounded-lg"
+        style={{ background: '#161B22', border: '1px solid #21262D', color: '#8B949E', fontSize: 12, cursor: 'pointer' }}
+      >
+        <ChevronLeft size={13} /> Prev
+      </button>
+      {pages.map((n, i) => (
+        <button
+          key={i}
+          className="w-8 h-8 rounded-lg flex items-center justify-center"
+          style={n === activePage
+            ? { background: 'rgba(163,113,247,0.16)', border: '1px solid rgba(163,113,247,0.4)', color: '#A371F7', fontWeight: 700, fontSize: 13 }
+            : { background: 'transparent', color: '#8B949E', fontSize: 13, border: '1px solid transparent' }
+          }
+        >
+          {n}
+        </button>
+      ))}
+      <button
+        className="flex items-center gap-1 px-3 py-1.5 rounded-lg"
+        style={{ background: '#161B22', border: '1px solid #21262D', color: '#8B949E', fontSize: 12, cursor: 'pointer' }}
+      >
+        Next <ChevronRight size={13} />
+      </button>
+    </div>
   );
 }
 
@@ -937,22 +988,22 @@ function SeparatorPreview() {
 
 function SheetPreview() {
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline">Open Sheet</Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Sheet Title</SheetTitle>
-          <SheetDescription>
-            This is a sheet panel that slides in from the side.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="py-4">
-          <p className="text-sm text-muted-foreground">Sheet content goes here.</p>
+    <div className="flex flex-col gap-4">
+      <Button style={{ background: '#161B22', border: '1px solid #21262D', color: '#E6EDF3' }}>Open Sheet</Button>
+      {/* Static sheet preview */}
+      <div
+        className="rounded-xl p-5 w-full max-w-xs"
+        style={{ background: '#161B22', border: '1px solid #21262D', minHeight: 120 }}
+      >
+        <h3 style={{ color: '#E6EDF3', fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Sheet Panel</h3>
+        <p style={{ color: '#8B949E', fontSize: 13, lineHeight: 1.5, marginBottom: 12 }}>
+          Slides in from the side for contextual actions.
+        </p>
+        <div style={{ borderTop: '1px solid #21262D', paddingTop: 12 }}>
+          <p style={{ color: '#C6CDD5', fontSize: 12 }}>Sheet content area</p>
         </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </div>
   );
 }
 
@@ -1126,30 +1177,35 @@ function TablePreview() {
 }
 
 function TabsPreview() {
+  const tabs = [
+    { label: 'Overview', active: true },
+    { label: 'Sprints', active: false },
+    { label: 'Members', active: false },
+    { label: 'Settings', active: false },
+  ];
   return (
-    <Tabs defaultValue="account" className="w-full max-w-sm">
-      <TabsList>
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
-        <TabsTrigger value="settings">Settings</TabsTrigger>
-      </TabsList>
-      <TabsContent value="account" className="space-y-3 pt-2">
-        <div className="space-y-1.5">
-          <Label htmlFor="tab-name">Name</Label>
-          <Input id="tab-name" defaultValue="Tainan Fidelis" />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="tab-email">Email</Label>
-          <Input id="tab-email" defaultValue="tainan@devfellowship.com" />
-        </div>
-      </TabsContent>
-      <TabsContent value="password" className="text-sm text-muted-foreground pt-2">
-        Change your password here.
-      </TabsContent>
-      <TabsContent value="settings" className="text-sm text-muted-foreground pt-2">
-        Manage notification and display preferences.
-      </TabsContent>
-    </Tabs>
+    <div
+      className="flex items-center gap-0 rounded-xl overflow-hidden"
+      style={{ background: '#0D1117', border: '1px solid #21262D' }}
+    >
+      {tabs.map((tab) => (
+        <button
+          key={tab.label}
+          className="px-4 py-2.5 relative"
+          style={{
+            fontSize: 13,
+            fontWeight: tab.active ? 600 : 400,
+            color: tab.active ? '#F39325' : '#8B949E',
+            background: tab.active ? 'rgba(243,147,37,0.08)' : 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            borderBottom: tab.active ? '2px solid #F39325' : '2px solid transparent',
+          }}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
   );
 }
 
