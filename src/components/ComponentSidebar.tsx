@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronRight, Layout, Zap, Users, Code, BarChart3 } from 'lucide-react';
+import { ChevronRight, Layout, Zap, Users, Code } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -73,14 +73,6 @@ export const ComponentSidebar: React.FC<ComponentSidebarProps> = ({ components }
                   <Link to="/components">
                     <Layout className="w-4 h-4" />
                     <span>All Components</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={location.pathname === '/design-system'}>
-                  <Link to="/design-system">
-                    <BarChart3 className="w-4 h-4" />
-                    <span>Design System</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Eye } from 'lucide-react';
+import { CheckCircle2, Search, Eye } from 'lucide-react';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { Component } from '@/types/component';
 import { mockComponents } from '@/data/mockComponents';
 import designSystemData from '@/data/designSystemData.json';
 import { ComponentSidebar } from '@/components/ComponentSidebar';
-import { CategoryIcon } from '@/components/CategoryIcon';
 import { componentPreviews } from '@/data/componentPreviews';
 
 // Merge: use designSystemData for all components, enrich with mockComponents for previews/code
 const allComponents: Component[] = designSystemData.components.map((ds, idx) => {
-  const slug = ds.name.toLowerCase().replace(/\s+/g, '-');
   const mock = mockComponents.find(m => m.name.toLowerCase() === ds.name.toLowerCase());
   return {
     id: mock?.id || `ds-${idx}`,
@@ -36,21 +34,30 @@ function slugify(name: string): string {
 
 const ComponentsListing: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
 
-  const filteredComponents = allComponents.filter(component => {
-    if (!searchTerm) return true;
-    const q = searchTerm.toLowerCase();
-    return (
-      component.name.toLowerCase().includes(q) ||
-      component.description.toLowerCase().includes(q) ||
-      component.tags.some(tag => tag.toLowerCase().includes(q))
-    );
+  const { components, totalComponents } = designSystemData;
+
+  const availableCount = components.filter(c => c.available).length;
+
+  const filtered = allComponents.filter(comp => {
+    const matchesSearch = !searchTerm ||
+      comp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      comp.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      comp.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    const dsComp = components.find(c => c.name.toLowerCase() === comp.name.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || (dsComp?.category || comp.category) === categoryFilter;
+    return matchesSearch && matchesCategory;
   });
 
-  const categories = ['UI', 'Hooks', 'Providers', 'Pages'] as const;
+  const categories = [...new Set(components.map(c => c.category))];
 
+  // Group filtered components by category
   const grouped = categories.reduce<Record<string, Component[]>>((acc, cat) => {
-    const items = filteredComponents.filter(c => c.category === cat);
+    const items = filtered.filter(c => {
+      const dsComp = components.find(d => d.name.toLowerCase() === c.name.toLowerCase());
+      return (dsComp?.category || c.category) === cat;
+    });
     if (items.length > 0) acc[cat] = items;
     return acc;
   }, {});
@@ -74,66 +81,113 @@ const ComponentsListing: React.FC = () => {
           </div>
         </header>
 
-        {/* Main content */}
+        {/* Content */}
         <div className="p-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight">Components</h1>
+            <h1 className="text-3xl font-bold tracking-tight">All Components</h1>
             <p className="text-muted-foreground mt-1">
               Browse, preview, and copy DFL shared components.
             </p>
           </div>
 
-          {Object.entries(grouped).map(([category, components]) => (
-            <div key={category} className="mb-10">
-              <div className="flex items-center gap-2 mb-4">
-                <CategoryIcon category={category as Component['category']} />
+          {/* Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div className="rounded-lg border border-border p-4 bg-muted/20">
+              <p className="text-sm text-muted-foreground">Available</p>
+              <p className="text-3xl font-bold text-green-400">{availableCount}</p>
+            </div>
+            <div className="rounded-lg border border-border p-4 bg-muted/20">
+              <p className="text-sm text-muted-foreground">Total</p>
+              <p className="text-3xl font-bold">{totalComponents}</p>
+            </div>
+            <div className="rounded-lg border border-border p-4 bg-muted/20">
+              <p className="text-sm text-muted-foreground">Shown</p>
+              <p className="text-3xl font-bold text-blue-400">{filtered.length}</p>
+            </div>
+          </div>
+
+          {/* Category filters */}
+          <div className="flex items-center gap-2 flex-wrap mb-8">
+            <button
+              onClick={() => setCategoryFilter('all')}
+              className={`px-3 py-1.5 text-sm rounded-md border transition-colors ${
+                categoryFilter === 'all'
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'border-border text-muted-foreground hover:bg-muted'
+              }`}
+            >
+              All
+            </button>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setCategoryFilter(cat)}
+                className={`px-3 py-1.5 text-sm rounded-md border transition-colors ${
+                  categoryFilter === cat
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'border-border text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Single-column gallery by category */}
+          {Object.entries(grouped).map(([category, comps]) => (
+            <div key={category} className="mb-12">
+              <div className="flex items-center gap-2 mb-5">
                 <h2 className="text-xl font-semibold">{category}</h2>
-                <span className="text-sm text-muted-foreground">({components.length})</span>
+                <span className="text-sm text-muted-foreground">({comps.length})</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {components.map(comp => (
-                  <Link key={comp.id} to={`/components/${slugify(comp.name)}`} className="group">
-                    <Card className="h-full p-5 transition-colors hover:bg-accent/50 hover:border-accent-foreground/20">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold group-hover:text-blue-400 transition-colors">
+              <div className="space-y-4">
+                {comps.map(comp => {
+                  const preview = componentPreviews[comp.name];
+                  const dsComp = components.find(d => d.name.toLowerCase() === comp.name.toLowerCase());
+                  const isAvailable = dsComp?.available ?? true;
+
+                  return (
+                    <div
+                      key={comp.name}
+                      className="rounded-lg border border-border bg-card overflow-hidden transition-colors hover:border-accent-foreground/20"
+                    >
+                      {/* Header row */}
+                      <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/20">
+                        <Link
+                          to={`/components/${slugify(comp.name)}`}
+                          className="text-base font-semibold hover:text-blue-400 transition-colors"
+                        >
                           {comp.name}
-                        </h3>
-                        <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                          v{comp.version}
-                        </span>
+                        </Link>
+                        {isAvailable && (
+                          <Badge variant="secondary" className="text-xs gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-green-400" />
+                            Available
+                          </Badge>
+                        )}
                       </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                        {comp.description}
-                      </p>
 
-                      {/* Mini preview */}
-                      {(componentPreviews[comp.name]?.preview || comp.previewComponent) && (
-                        <div className="bg-muted/50 border border-border rounded-md p-3 mb-3 flex items-center justify-center min-h-[60px] overflow-hidden [&>*]:scale-90 [&>*]:origin-center">
-                          {componentPreviews[comp.name]?.preview
-                            ? componentPreviews[comp.name].preview
-                            : comp.previewComponent
-                              ? React.createElement(comp.previewComponent)
-                              : null}
-                        </div>
-                      )}
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-wrap gap-1">
-                          {comp.tags.slice(0, 3).map(tag => (
-                            <span
-                              key={tag}
-                              className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        <Eye className="w-4 h-4 text-muted-foreground group-hover:text-blue-400 transition-colors" />
+                      {/* Preview area */}
+                      <div className="px-5 py-4">
+                        {preview ? (
+                          <div className="border border-border rounded-md p-4 bg-muted/30 flex items-center justify-center min-h-[80px] overflow-hidden">
+                            <div className="w-full flex items-center justify-center">
+                              {preview.preview}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="border border-border rounded-md p-4 bg-muted/10 flex items-center justify-center min-h-[80px]">
+                            <div className="text-center">
+                              <Eye className="w-6 h-6 mx-auto mb-2 text-muted-foreground/40" />
+                              <p className="text-xs text-muted-foreground/60">Preview not available</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </Card>
-                  </Link>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -142,9 +196,13 @@ const ComponentsListing: React.FC = () => {
             <div className="text-center py-16">
               <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <p className="text-lg text-muted-foreground">No components found</p>
-              <p className="text-sm text-muted-foreground">Try adjusting your search</p>
+              <p className="text-sm text-muted-foreground">Try adjusting your search or filter</p>
             </div>
           )}
+
+          <p className="text-xs text-muted-foreground mt-4">
+            {filtered.length} of {totalComponents} components shown.
+          </p>
         </div>
       </SidebarInset>
     </SidebarProvider>
