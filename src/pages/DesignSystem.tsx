@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, XCircle, Search } from 'lucide-react';
+import { CheckCircle2, Search, Eye } from 'lucide-react';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,12 +15,31 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { mockComponents } from '@/data/mockComponents';
+import { Component } from '@/types/component';
 import { ComponentSidebar } from '@/components/ComponentSidebar';
 import designSystemData from '@/data/designSystemData.json';
+import { componentPreviews } from '@/data/componentPreviews';
 
 function slugify(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-');
 }
+
+// Build full component list for the sidebar
+const allComponents: Component[] = designSystemData.components.map((ds, idx) => {
+  const mock = mockComponents.find(m => m.name.toLowerCase() === ds.name.toLowerCase());
+  return {
+    id: mock?.id || `ds-${idx}`,
+    name: ds.name,
+    description: mock?.description || `${ds.name} component`,
+    category: (ds.category || 'UI') as Component['category'],
+    tags: mock?.tags || [ds.name.toLowerCase()],
+    version: mock?.version || '1.0.0',
+    filePath: `src/components/ui/${ds.file}`,
+    code: mock?.code || `import { ${ds.name.replace(/\s+/g, '')} } from '@/components/ui/${ds.file.replace('.tsx', '')}';`,
+    previewComponent: mock?.previewComponent,
+    subPages: mock?.subPages,
+  };
+});
 
 const DesignSystem: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,10 +59,17 @@ const DesignSystem: React.FC = () => {
 
   const categories = [...new Set(components.map(c => c.category))];
 
+  // Group filtered components by category
+  const grouped = categories.reduce<Record<string, typeof filtered>>((acc, cat) => {
+    const items = filtered.filter(c => c.category === cat);
+    if (items.length > 0) acc[cat] = items;
+    return acc;
+  }, {});
+
   return (
     <SidebarProvider>
-      <ComponentSidebar components={mockComponents} />
-      <SidebarInset>
+      <ComponentSidebar components={allComponents} />
+      <SidebarInset className="bg-background">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-6 py-3">
           <SidebarTrigger className="-ml-1" />
@@ -72,9 +92,9 @@ const DesignSystem: React.FC = () => {
         {/* Content */}
         <div className="p-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight">Design System Coverage</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Design System Gallery</h1>
             <p className="text-muted-foreground mt-1">
-              Component availability matrix across the DFL design system.
+              Visual showcase of all DFL design system components.
             </p>
           </div>
 
@@ -99,7 +119,7 @@ const DesignSystem: React.FC = () => {
           </div>
 
           {/* Filters */}
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-8">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -109,7 +129,7 @@ const DesignSystem: React.FC = () => {
                 className="pl-10"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setCategoryFilter('all')}
                 className={`px-3 py-1.5 text-sm rounded-md border transition-colors ${
@@ -136,56 +156,69 @@ const DesignSystem: React.FC = () => {
             </div>
           </div>
 
-          {/* Table */}
-          <div className="rounded-lg border border-border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[300px]">Component</TableHead>
-                  <TableHead className="w-[120px]">Category</TableHead>
-                  <TableHead className="w-[120px]">File</TableHead>
-                  <TableHead className="w-[100px] text-center">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map(comp => (
-                  <TableRow key={comp.name}>
-                    <TableCell className="font-medium">
-                      {comp.available ? (
-                        <Link
-                          to={`/components/${slugify(comp.name)}`}
-                          className="hover:text-blue-400 transition-colors"
-                        >
-                          {comp.name}
-                        </Link>
-                      ) : (
-                        comp.name
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded">
-                        {comp.category}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-sm font-mono text-muted-foreground">
-                      {comp.file}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {comp.available ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-400 inline-block" />
-                      ) : (
-                        <XCircle className="w-5 h-5 text-red-400 inline-block" />
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          {/* Gallery by category */}
+          {Object.entries(grouped).map(([category, comps]) => (
+            <div key={category} className="mb-12">
+              <div className="flex items-center gap-2 mb-5">
+                <h2 className="text-xl font-semibold">{category}</h2>
+                <span className="text-sm text-muted-foreground">({comps.length})</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                {comps.map(comp => {
+                  const preview = componentPreviews[comp.name];
+                  return (
+                    <Link key={comp.name} to={`/components/${slugify(comp.name)}`} className="group">
+                      <Card className="h-full transition-colors hover:border-accent-foreground/20 hover:bg-accent/50">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-base group-hover:text-blue-400 transition-colors">
+                              {comp.name}
+                            </CardTitle>
+                            <div className="flex items-center gap-2">
+                              {comp.available && (
+                                <Badge variant="secondary" className="text-xs gap-1">
+                                  <CheckCircle2 className="w-3 h-3 text-green-400" />
+                                  Available
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          {preview ? (
+                            <div className="border border-border rounded-md p-4 bg-muted/30 flex items-center justify-center min-h-[100px] overflow-hidden">
+                              <div className="pointer-events-none [&>*]:scale-90 [&>*]:origin-center">
+                                {preview.preview}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="border border-border rounded-md p-4 bg-muted/10 flex items-center justify-center min-h-[100px]">
+                              <div className="text-center">
+                                <Eye className="w-6 h-6 mx-auto mb-2 text-muted-foreground/40" />
+                                <p className="text-xs text-muted-foreground/60">Preview not available</p>
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+
+          {Object.keys(grouped).length === 0 && (
+            <div className="text-center py-16">
+              <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <p className="text-lg text-muted-foreground">No components found</p>
+              <p className="text-sm text-muted-foreground">Try adjusting your search or filter</p>
+            </div>
+          )}
 
           <p className="text-xs text-muted-foreground mt-4">
             {filtered.length} of {totalComponents} components shown.
-            Status is auto-generated from <code className="font-mono">src/components/ui/</code>.
           </p>
         </div>
       </SidebarInset>

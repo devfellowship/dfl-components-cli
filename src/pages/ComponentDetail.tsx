@@ -17,6 +17,7 @@ import { mockComponents } from '@/data/mockComponents';
 import { Component } from '@/types/component';
 import designSystemData from '@/data/designSystemData.json';
 import { ComponentSidebar } from '@/components/ComponentSidebar';
+import { componentPreviews } from '@/data/componentPreviews';
 
 // Merge all components (same logic as ComponentsListing)
 const allComponents: Component[] = designSystemData.components.map((ds, idx) => {
@@ -85,7 +86,7 @@ const ComponentDetail: React.FC = () => {
     return (
       <SidebarProvider>
         <ComponentSidebar components={allComponents} />
-        <SidebarInset>
+        <SidebarInset className="bg-background">
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
               <h1 className="text-2xl font-bold mb-2">Component not found</h1>
@@ -117,7 +118,7 @@ const ComponentDetail: React.FC = () => {
   return (
     <SidebarProvider>
       <ComponentSidebar components={allComponents} />
-      <SidebarInset>
+      <SidebarInset className="bg-background">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-6 py-3">
           <SidebarTrigger className="-ml-1" />
@@ -208,11 +209,15 @@ const ComponentDetail: React.FC = () => {
           ) : (
             <div className="space-y-8">
               {/* Preview */}
-              {component.previewComponent && (
+              {(componentPreviews[component.name]?.preview || component.previewComponent) && (
                 <section>
                   <h2 className="text-lg font-semibold mb-3">Preview</h2>
                   <div className="border border-border rounded-lg p-6 bg-muted/20 flex items-center justify-center min-h-[120px]">
-                    {React.createElement(component.previewComponent)}
+                    {componentPreviews[component.name]?.preview
+                      ? componentPreviews[component.name].preview
+                      : component.previewComponent
+                        ? React.createElement(component.previewComponent)
+                        : null}
                   </div>
                 </section>
               )}
@@ -223,10 +228,13 @@ const ComponentDetail: React.FC = () => {
                 <CodeBlock code={importStatement} label="Import" />
               </section>
 
-              {/* Source code */}
+              {/* Usage Example */}
               <section>
-                <h2 className="text-lg font-semibold mb-3">Source Code</h2>
-                <CodeBlock code={component.code} label={component.filePath} />
+                <h2 className="text-lg font-semibold mb-3">Usage Example</h2>
+                <CodeBlock
+                  code={componentPreviews[component.name]?.usage || importStatement}
+                  label="Example"
+                />
               </section>
             </div>
           )}

@@ -10,6 +10,7 @@ import { mockComponents } from '@/data/mockComponents';
 import designSystemData from '@/data/designSystemData.json';
 import { ComponentSidebar } from '@/components/ComponentSidebar';
 import { CategoryIcon } from '@/components/CategoryIcon';
+import { componentPreviews } from '@/data/componentPreviews';
 
 // Merge: use designSystemData for all components, enrich with mockComponents for previews/code
 const allComponents: Component[] = designSystemData.components.map((ds, idx) => {
@@ -57,7 +58,7 @@ const ComponentsListing: React.FC = () => {
   return (
     <SidebarProvider>
       <ComponentSidebar components={allComponents} />
-      <SidebarInset>
+      <SidebarInset className="bg-background">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-6 py-3">
           <SidebarTrigger className="-ml-1" />
@@ -107,9 +108,13 @@ const ComponentsListing: React.FC = () => {
                       </p>
 
                       {/* Mini preview */}
-                      {comp.previewComponent && (
-                        <div className="bg-muted/50 border border-border rounded-md p-3 mb-3 flex items-center justify-center min-h-[60px]">
-                          {React.createElement(comp.previewComponent)}
+                      {(componentPreviews[comp.name]?.preview || comp.previewComponent) && (
+                        <div className="bg-muted/50 border border-border rounded-md p-3 mb-3 flex items-center justify-center min-h-[60px] overflow-hidden [&>*]:scale-90 [&>*]:origin-center">
+                          {componentPreviews[comp.name]?.preview
+                            ? componentPreviews[comp.name].preview
+                            : comp.previewComponent
+                              ? React.createElement(comp.previewComponent)
+                              : null}
                         </div>
                       )}
 
