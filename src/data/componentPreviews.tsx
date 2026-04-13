@@ -172,9 +172,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   AlertCircle,
   Bold,
+  Check,
   ChevronDown,
   ChevronsUpDown,
   Italic,
+  Minus,
   Terminal,
   Bell,
   AlignLeft,
@@ -270,34 +272,59 @@ function CardPreview() {
 }
 
 function InputPreview() {
-  const [showPassword, setShowPassword] = useState(false);
+  const inputBase: React.CSSProperties = {
+    background: '#0D1117',
+    border: '1px solid #21262D',
+    color: '#E6EDF3',
+    fontSize: 13,
+    borderRadius: 12,
+    padding: '10px 12px',
+    width: '100%',
+    outline: 'none',
+  };
   return (
-    <div className="w-full max-w-sm space-y-4">
+    <div className="w-full max-w-sm space-y-5">
+      {/* Default */}
       <div className="space-y-1.5">
-        <Label htmlFor="input-name">Full name</Label>
-        <Input id="input-name" placeholder="John Doe" />
+        <label style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 500 }}>Full name</label>
+        <input
+          style={inputBase}
+          placeholder="e.g. Jo\u00e3o Pessoa"
+        />
+        <p style={{ color: '#8B949E', fontSize: 12 }}>Your legal name as it appears on documents</p>
       </div>
+      {/* Error */}
       <div className="space-y-1.5">
-        <Label htmlFor="input-email" className="text-destructive">Email</Label>
-        <Input id="input-email" placeholder="john@example.com" className="border-destructive focus-visible:ring-destructive" defaultValue="invalid-email" />
-        <p className="text-xs text-destructive">Please enter a valid email</p>
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="input-password">Password</Label>
+        <label style={{ color: '#EF4444', fontSize: 13, fontWeight: 500 }}>Email</label>
         <div className="relative">
-          <Input id="input-password" type={showPassword ? 'text' : 'password'} placeholder="Enter password" defaultValue="secret123" />
-          <button
-            type="button"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </button>
+          <input
+            style={{
+              ...inputBase,
+              border: '1px solid rgba(239,68,68,0.5)',
+              paddingRight: 36,
+            }}
+            defaultValue="not-an-email"
+          />
+          <AlertCircle
+            className="absolute right-3 top-1/2 -translate-y-1/2"
+            style={{ color: '#EF4444', width: 16, height: 16 }}
+          />
         </div>
+        <p style={{ color: '#EF4444', fontSize: 12 }}>Please enter a valid email address</p>
       </div>
+      {/* Disabled */}
       <div className="space-y-1.5">
-        <Label htmlFor="input-readonly" className="text-muted-foreground">Read-only</Label>
-        <Input id="input-readonly" placeholder="Cannot edit this" disabled defaultValue="Locked value" />
+        <label style={{ color: '#6B7280', fontSize: 13, fontWeight: 500 }}>Batch (read-only)</label>
+        <input
+          style={{
+            ...inputBase,
+            color: '#6B7280',
+            cursor: 'not-allowed',
+            background: 'rgba(13,17,23,0.6)',
+          }}
+          disabled
+          defaultValue="Batch 7 — locked"
+        />
       </div>
     </div>
   );
@@ -470,20 +497,37 @@ function ChartPreview() {
 }
 
 function CheckboxPreview() {
+  const boxSize = 20;
+  const boxBase: React.CSSProperties = {
+    width: boxSize,
+    height: boxSize,
+    borderRadius: 6,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  };
   return (
-    <div className="space-y-3">
-      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">States</p>
-      <div className="flex items-center space-x-2">
-        <Checkbox id="cb-checked" defaultChecked />
-        <Label htmlFor="cb-checked">Checked</Label>
+    <div className="space-y-4">
+      <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#8B949E' }}>States</p>
+      {/* Checked */}
+      <div className="flex items-center gap-3">
+        <div style={{ ...boxBase, background: 'rgba(163,113,247,0.9)', border: '1px solid #A371F7' }}>
+          <Check style={{ color: '#fff', width: 14, height: 14, strokeWidth: 3 }} />
+        </div>
+        <span style={{ color: '#E6EDF3', fontSize: 13 }}>Enable notifications</span>
       </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox id="cb-unchecked" />
-        <Label htmlFor="cb-unchecked">Unchecked</Label>
+      {/* Unchecked */}
+      <div className="flex items-center gap-3">
+        <div style={{ ...boxBase, background: 'transparent', border: '1px solid #21262D' }} />
+        <span style={{ color: '#E6EDF3', fontSize: 13 }}>Auto-deploy on merge</span>
       </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox id="cb-disabled" disabled defaultChecked />
-        <Label htmlFor="cb-disabled" className="text-muted-foreground">Disabled (checked)</Label>
+      {/* Indeterminate */}
+      <div className="flex items-center gap-3">
+        <div style={{ ...boxBase, background: 'rgba(163,113,247,0.9)', border: '1px solid #A371F7' }}>
+          <Minus style={{ color: '#fff', width: 14, height: 14, strokeWidth: 3 }} />
+        </div>
+        <span style={{ color: '#E6EDF3', fontSize: 13 }}>Select all tasks</span>
       </div>
     </div>
   );
@@ -820,19 +864,63 @@ function ScrollAreaPreview() {
 }
 
 function SelectPreview() {
+  const options = [
+    { value: 'stage-1', label: 'Stage 1 \u2014 Discovery', color: '#F39325' },
+    { value: 'stage-2', label: 'Stage 2 \u2014 Builder', color: '#4AADE8' },
+    { value: 'stage-3', label: 'Stage 3 \u2014 Launch', color: '#A371F7' },
+  ];
+  const selected = 1; // stage-2
   return (
-    <div className="w-full max-w-sm space-y-1.5">
-      <Label>Project stage</Label>
-      <Select defaultValue="stage-2">
-        <SelectTrigger className="w-[220px]">
-          <SelectValue placeholder="Select a stage" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="stage-1">Stage 1 — Discovery</SelectItem>
-          <SelectItem value="stage-2">Stage 2 — Development</SelectItem>
-          <SelectItem value="stage-3">Stage 3 — Launch</SelectItem>
-        </SelectContent>
-      </Select>
+    <div className="w-full max-w-xs space-y-2">
+      <label style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 500 }}>Project stage</label>
+      {/* Trigger button */}
+      <div
+        style={{
+          background: '#0D1117',
+          border: '1px solid #21262D',
+          borderRadius: 12,
+          padding: '10px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          cursor: 'pointer',
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: options[selected].color }} />
+          <span style={{ color: '#E6EDF3', fontSize: 13 }}>{options[selected].label}</span>
+        </div>
+        <ChevronDown style={{ color: '#8B949E', width: 16, height: 16 }} />
+      </div>
+      {/* Floating dropdown (static, always visible for preview) */}
+      <div
+        style={{
+          background: '#1C2128',
+          border: '1px solid #21262D',
+          borderRadius: 12,
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          padding: '4px 0',
+          overflow: 'hidden',
+        }}
+      >
+        {options.map((opt, i) => (
+          <div
+            key={opt.value}
+            className="flex items-center justify-between"
+            style={{
+              padding: '8px 12px',
+              background: i === selected ? 'rgba(74,173,232,0.08)' : 'transparent',
+              cursor: 'pointer',
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: opt.color }} />
+              <span style={{ color: i === selected ? '#E6EDF3' : '#C6CDD5', fontSize: 13 }}>{opt.label}</span>
+            </div>
+            {i === selected && <Check style={{ color: '#4AADE8', width: 16, height: 16 }} />}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -935,32 +1023,71 @@ function SonnerPreview() {
 }
 
 function SwitchPreview() {
+  const trackW = 44;
+  const trackH = 24;
+  const thumbD = 18;
+  const pad = 3;
   return (
-    <div className="space-y-4">
-      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Settings</p>
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="sw-email" className="flex flex-col gap-0.5">
-            <span>Email notifications</span>
-            <span className="text-xs text-muted-foreground font-normal">Receive emails for important updates</span>
-          </Label>
-          <Switch id="sw-email" defaultChecked />
+    <div className="space-y-5">
+      <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#8B949E' }}>Toggle States</p>
+      {/* On */}
+      <div className="flex items-center gap-4">
+        <div
+          style={{
+            width: trackW,
+            height: trackH,
+            borderRadius: trackH / 2,
+            background: 'linear-gradient(135deg, #A371F7, #06B6D4)',
+            position: 'relative',
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              width: thumbD,
+              height: thumbD,
+              borderRadius: '50%',
+              background: '#fff',
+              position: 'absolute',
+              top: pad,
+              left: trackW - thumbD - pad,
+              boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+            }}
+          />
         </div>
-        <Separator />
-        <div className="flex items-center justify-between">
-          <Label htmlFor="sw-dark" className="flex flex-col gap-0.5">
-            <span>Dark mode</span>
-            <span className="text-xs text-muted-foreground font-normal">Use dark color scheme</span>
-          </Label>
-          <Switch id="sw-dark" defaultChecked />
+        <div className="flex flex-col">
+          <span style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 500 }}>Dark mode</span>
+          <span style={{ color: '#8B949E', fontSize: 12 }}>Use dark color scheme</span>
         </div>
-        <Separator />
-        <div className="flex items-center justify-between">
-          <Label htmlFor="sw-beta" className="flex flex-col gap-0.5">
-            <span>Beta features</span>
-            <span className="text-xs text-muted-foreground font-normal">Try experimental functionality</span>
-          </Label>
-          <Switch id="sw-beta" />
+      </div>
+      {/* Off */}
+      <div className="flex items-center gap-4">
+        <div
+          style={{
+            width: trackW,
+            height: trackH,
+            borderRadius: trackH / 2,
+            background: '#21262D',
+            position: 'relative',
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              width: thumbD,
+              height: thumbD,
+              borderRadius: '50%',
+              background: '#6B7280',
+              position: 'absolute',
+              top: pad,
+              left: pad,
+              boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+            }}
+          />
+        </div>
+        <div className="flex flex-col">
+          <span style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 500 }}>Beta features</span>
+          <span style={{ color: '#8B949E', fontSize: 12 }}>Try experimental functionality</span>
         </div>
       </div>
     </div>
@@ -1029,9 +1156,24 @@ function TabsPreview() {
 function TextareaPreview() {
   return (
     <div className="w-full max-w-sm space-y-1.5">
-      <Label htmlFor="textarea-msg">Message</Label>
-      <Textarea id="textarea-msg" placeholder="Type your message here..." />
-      <p className="text-xs text-muted-foreground">Your message will be sent to the team lead.</p>
+      <label style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 500 }}>Message</label>
+      <textarea
+        style={{
+          background: '#0D1117',
+          border: '1px solid #21262D',
+          color: '#E6EDF3',
+          fontSize: 13,
+          borderRadius: 12,
+          padding: '10px 12px',
+          width: '100%',
+          minHeight: 80,
+          resize: 'vertical',
+          outline: 'none',
+          fontFamily: 'inherit',
+        }}
+        placeholder="Type your message here..."
+      />
+      <p style={{ color: '#8B949E', fontSize: 12 }}>Focus adds a subtle <span style={{ color: '#A371F7' }}>#A371F7</span> ring glow</p>
     </div>
   );
 }
@@ -1109,14 +1251,41 @@ function ProgressPreview() {
 }
 
 function SliderPreview() {
-  const [value, setValue] = useState([62]);
+  const pct = 62;
   return (
-    <div className="w-full max-w-sm space-y-2">
-      <div className="flex justify-between text-sm">
-        <Label>Completion threshold</Label>
-        <span className="text-muted-foreground font-medium">{value[0]}%</span>
+    <div className="w-full max-w-sm space-y-3">
+      <div className="flex justify-between" style={{ fontSize: 13 }}>
+        <span style={{ color: '#E6EDF3', fontWeight: 500 }}>Completion threshold</span>
+        <span style={{ color: '#F39325', fontWeight: 600 }}>{pct}%</span>
       </div>
-      <Slider value={value} onValueChange={setValue} max={100} step={1} />
+      {/* Track */}
+      <div style={{ position: 'relative', height: 20, display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: '100%', height: 6, borderRadius: 3, background: '#21262D', position: 'relative' }}>
+          <div
+            style={{
+              width: `${pct}%`,
+              height: '100%',
+              borderRadius: 3,
+              background: 'linear-gradient(90deg, #F39325, #F39325)',
+            }}
+          />
+        </div>
+        {/* Thumb */}
+        <div
+          style={{
+            position: 'absolute',
+            left: `${pct}%`,
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 18,
+            height: 18,
+            borderRadius: '50%',
+            background: '#F39325',
+            border: '2px solid #0D1117',
+            boxShadow: '0 0 0 2px rgba(243,147,37,0.3)',
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -1211,17 +1380,51 @@ function EmptyPlaceholderPreview() {
 }
 
 function FormPreview() {
+  const inputStyle: React.CSSProperties = {
+    background: '#0D1117',
+    border: '1px solid #21262D',
+    color: '#E6EDF3',
+    fontSize: 13,
+    borderRadius: 12,
+    padding: '10px 12px',
+    width: '100%',
+    outline: 'none',
+  };
+  const labelStyle: React.CSSProperties = { color: '#E6EDF3', fontSize: 13, fontWeight: 500 };
+  const helperStyle: React.CSSProperties = { color: '#8B949E', fontSize: 12 };
   return (
-    <div className="w-full max-w-sm space-y-3">
-      <div className="space-y-1">
-        <Label htmlFor="name">Name</Label>
-        <Input id="name" placeholder="Enter your name" />
+    <div className="w-full max-w-sm space-y-4">
+      <div className="space-y-1.5">
+        <label style={labelStyle}>Full name</label>
+        <input style={inputStyle} placeholder="e.g. Jo\u00e3o Pessoa" />
+        <p style={helperStyle}>As it appears on your ID</p>
       </div>
-      <div className="space-y-1">
-        <Label htmlFor="email-form">Email</Label>
-        <Input id="email-form" type="email" placeholder="you@example.com" />
+      <div className="space-y-1.5">
+        <label style={labelStyle}>Email</label>
+        <input style={inputStyle} placeholder="you@example.com" />
       </div>
-      <Button className="w-full">Submit</Button>
+      <div className="space-y-1.5">
+        <label style={labelStyle}>Project stage</label>
+        <div style={{ ...inputStyle, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+          <span style={{ color: '#C6CDD5' }}>Select a stage...</span>
+          <ChevronDown style={{ color: '#8B949E', width: 16, height: 16 }} />
+        </div>
+      </div>
+      <button
+        style={{
+          width: '100%',
+          padding: '10px 0',
+          borderRadius: 12,
+          border: 'none',
+          background: '#F39325',
+          color: '#000',
+          fontSize: 13,
+          fontWeight: 600,
+          cursor: 'pointer',
+        }}
+      >
+        Submit
+      </button>
     </div>
   );
 }
