@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Accordion,
@@ -65,6 +65,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from '@/components/ui/dialog';
 import {
   Drawer,
@@ -116,6 +117,7 @@ import {
   PaginationLink,
   PaginationPrevious,
   PaginationNext,
+  PaginationEllipsis,
 } from '@/components/ui/pagination';
 import {
   Popover,
@@ -178,30 +180,64 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  Info,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 // --- Preview components ---
 
 function ButtonPreview() {
   return (
-    <div className="flex flex-wrap gap-2">
-      <Button>Default</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="destructive">Destructive</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button variant="link">Link</Button>
+    <div className="space-y-4">
+      <div>
+        <p className="text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wider">Variants</p>
+        <div className="flex flex-wrap gap-2">
+          <Button>Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="destructive">Destructive</Button>
+          <Button variant="link">Link</Button>
+        </div>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wider">Sizes</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button size="sm">Small</Button>
+          <Button size="default">Default</Button>
+          <Button size="lg">Large</Button>
+          <Button size="icon"><Bell className="h-4 w-4" /></Button>
+        </div>
+      </div>
     </div>
   );
 }
 
 function BadgePreview() {
   return (
-    <div className="flex flex-wrap gap-2">
-      <Badge>Default</Badge>
-      <Badge variant="secondary">Secondary</Badge>
-      <Badge variant="destructive">Destructive</Badge>
-      <Badge variant="outline">Outline</Badge>
+    <div className="space-y-3">
+      <div>
+        <p className="text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wider">Variants</p>
+        <div className="flex flex-wrap gap-2">
+          <Badge>Default</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="destructive">Destructive</Badge>
+          <Badge variant="outline">Outline</Badge>
+        </div>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wider">Brand Colors</p>
+        <div className="flex flex-wrap gap-2">
+          <Badge className="bg-[#F39325] text-black hover:bg-[#F39325]/80">Orange</Badge>
+          <Badge className="bg-[#4AADE8] text-black hover:bg-[#4AADE8]/80">Cyan</Badge>
+          <Badge className="bg-[#A371F7] text-black hover:bg-[#A371F7]/80">Purple</Badge>
+          <Badge className="bg-emerald-600 text-white hover:bg-emerald-600/80">Success</Badge>
+        </div>
+      </div>
     </div>
   );
 }
@@ -210,40 +246,82 @@ function CardPreview() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-        <CardDescription>Card description goes here.</CardDescription>
+        <CardTitle>Sprint Overview</CardTitle>
+        <CardDescription>Current sprint progress and key metrics for Q2 2026.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">
-          This is an example card with header and content sections.
-        </p>
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Tasks completed</span>
+            <span className="font-medium">18 / 24</span>
+          </div>
+          <Progress value={75} />
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Days remaining</span>
+            <span className="font-medium">5</span>
+          </div>
+        </div>
       </CardContent>
+      <CardFooter>
+        <Button className="w-full">View Details</Button>
+      </CardFooter>
     </Card>
   );
 }
 
 function InputPreview() {
+  const [showPassword, setShowPassword] = useState(false);
   return (
-    <div className="w-full max-w-sm space-y-2">
-      <Input placeholder="Type something..." />
-      <Input placeholder="Disabled input" disabled />
+    <div className="w-full max-w-sm space-y-4">
+      <div className="space-y-1.5">
+        <Label htmlFor="input-name">Full name</Label>
+        <Input id="input-name" placeholder="John Doe" />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="input-email" className="text-destructive">Email</Label>
+        <Input id="input-email" placeholder="john@example.com" className="border-destructive focus-visible:ring-destructive" defaultValue="invalid-email" />
+        <p className="text-xs text-destructive">Please enter a valid email</p>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="input-password">Password</Label>
+        <div className="relative">
+          <Input id="input-password" type={showPassword ? 'text' : 'password'} placeholder="Enter password" defaultValue="secret123" />
+          <button
+            type="button"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="input-readonly" className="text-muted-foreground">Read-only</Label>
+        <Input id="input-readonly" placeholder="Cannot edit this" disabled defaultValue="Locked value" />
+      </div>
     </div>
   );
 }
 
 function AccordionPreview() {
   return (
-    <Accordion type="single" collapsible className="w-full max-w-sm">
+    <Accordion type="single" collapsible defaultValue="item-1" className="w-full max-w-sm">
       <AccordionItem value="item-1">
-        <AccordionTrigger>Is it accessible?</AccordionTrigger>
+        <AccordionTrigger>What is the DFL Design System?</AccordionTrigger>
         <AccordionContent>
-          Yes. It adheres to the WAI-ARIA design pattern.
+          A unified set of tokens, components, and patterns used across all DevFellowship products to ensure visual consistency.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
-        <AccordionTrigger>Is it styled?</AccordionTrigger>
+        <AccordionTrigger>How do I install components?</AccordionTrigger>
         <AccordionContent>
-          Yes. It ships with default styles using Tailwind CSS.
+          Use the CLI tool to copy components directly into your project. Run <code className="text-xs bg-muted px-1 py-0.5 rounded">npx dfl-components add button</code>.
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="item-3">
+        <AccordionTrigger>Can I customize the theme?</AccordionTrigger>
+        <AccordionContent>
+          Yes. Override the CSS variables in your root stylesheet to match your brand palette.
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -252,7 +330,7 @@ function AccordionPreview() {
 
 function AlertPreview() {
   return (
-    <div className="w-full max-w-sm space-y-2">
+    <div className="w-full max-w-sm space-y-3">
       <Alert>
         <Terminal className="h-4 w-4" />
         <AlertTitle>Heads up!</AlertTitle>
@@ -263,7 +341,9 @@ function AlertPreview() {
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>Something went wrong.</AlertDescription>
+        <AlertDescription>
+          Your session has expired. Please log in again.
+        </AlertDescription>
       </Alert>
     </div>
   );
@@ -273,18 +353,18 @@ function AlertDialogPreview() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Delete Item</Button>
+        <Button variant="destructive">Delete Item</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your data.
+            This action cannot be undone. This will permanently delete the selected item and remove all associated data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -303,17 +383,23 @@ function AspectRatioPreview() {
 
 function AvatarPreview() {
   return (
-    <div className="flex gap-3">
-      <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-      <Avatar>
-        <AvatarFallback>TF</AvatarFallback>
-      </Avatar>
-      <Avatar>
-        <AvatarFallback>AB</AvatarFallback>
-      </Avatar>
+    <div className="space-y-3">
+      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Sizes &amp; Fallbacks</p>
+      <div className="flex items-end gap-3">
+        <Avatar className="h-8 w-8">
+          <AvatarFallback className="text-xs">SM</AvatarFallback>
+        </Avatar>
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <Avatar className="h-14 w-14">
+          <AvatarFallback className="text-lg bg-[#F39325] text-black">TF</AvatarFallback>
+        </Avatar>
+        <Avatar className="h-14 w-14">
+          <AvatarFallback className="text-lg bg-[#A371F7] text-black">JD</AvatarFallback>
+        </Avatar>
+      </div>
     </div>
   );
 }
@@ -327,11 +413,11 @@ function BreadcrumbPreview() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">Components</BreadcrumbLink>
+          <BreadcrumbLink href="#">Stage 2</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <span className="text-foreground">Breadcrumb</span>
+          <span className="text-foreground font-medium">Sprint 4</span>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -351,14 +437,19 @@ function CalendarPreview() {
 }
 
 function CarouselPreview() {
+  const colors = ['bg-[#F39325]/20', 'bg-[#A371F7]/20', 'bg-[#4AADE8]/20'];
+  const labels = ['Design', 'Develop', 'Deploy'];
   return (
     <Carousel className="w-full max-w-xs">
       <CarouselContent>
-        {[1, 2, 3].map((i) => (
+        {[0, 1, 2].map((i) => (
           <CarouselItem key={i}>
             <div className="p-1">
-              <div className="flex aspect-square items-center justify-center rounded-md border border-border bg-muted">
-                <span className="text-2xl font-semibold">{i}</span>
+              <div className={`flex aspect-square items-center justify-center rounded-md border border-border ${colors[i]}`}>
+                <div className="text-center">
+                  <span className="text-3xl font-bold">{i + 1}</span>
+                  <p className="text-sm text-muted-foreground mt-1">{labels[i]}</p>
+                </div>
               </div>
             </div>
           </CarouselItem>
@@ -381,13 +472,18 @@ function ChartPreview() {
 function CheckboxPreview() {
   return (
     <div className="space-y-3">
+      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">States</p>
       <div className="flex items-center space-x-2">
-        <Checkbox id="terms" />
-        <Label htmlFor="terms">Accept terms and conditions</Label>
+        <Checkbox id="cb-checked" defaultChecked />
+        <Label htmlFor="cb-checked">Checked</Label>
       </div>
       <div className="flex items-center space-x-2">
-        <Checkbox id="newsletter" defaultChecked />
-        <Label htmlFor="newsletter">Subscribe to newsletter</Label>
+        <Checkbox id="cb-unchecked" />
+        <Label htmlFor="cb-unchecked">Unchecked</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Checkbox id="cb-disabled" disabled defaultChecked />
+        <Label htmlFor="cb-disabled" className="text-muted-foreground">Disabled (checked)</Label>
       </div>
     </div>
   );
@@ -417,12 +513,16 @@ function CollapsiblePreview() {
 function CommandPreview() {
   return (
     <Command className="rounded-lg border border-border shadow-md w-full max-w-sm">
-      <CommandInput placeholder="Search..." />
+      <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          <CommandItem>Calendar</CommandItem>
-          <CommandItem>Search</CommandItem>
+        <CommandGroup heading="Actions">
+          <CommandItem>Create new project</CommandItem>
+          <CommandItem>Deploy to production</CommandItem>
+          <CommandItem>View analytics</CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Navigation">
+          <CommandItem>Dashboard</CommandItem>
           <CommandItem>Settings</CommandItem>
         </CommandGroup>
       </CommandList>
@@ -449,18 +549,22 @@ function DialogPreview() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Open Dialog</Button>
+        <Button>Open Modal</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Dialog Title</DialogTitle>
+          <DialogTitle>Confirm Action</DialogTitle>
           <DialogDescription>
-            This is a dialog description. You can put any content here.
+            Are you sure you want to proceed? This will apply changes to all selected items in the current workspace.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm text-muted-foreground">Dialog body content goes here.</p>
+          <p className="text-sm text-muted-foreground">Review the changes carefully before confirming. This operation may take a few seconds to complete.</p>
         </div>
+        <DialogFooter>
+          <Button variant="outline">Cancel</Button>
+          <Button>Confirm</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -474,14 +578,21 @@ function DrawerPreview() {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Drawer Title</DrawerTitle>
-          <DrawerDescription>This is a drawer description.</DrawerDescription>
+          <DrawerTitle>Edit Profile</DrawerTitle>
+          <DrawerDescription>Make changes to your profile here.</DrawerDescription>
         </DrawerHeader>
-        <div className="p-4">
-          <p className="text-sm text-muted-foreground">Drawer content goes here.</p>
+        <div className="p-4 space-y-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="drawer-name">Display name</Label>
+            <Input id="drawer-name" defaultValue="Tainan Fidelis" />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="drawer-bio">Bio</Label>
+            <Textarea id="drawer-bio" placeholder="Tell us about yourself..." />
+          </div>
         </div>
         <DrawerFooter>
-          <Button>Submit</Button>
+          <Button>Save Changes</Button>
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
@@ -503,7 +614,7 @@ function DropdownMenuPreview() {
         <DropdownMenuItem>Profile</DropdownMenuItem>
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        <DropdownMenuItem className="text-destructive">Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -513,14 +624,18 @@ function HoverCardPreview() {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button variant="link">Hover me</Button>
+        <Button variant="link">@devfellowship</Button>
       </HoverCardTrigger>
-      <HoverCardContent className="w-64">
-        <div className="space-y-1">
-          <h4 className="text-sm font-semibold">Hover Card</h4>
-          <p className="text-sm text-muted-foreground">
-            This content appears on hover. Great for previews and tooltips.
-          </p>
+      <HoverCardContent className="w-72">
+        <div className="flex gap-3">
+          <Avatar>
+            <AvatarFallback className="bg-[#F39325] text-black">DF</AvatarFallback>
+          </Avatar>
+          <div className="space-y-1">
+            <h4 className="text-sm font-semibold">DevFellowship</h4>
+            <p className="text-sm text-muted-foreground">Building the next generation of developer tools and design systems.</p>
+            <p className="text-xs text-muted-foreground">Joined April 2024</p>
+          </div>
         </div>
       </HoverCardContent>
     </HoverCard>
@@ -613,13 +728,19 @@ function PaginationPreview() {
           <PaginationPrevious href="#" />
         </PaginationItemComp>
         <PaginationItemComp>
-          <PaginationLink href="#" isActive>1</PaginationLink>
+          <PaginationLink href="#">1</PaginationLink>
         </PaginationItemComp>
         <PaginationItemComp>
-          <PaginationLink href="#">2</PaginationLink>
+          <PaginationLink href="#" isActive>2</PaginationLink>
         </PaginationItemComp>
         <PaginationItemComp>
           <PaginationLink href="#">3</PaginationLink>
+        </PaginationItemComp>
+        <PaginationItemComp>
+          <PaginationEllipsis />
+        </PaginationItemComp>
+        <PaginationItemComp>
+          <PaginationLink href="#">8</PaginationLink>
         </PaginationItemComp>
         <PaginationItemComp>
           <PaginationNext href="#" />
@@ -700,16 +821,19 @@ function ScrollAreaPreview() {
 
 function SelectPreview() {
   return (
-    <Select>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a fruit" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="apple">Apple</SelectItem>
-        <SelectItem value="banana">Banana</SelectItem>
-        <SelectItem value="cherry">Cherry</SelectItem>
-      </SelectContent>
-    </Select>
+    <div className="w-full max-w-sm space-y-1.5">
+      <Label>Project stage</Label>
+      <Select defaultValue="stage-2">
+        <SelectTrigger className="w-[220px]">
+          <SelectValue placeholder="Select a stage" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="stage-1">Stage 1 — Discovery</SelectItem>
+          <SelectItem value="stage-2">Stage 2 — Development</SelectItem>
+          <SelectItem value="stage-3">Stage 3 — Launch</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
 
@@ -754,34 +878,90 @@ function SidebarPreview() {
 
 function SonnerPreview() {
   return (
-    <div className="flex items-center gap-2">
-      <Button
-        variant="outline"
-        onClick={() => {
-          import('sonner').then(({ toast }) => {
-            toast('Event has been created', {
-              description: 'Sunday, December 03, 2023 at 9:00 AM',
+    <div className="space-y-3">
+      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Toast Notifications</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button
+          size="sm"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+          onClick={() => {
+            import('sonner').then(({ toast }) => {
+              toast.success('Task completed successfully');
             });
-          });
-        }}
-      >
-        <Bell className="mr-2 h-4 w-4" />
-        Show Toast (Sonner)
-      </Button>
+          }}
+        >
+          <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+          Success
+        </Button>
+        <Button
+          size="sm"
+          variant="destructive"
+          onClick={() => {
+            import('sonner').then(({ toast }) => {
+              toast.error('Something went wrong');
+            });
+          }}
+        >
+          <XCircle className="mr-1 h-3.5 w-3.5" />
+          Error
+        </Button>
+        <Button
+          size="sm"
+          className="bg-amber-500 hover:bg-amber-600 text-black"
+          onClick={() => {
+            import('sonner').then(({ toast }) => {
+              toast.warning('Please review before continuing');
+            });
+          }}
+        >
+          <AlertTriangle className="mr-1 h-3.5 w-3.5" />
+          Warning
+        </Button>
+        <Button
+          size="sm"
+          className="bg-[#4AADE8] hover:bg-[#4AADE8]/80 text-black"
+          onClick={() => {
+            import('sonner').then(({ toast }) => {
+              toast.info('New version available');
+            });
+          }}
+        >
+          <Info className="mr-1 h-3.5 w-3.5" />
+          Info
+        </Button>
+      </div>
     </div>
   );
 }
 
 function SwitchPreview() {
   return (
-    <div className="space-y-3">
-      <div className="flex items-center space-x-2">
-        <Switch id="airplane-mode" />
-        <Label htmlFor="airplane-mode">Airplane Mode</Label>
-      </div>
-      <div className="flex items-center space-x-2">
-        <Switch id="notifications" defaultChecked />
-        <Label htmlFor="notifications">Notifications</Label>
+    <div className="space-y-4">
+      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Settings</p>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="sw-email" className="flex flex-col gap-0.5">
+            <span>Email notifications</span>
+            <span className="text-xs text-muted-foreground font-normal">Receive emails for important updates</span>
+          </Label>
+          <Switch id="sw-email" defaultChecked />
+        </div>
+        <Separator />
+        <div className="flex items-center justify-between">
+          <Label htmlFor="sw-dark" className="flex flex-col gap-0.5">
+            <span>Dark mode</span>
+            <span className="text-xs text-muted-foreground font-normal">Use dark color scheme</span>
+          </Label>
+          <Switch id="sw-dark" defaultChecked />
+        </div>
+        <Separator />
+        <div className="flex items-center justify-between">
+          <Label htmlFor="sw-beta" className="flex flex-col gap-0.5">
+            <span>Beta features</span>
+            <span className="text-xs text-muted-foreground font-normal">Try experimental functionality</span>
+          </Label>
+          <Switch id="sw-beta" />
+        </div>
       </div>
     </div>
   );
@@ -799,14 +979,19 @@ function TablePreview() {
       </TableHeader>
       <TableBody>
         <TableRow>
-          <TableCell>Alice</TableCell>
-          <TableCell>Active</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
+          <TableCell className="font-medium">Alice Johnson</TableCell>
+          <TableCell><Badge className="bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/20 border-0">Active</Badge></TableCell>
+          <TableCell className="text-right">$2,500.00</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>Bob</TableCell>
-          <TableCell>Pending</TableCell>
-          <TableCell className="text-right">$150.00</TableCell>
+          <TableCell className="font-medium">Bob Smith</TableCell>
+          <TableCell><Badge className="bg-amber-500/20 text-amber-400 hover:bg-amber-500/20 border-0">Pending</Badge></TableCell>
+          <TableCell className="text-right">$1,250.00</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-medium">Carol Davis</TableCell>
+          <TableCell><Badge className="bg-red-500/20 text-red-400 hover:bg-red-500/20 border-0">Overdue</Badge></TableCell>
+          <TableCell className="text-right">$890.00</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -819,12 +1004,23 @@ function TabsPreview() {
       <TabsList>
         <TabsTrigger value="account">Account</TabsTrigger>
         <TabsTrigger value="password">Password</TabsTrigger>
+        <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
-      <TabsContent value="account" className="text-sm text-muted-foreground">
-        Manage your account settings here.
+      <TabsContent value="account" className="space-y-3 pt-2">
+        <div className="space-y-1.5">
+          <Label htmlFor="tab-name">Name</Label>
+          <Input id="tab-name" defaultValue="Tainan Fidelis" />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="tab-email">Email</Label>
+          <Input id="tab-email" defaultValue="tainan@devfellowship.com" />
+        </div>
       </TabsContent>
-      <TabsContent value="password" className="text-sm text-muted-foreground">
+      <TabsContent value="password" className="text-sm text-muted-foreground pt-2">
         Change your password here.
+      </TabsContent>
+      <TabsContent value="settings" className="text-sm text-muted-foreground pt-2">
+        Manage notification and display preferences.
       </TabsContent>
     </Tabs>
   );
@@ -832,8 +1028,10 @@ function TabsPreview() {
 
 function TextareaPreview() {
   return (
-    <div className="w-full max-w-sm">
-      <Textarea placeholder="Type your message here..." />
+    <div className="w-full max-w-sm space-y-1.5">
+      <Label htmlFor="textarea-msg">Message</Label>
+      <Textarea id="textarea-msg" placeholder="Type your message here..." />
+      <p className="text-xs text-muted-foreground">Your message will be sent to the team lead.</p>
     </div>
   );
 }
@@ -900,28 +1098,45 @@ function TooltipPreview() {
 
 function ProgressPreview() {
   return (
-    <div className="w-full max-w-sm">
-      <Progress value={60} />
+    <div className="w-full max-w-sm space-y-2">
+      <div className="flex justify-between text-sm">
+        <Label>Processing tasks</Label>
+        <span className="text-muted-foreground font-medium">68%</span>
+      </div>
+      <Progress value={68} />
     </div>
   );
 }
 
 function SliderPreview() {
+  const [value, setValue] = useState([62]);
   return (
-    <div className="w-full max-w-sm">
-      <Slider defaultValue={[50]} max={100} step={1} />
+    <div className="w-full max-w-sm space-y-2">
+      <div className="flex justify-between text-sm">
+        <Label>Completion threshold</Label>
+        <span className="text-muted-foreground font-medium">{value[0]}%</span>
+      </div>
+      <Slider value={value} onValueChange={setValue} max={100} step={1} />
     </div>
   );
 }
 
 function SkeletonPreview() {
   return (
-    <div className="flex items-center space-x-4">
-      <Skeleton className="h-12 w-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[200px]" />
-        <Skeleton className="h-4 w-[150px]" />
+    <div className="w-full max-w-sm space-y-4">
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2 flex-1">
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
       </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+      <Skeleton className="h-[120px] w-full rounded-md" />
     </div>
   );
 }
@@ -1048,7 +1263,7 @@ const [date, setDate] = useState<Date | undefined>(new Date());
   },
   Card: {
     preview: <CardPreview />,
-    usage: `import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+    usage: `import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 
 <Card>
   <CardHeader>
@@ -1058,6 +1273,9 @@ const [date, setDate] = useState<Date | undefined>(new Date());
   <CardContent>
     <p>Content goes here.</p>
   </CardContent>
+  <CardFooter>
+    <Button>Action</Button>
+  </CardFooter>
 </Card>`,
   },
   Carousel: {
@@ -1133,7 +1351,7 @@ import { Label } from '@/components/ui/label';
   },
   Dialog: {
     preview: <DialogPreview />,
-    usage: `import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+    usage: `import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 <Dialog>
   <DialogTrigger asChild>
@@ -1144,6 +1362,10 @@ import { Label } from '@/components/ui/label';
       <DialogTitle>Title</DialogTitle>
       <DialogDescription>Description here.</DialogDescription>
     </DialogHeader>
+    <DialogFooter>
+      <Button variant="outline">Cancel</Button>
+      <Button>Confirm</Button>
+    </DialogFooter>
   </DialogContent>
 </Dialog>`,
   },
@@ -1278,13 +1500,14 @@ const form = useForm();
   },
   Pagination: {
     preview: <PaginationPreview />,
-    usage: `import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext } from '@/components/ui/pagination';
+    usage: `import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/components/ui/pagination';
 
 <Pagination>
   <PaginationContent>
     <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
     <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
     <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
     <PaginationItem><PaginationNext href="#" /></PaginationItem>
   </PaginationContent>
 </Pagination>`,
