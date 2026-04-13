@@ -171,6 +171,9 @@ import { Slider } from '@/components/ui/slider';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   AlertCircle,
+  ArrowUpDown,
+  Award,
+  Banknote,
   Bold,
   Check,
   ChevronDown,
@@ -179,19 +182,24 @@ import {
   ChevronsUpDown,
   FileText,
   Folder,
+  GripVertical,
   Home,
+  Info,
   Italic,
+  Layers,
   Minus,
+  Settings,
+  Shield,
   Star,
   Terminal,
   Bell,
+  User,
   AlignLeft,
   AlignCenter,
   AlignRight,
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  Info,
   Eye,
   EyeOff,
 } from 'lucide-react';
@@ -337,70 +345,84 @@ function InputPreview() {
 }
 
 function AccordionPreview() {
+  const items = [
+    { q: "What is the DFL Design System?", a: "A unified set of tokens, components, and patterns used across all DevFellowship products to ensure visual consistency." },
+    { q: "How do I install components?", a: "Use the CLI tool to copy components directly into your project. Run npx dfl-components add button." },
+    { q: "Can I customize the theme?", a: "Yes. Override the CSS variables in your root stylesheet to match your brand palette." },
+  ];
   return (
-    <Accordion type="single" collapsible defaultValue="item-1" className="w-full max-w-sm">
-      <AccordionItem value="item-1">
-        <AccordionTrigger>What is the DFL Design System?</AccordionTrigger>
-        <AccordionContent>
-          A unified set of tokens, components, and patterns used across all DevFellowship products to ensure visual consistency.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="item-2">
-        <AccordionTrigger>How do I install components?</AccordionTrigger>
-        <AccordionContent>
-          Use the CLI tool to copy components directly into your project. Run <code className="text-xs bg-muted px-1 py-0.5 rounded">npx dfl-components add button</code>.
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="item-3">
-        <AccordionTrigger>Can I customize the theme?</AccordionTrigger>
-        <AccordionContent>
-          Yes. Override the CSS variables in your root stylesheet to match your brand palette.
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <div className="w-full max-w-sm" style={{ border: '1px solid #21262D', borderRadius: 12, overflow: 'hidden' }}>
+      {items.map((item, i) => (
+        <div key={i} style={{ borderBottom: i < items.length - 1 ? '1px solid #21262D' : 'none' }}>
+          <div className="flex items-center justify-between px-4 py-3 cursor-pointer" style={{ color: i === 0 ? '#E6EDF3' : '#C6CDD5' }}>
+            <span style={{ fontSize: 13, fontWeight: 500 }}>{item.q}</span>
+            <ChevronDown size={14} style={{ color: '#8B949E', transform: i === 0 ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+          </div>
+          {i === 0 && (
+            <div className="px-4 pb-3" style={{ color: '#8B949E', fontSize: 13, lineHeight: 1.5 }}>
+              {item.a}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 
 function AlertPreview() {
+  const alerts = [
+    { icon: CheckCircle2, color: '#22C55E', bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.2)', title: 'Success', msg: 'Changes saved successfully.' },
+    { icon: XCircle, color: '#EF4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)', title: 'Error', msg: 'Your session has expired. Please log in again.' },
+    { icon: AlertTriangle, color: '#F4C542', bg: 'rgba(244,197,66,0.08)', border: 'rgba(244,197,66,0.2)', title: 'Warning', msg: 'Please review before continuing.' },
+    { icon: Info, color: '#06B6D4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)', title: 'Info', msg: 'New version available for download.' },
+  ];
   return (
     <div className="w-full max-w-sm space-y-3">
-      <Alert>
-        <Terminal className="h-4 w-4" />
-        <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>
-          You can add components to your app using the CLI.
-        </AlertDescription>
-      </Alert>
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          Your session has expired. Please log in again.
-        </AlertDescription>
-      </Alert>
+      {alerts.map((a) => {
+        const Icon = a.icon;
+        return (
+          <div key={a.title} className="flex items-start gap-3 px-4 py-3 rounded-xl" style={{ background: a.bg, border: `1px solid ${a.border}` }}>
+            <Icon size={16} style={{ color: a.color, marginTop: 2, flexShrink: 0 }} />
+            <div>
+              <p style={{ color: a.color, fontSize: 13, fontWeight: 600 }}>{a.title}</p>
+              <p style={{ color: '#C6CDD5', fontSize: 12 }}>{a.msg}</p>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
 function AlertDialogPreview() {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive">Delete Item</Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the selected item and remove all associated data from our servers.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <div className="flex flex-col gap-4">
+      <Button style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444' }}>Delete Item</Button>
+      {/* Static dialog preview */}
+      <div
+        className="rounded-xl p-5 w-full max-w-sm"
+        style={{ background: '#1C2128', border: '1px solid #21262D', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
+      >
+        <h3 style={{ color: '#E6EDF3', fontSize: 15, fontWeight: 600, marginBottom: 6 }}>Are you absolutely sure?</h3>
+        <p style={{ color: '#8B949E', fontSize: 13, lineHeight: 1.5, marginBottom: 16 }}>
+          This action cannot be undone. This will permanently delete the selected item and remove all associated data from our servers.
+        </p>
+        <div className="flex items-center gap-2 justify-end">
+          <button
+            className="px-4 py-2 rounded-lg"
+            style={{ background: 'transparent', border: '1px solid #21262D', color: '#C6CDD5', fontSize: 13, cursor: 'pointer' }}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 rounded-lg"
+            style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', color: '#EF4444', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -415,23 +437,54 @@ function AspectRatioPreview() {
 }
 
 function AvatarPreview() {
+  const sizes = [
+    { label: 'XS', size: 20, fontSize: 8 },
+    { label: 'SM', size: 28, fontSize: 10 },
+    { label: 'MD', size: 36, fontSize: 12 },
+    { label: 'LG', size: 48, fontSize: 14 },
+    { label: 'XL', size: 60, fontSize: 18 },
+  ];
   return (
-    <div className="space-y-3">
-      <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Sizes &amp; Fallbacks</p>
-      <div className="flex items-end gap-3">
-        <Avatar className="h-8 w-8">
-          <AvatarFallback className="text-xs">SM</AvatarFallback>
-        </Avatar>
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-        <Avatar className="h-14 w-14">
-          <AvatarFallback className="text-lg bg-[#F39325] text-black">TF</AvatarFallback>
-        </Avatar>
-        <Avatar className="h-14 w-14">
-          <AvatarFallback className="text-lg bg-[#A371F7] text-black">JD</AvatarFallback>
-        </Avatar>
+    <div className="space-y-5">
+      {/* Row 1: Variants */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8B949E' }}>Variants</p>
+        <div className="flex items-center gap-3">
+          {/* Image placeholder */}
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ border: '2px solid #F39325', background: 'transparent' }}>
+            <User size={16} color="#F39325" />
+          </div>
+          {/* Initials */}
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(163,113,247,0.15)', fontSize: 12, fontWeight: 700, color: '#A371F7' }}>JP</div>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(6,182,212,0.15)', fontSize: 12, fontWeight: 700, color: '#06B6D4' }}>AF</div>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(243,147,37,0.15)', fontSize: 12, fontWeight: 700, color: '#F39325' }}>CO</div>
+          {/* Icon default */}
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: '#161B22' }}>
+            <User size={16} color="#8B949E" />
+          </div>
+        </div>
+      </div>
+      {/* Row 2: Sizes */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8B949E' }}>Sizes</p>
+        <div className="flex items-end gap-3">
+          {sizes.map((s) => (
+            <div key={s.label} className="flex flex-col items-center gap-1">
+              <div className="rounded-full flex items-center justify-center" style={{ width: s.size, height: s.size, background: 'rgba(163,113,247,0.15)', fontSize: s.fontSize, fontWeight: 700, color: '#A371F7' }}>
+                JP
+              </div>
+              <span style={{ color: '#8B949E', fontSize: 10 }}>{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Row 3: With badge */}
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8B949E' }}>With Badge</p>
+        <div className="relative inline-flex">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(243,147,37,0.15)', fontSize: 14, fontWeight: 700, color: '#F39325' }}>TF</div>
+          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#F4C542', fontSize: 10, fontWeight: 700, color: '#0D1117' }}>2</div>
+        </div>
       </div>
     </div>
   );
@@ -694,23 +747,23 @@ function DropdownMenuPreview() {
 
 function HoverCardPreview() {
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Button variant="link">@devfellowship</Button>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-72">
+    <div className="flex flex-col gap-4">
+      <button style={{ color: '#4AADE8', fontSize: 13, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>@devfellowship</button>
+      {/* Static hover card preview */}
+      <div
+        className="rounded-xl p-4 w-full max-w-xs"
+        style={{ background: '#1C2128', border: '1px solid #21262D', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+      >
         <div className="flex gap-3">
-          <Avatar>
-            <AvatarFallback className="bg-[#F39325] text-black">DF</AvatarFallback>
-          </Avatar>
-          <div className="space-y-1">
-            <h4 className="text-sm font-semibold">DevFellowship</h4>
-            <p className="text-sm text-muted-foreground">Building the next generation of developer tools and design systems.</p>
-            <p className="text-xs text-muted-foreground">Joined April 2024</p>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(243,147,37,0.15)', fontSize: 12, fontWeight: 700, color: '#F39325' }}>DF</div>
+          <div>
+            <h4 style={{ color: '#E6EDF3', fontSize: 14, fontWeight: 600 }}>DevFellowship</h4>
+            <p style={{ color: '#8B949E', fontSize: 12, lineHeight: 1.5, marginTop: 2 }}>Building the next generation of developer tools and design systems.</p>
+            <p style={{ color: '#6B7280', fontSize: 11, marginTop: 4 }}>Joined April 2024</p>
           </div>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </div>
+    </div>
   );
 }
 
@@ -847,19 +900,19 @@ function PaginationPreview() {
 
 function PopoverPreview() {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Open Popover</Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64">
-        <div className="space-y-2">
-          <h4 className="font-medium text-sm">Popover Title</h4>
-          <p className="text-sm text-muted-foreground">
-            This is a popover with some content inside.
-          </p>
-        </div>
-      </PopoverContent>
-    </Popover>
+    <div className="flex flex-col gap-4">
+      <Button style={{ background: '#161B22', border: '1px solid #21262D', color: '#E6EDF3' }}>Open Popover</Button>
+      {/* Static popover preview */}
+      <div
+        className="rounded-xl p-4 w-full max-w-xs"
+        style={{ background: '#1C2128', border: '1px solid #21262D', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
+      >
+        <h4 style={{ color: '#E6EDF3', fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Popover Title</h4>
+        <p style={{ color: '#8B949E', fontSize: 13, lineHeight: 1.5 }}>
+          This is a popover with some content inside a dark floating panel.
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -1146,33 +1199,71 @@ function SwitchPreview() {
 }
 
 function TablePreview() {
+  const tableData = [
+    { id: 1, name: "João Pessoa", initials: "JP", stage: "Stage 2", status: "Doing", value: "R$ 250" },
+    { id: 2, name: "Ana Ferreira", initials: "AF", stage: "Stage 3", status: "Done", value: "R$ 410" },
+    { id: 3, name: "Carlos Oliveira", initials: "CO", stage: "Stage 1", status: "In Review", value: "R$ 95" },
+    { id: 4, name: "Maria Costa", initials: "MC", stage: "Stage 2", status: "To Do", value: "R$ 180" },
+  ];
+  const statusColor: Record<string, string> = {
+    "Doing": "#4AADE8", "Done": "#22C55E", "In Review": "#F4C542", "To Do": "#8B949E",
+  };
+  const stageColor: Record<string, string> = {
+    "Stage 1": "#F39325", "Stage 2": "#4AADE8", "Stage 3": "#A371F7",
+  };
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">Alice Johnson</TableCell>
-          <TableCell><Badge className="bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/20 border-0">Active</Badge></TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-medium">Bob Smith</TableCell>
-          <TableCell><Badge className="bg-amber-500/20 text-amber-400 hover:bg-amber-500/20 border-0">Pending</Badge></TableCell>
-          <TableCell className="text-right">$1,250.00</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-medium">Carol Davis</TableCell>
-          <TableCell><Badge className="bg-red-500/20 text-red-400 hover:bg-red-500/20 border-0">Overdue</Badge></TableCell>
-          <TableCell className="text-right">$890.00</TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <div className="w-full overflow-x-auto">
+      <table className="w-full border-collapse" style={{ fontSize: 13 }}>
+        <thead>
+          <tr style={{ borderBottom: '1px solid #21262D' }}>
+            <th className="pb-2.5 pr-3 text-left" style={{ width: 32 }}>
+              <div className="w-4 h-4 rounded" style={{ background: '#161B22', border: '1px solid #21262D' }} />
+            </th>
+            <th className="pb-2.5 pr-6 text-left" style={{ color: '#8B949E', fontWeight: 600 }}>
+              <div className="flex items-center gap-1.5">
+                Name <ArrowUpDown size={11} color="#30363D" />
+              </div>
+            </th>
+            {["Stage", "Status", "Earnings"].map((h) => (
+              <th key={h} className="pb-2.5 pr-6 text-left" style={{ color: '#8B949E', fontWeight: 600 }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.map((row) => (
+            <tr key={row.id} style={{ borderBottom: '1px solid #21262D' }}>
+              <td className="py-3 pr-3">
+                <div className="w-4 h-4 rounded" style={{ background: 'transparent', border: '1.5px solid #21262D' }} />
+              </td>
+              <td className="py-3 pr-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(163,113,247,0.15)', fontSize: 10, fontWeight: 700, color: '#A371F7' }}>
+                    {row.initials}
+                  </div>
+                  <span style={{ color: '#E6EDF3' }}>{row.name}</span>
+                </div>
+              </td>
+              <td className="py-3 pr-6">
+                <span style={{ color: stageColor[row.stage] ?? '#8B949E', fontWeight: 600 }}>{row.stage}</span>
+              </td>
+              <td className="py-3 pr-6">
+                <span
+                  className="px-2 py-0.5 rounded-full"
+                  style={{ background: `${statusColor[row.status]}15`, color: statusColor[row.status], fontSize: 11, fontWeight: 700, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.06em' }}
+                >
+                  {row.status}
+                </span>
+              </td>
+              <td className="py-3">
+                <span className="flex items-center gap-1" style={{ color: '#22C55E', fontWeight: 600 }}>
+                  <Banknote size={12} />{row.value}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -1281,16 +1372,16 @@ function ToggleGroupPreview() {
 
 function TooltipPreview() {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button variant="outline">Hover me</Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>This is a tooltip</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <div className="flex flex-col items-start gap-3">
+      <Button style={{ background: '#161B22', border: '1px solid #21262D', color: '#E6EDF3' }}>Hover me</Button>
+      {/* Static tooltip preview */}
+      <div
+        className="rounded-lg px-3 py-1.5"
+        style={{ background: '#1C2128', border: '1px solid #21262D', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}
+      >
+        <p style={{ color: '#E6EDF3', fontSize: 12 }}>This is a tooltip</p>
+      </div>
+    </div>
   );
 }
 
@@ -1481,6 +1572,80 @@ function FormPreview() {
       >
         Submit
       </button>
+    </div>
+  );
+}
+
+function ListItemsPreview() {
+  const items = [
+    { icon: Bell, label: "Notifications", sub: "3 unread", badge: "3" },
+    { icon: Shield, label: "Permissions", sub: "Admin access", badge: null },
+    { icon: Settings, label: "Preferences", sub: "Theme \u00b7 Language", badge: null },
+    { icon: User, label: "Profile", sub: "Jo\u00e3o Pessoa", badge: null },
+  ];
+  return (
+    <div className="flex flex-col gap-0 w-full max-w-md" style={{ border: '1px solid #21262D', borderRadius: 12, overflow: 'hidden' }}>
+      {items.map((item, i) => {
+        const Icon = item.icon;
+        return (
+          <div
+            key={item.label}
+            className="flex items-center gap-3 px-4 py-3 cursor-pointer"
+            style={{ borderBottom: i < items.length - 1 ? '1px solid #21262D' : 'none' }}
+          >
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(163,113,247,0.12)' }}>
+              <Icon size={14} color="#A371F7" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 600 }}>{item.label}</p>
+              <p style={{ color: '#8B949E', fontSize: 11 }}>{item.sub}</p>
+            </div>
+            {item.badge && (
+              <span className="px-2 py-0.5 rounded-full" style={{ background: 'rgba(239,68,68,0.12)', color: '#EF4444', fontSize: 10, fontWeight: 700, fontFamily: "'Barlow Condensed', sans-serif" }}>{item.badge}</span>
+            )}
+            <ChevronRight size={13} color="#30363D" />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CardGridPreview() {
+  const cards = [
+    { icon: Layers, label: "Stage 1", sub: "Onboarding", color: '#F39325', done: 80 },
+    { icon: GripVertical, label: "Stage 2", sub: "Builder", color: '#4AADE8', done: 45 },
+    { icon: Award, label: "Stage 3", sub: "Architect", color: '#A371F7', done: 0 },
+  ];
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+      {cards.map((card) => {
+        const Icon = card.icon;
+        return (
+          <div
+            key={card.label}
+            className="flex flex-col gap-3 p-4 rounded-xl"
+            style={{ background: '#161B22', border: '1px solid #21262D' }}
+          >
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${card.color}20` }}>
+              <Icon size={16} color={card.color} />
+            </div>
+            <div>
+              <p style={{ color: '#E6EDF3', fontSize: 14, fontWeight: 600 }}>{card.label}</p>
+              <p style={{ color: '#8B949E', fontSize: 12 }}>{card.sub}</p>
+            </div>
+            <div className="mt-auto">
+              <div className="flex items-center justify-between mb-1">
+                <span style={{ color: '#6B7280', fontSize: 11 }}>Progress</span>
+                <span style={{ color: card.color, fontSize: 11, fontWeight: 700 }}>{card.done}%</span>
+              </div>
+              <div className="h-1.5 rounded-full" style={{ background: '#21262D' }}>
+                <div className="h-full rounded-full" style={{ width: `${card.done}%`, background: card.color }} />
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -2100,5 +2265,47 @@ import { Bold } from 'lucide-react';
     <TooltipContent>Tooltip text</TooltipContent>
   </Tooltip>
 </TooltipProvider>`,
+  },
+  'List Items': {
+    preview: <ListItemsPreview />,
+    usage: `{/* Settings-style list rows */}
+<div style={{ border: '1px solid #21262D', borderRadius: 12, overflow: 'hidden' }}>
+  {items.map((item, i, arr) => (
+    <div key={item.label} className="flex items-center gap-3 px-4 py-3"
+         style={{ borderBottom: i < arr.length - 1 ? '1px solid #21262D' : 'none' }}>
+      <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+           style={{ background: 'rgba(163,113,247,0.12)' }}>
+        <Icon size={14} color="#A371F7" />
+      </div>
+      <div className="flex-1">
+        <p style={{ color: '#E6EDF3', fontSize: 13, fontWeight: 600 }}>{item.label}</p>
+        <p style={{ color: '#8B949E', fontSize: 11 }}>{item.sub}</p>
+      </div>
+      <ChevronRight size={13} color="#30363D" />
+    </div>
+  ))}
+</div>`,
+  },
+  'Card Grid': {
+    preview: <CardGridPreview />,
+    usage: `{/* Responsive card grid with progress */}
+<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+  {cards.map((card) => (
+    <div key={card.label} className="flex flex-col gap-3 p-4 rounded-xl"
+         style={{ background: '#161B22', border: '1px solid #21262D' }}>
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+           style={{ background: \`\${card.color}20\` }}>
+        <Icon size={16} color={card.color} />
+      </div>
+      <div>
+        <p style={{ color: '#E6EDF3', fontSize: 14, fontWeight: 600 }}>{card.label}</p>
+        <p style={{ color: '#8B949E', fontSize: 12 }}>{card.sub}</p>
+      </div>
+      <div className="h-1.5 rounded-full" style={{ background: '#21262D' }}>
+        <div className="h-full rounded-full" style={{ width: \`\${card.done}%\`, background: card.color }} />
+      </div>
+    </div>
+  ))}
+</div>`,
   },
 };
