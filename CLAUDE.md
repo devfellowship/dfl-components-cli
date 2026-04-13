@@ -20,7 +20,7 @@ src/                          # Showcase web app
 │   ├── auth/                 # LoginPage, RegisterPage (placeholders)
 │   ├── observability/        # OTel tracing
 │   └── ui/                   # shadcn/ui primitives
-├── data/mockComponents.ts    # Component catalog (mock)
+├── data/registryComponents.ts # Component catalog (auto-generated from registry/)
 ├── types/component.ts        # Component type definition
 packages/cli/                 # CLI tool
 ├── src/
@@ -43,7 +43,7 @@ registry/                     # JSON component registry
 - CLI: `cd packages/cli && npm run build` (tsup)
 - Registry JSON files define components with: name, type, files, dependencies
 - CLI reads registry.json, resolves aliases, copies files into target project
-- Showcase app uses mock data — update `data/mockComponents.ts` to add demos
+- Showcase app reads from registry — data auto-generated from `registry/` JSON files via `src/data/registryComponents.ts`
 
 ## Contracts
 - **Registry format**: `{ name, type, files: [{ path, content }], dependencies }` per component
@@ -65,11 +65,14 @@ registry/                     # JSON component registry
 <!-- END GENERATED:claude/base -->
 
 <!-- BEGIN MANUAL:repo/local-notes -->
-## Component Hub Maintenance
+## Adding a New Component or Hook
 
-When adding or removing components from `src/components/ui/`:
-1. Update `src/data/mockComponents.ts` with the new component entry
-2. Re-generate `src/data/designSystemData.json` by running: `node scripts/generate-design-data.mjs`
-3. Add a preview example if possible
-4. Verify the component appears on components.devfellowship.com after deploy
+When adding a new component or hook to @dfl/components:
+
+1. **Add the component source** — create `registry/components/<name>.json` (or `hooks/`, `providers/`, `pages/`) following the existing JSON schema: `{ name, type, title, description, category, version, tags, dependencies, registryDependencies, files: [{ path, content }] }`
+2. **Update the registry index** — add an entry to `registry/registry.json` items array with: name, type, title, description, category, version, registryDependencies, dependencies
+3. **Update the Component Hub data** — re-generate `src/data/designSystemData.json` by running: `node scripts/generate-design-data.mjs`
+4. **Verify the Component Hub** — `npm run dev` and confirm the new component appears on the hub listing AND detail page
+5. **Verify after deploy** — confirm it appears on components.devfellowship.com
+6. **If it doesn't appear** — check that the individual JSON file, the registry.json entry, AND the designSystemData.json all include the component
 <!-- END MANUAL:repo/local-notes -->
