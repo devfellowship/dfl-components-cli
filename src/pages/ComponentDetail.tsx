@@ -120,7 +120,7 @@ const ComponentDetail: React.FC = () => {
       <ComponentSidebar components={allComponents} />
       <SidebarInset className="bg-sidebar">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-sidebar-border bg-sidebar/95 backdrop-blur px-6 py-3">
+        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-sidebar-border bg-sidebar/95 backdrop-blur px-3 sm:px-6 py-3">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="h-6" />
           <Breadcrumb>
@@ -145,10 +145,10 @@ const ComponentDetail: React.FC = () => {
         </header>
 
         {/* Content */}
-        <div className="p-6 max-w-4xl">
+        <div className="p-3 sm:p-6 max-w-4xl">
           {/* Title section */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
               <h1 className="text-3xl font-bold tracking-tight">{component.name}</h1>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded">
@@ -191,7 +191,7 @@ const ComponentDetail: React.FC = () => {
                   {sub.previewComponent && (
                     <section>
                       <h2 className="text-lg font-semibold mb-3">Preview</h2>
-                      <div className="rounded-xl p-6 bg-card flex items-center justify-center min-h-[200px]">
+                      <div className="rounded-xl p-3 sm:p-6 bg-card flex items-center justify-center min-h-[200px] overflow-x-auto">
                         {React.createElement(sub.previewComponent)}
                       </div>
                     </section>
@@ -212,7 +212,7 @@ const ComponentDetail: React.FC = () => {
               {(componentPreviews[component.name]?.preview || component.previewComponent) && (
                 <section>
                   <h2 className="text-lg font-semibold mb-3">Preview</h2>
-                  <div className="rounded-xl p-6 bg-card flex items-center justify-center min-h-[120px]">
+                  <div className="rounded-xl p-3 sm:p-6 bg-card flex items-center justify-center min-h-[120px] overflow-x-auto">
                     {componentPreviews[component.name]?.preview
                       ? componentPreviews[component.name].preview
                       : component.previewComponent

@@ -66,7 +66,7 @@ const ComponentsListing: React.FC = () => {
       <ComponentSidebar components={allComponents} />
       <SidebarInset className="bg-sidebar">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-sidebar-border bg-sidebar/95 backdrop-blur px-6 py-3">
+        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-sidebar-border bg-sidebar/95 backdrop-blur px-3 sm:px-6 py-3">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="h-6" />
           <div className="relative flex-1 max-w-md">
@@ -81,7 +81,7 @@ const ComponentsListing: React.FC = () => {
         </header>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           <div className="mb-8">
             <h1 className="text-3xl font-bold tracking-tight">All Components</h1>
             <p className="text-muted-foreground mt-1">
@@ -154,11 +154,11 @@ const ComponentsListing: React.FC = () => {
                       </Link>
                       <hr className="border-border my-3" />
                       {preview ? (
-                        <div className="flex items-center justify-center min-h-[60px] overflow-hidden rounded-xl bg-card p-6">
+                        <div className="flex items-center justify-center min-h-[60px] overflow-x-auto rounded-xl bg-card p-3 sm:p-6">
                           {preview.preview}
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center min-h-[60px] rounded-xl bg-card p-6">
+                        <div className="flex items-center justify-center min-h-[60px] rounded-xl bg-card p-3 sm:p-6">
                           <p className="text-xs text-muted-foreground/60">Preview not available</p>
                         </div>
                       )}
