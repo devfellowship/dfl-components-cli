@@ -1,8 +1,7 @@
-
-import ComponentHubApp from '@/components/ComponentHubApp';
+import { Navigate } from 'react-router-dom';
 
 const Index = () => {
-  return <ComponentHubApp />;
+  return <Navigate to="/components" replace />;
 };
 
 export default Index;

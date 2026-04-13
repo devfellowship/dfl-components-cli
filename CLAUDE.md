@@ -65,5 +65,11 @@ registry/                     # JSON component registry
 <!-- END GENERATED:claude/base -->
 
 <!-- BEGIN MANUAL:repo/local-notes -->
-<!-- repo-specific notes live here -->
+## Component Hub Maintenance
+
+When adding or removing components from `src/components/ui/`:
+1. Update `src/data/mockComponents.ts` with the new component entry
+2. Re-generate `src/data/designSystemData.json` by running: `node scripts/generate-design-data.mjs`
+3. Add a preview example if possible
+4. Verify the component appears on components.devfellowship.com after deploy
 <!-- END MANUAL:repo/local-notes -->
