@@ -92,6 +92,16 @@
   }
 }
 
+@keyframes ds-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+.ds-shimmer {
+  background: linear-gradient(90deg, #21262D 25%, #2D333B 50%, #21262D 75%);
+  background-size: 1200px 100%;
+  animation: ds-shimmer 1.6s infinite linear;
+}
+
 @layer base {
   * {
     @apply border-border;

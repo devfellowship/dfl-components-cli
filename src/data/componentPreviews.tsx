@@ -1125,18 +1125,87 @@ function SkeletonPreview() {
   return (
     <div className="w-full max-w-sm space-y-4">
       <div className="flex items-center space-x-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="ds-shimmer w-10 h-10 rounded-full" />
         <div className="space-y-2 flex-1">
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-4 w-1/2" />
+          <div className="ds-shimmer h-4 rounded-md" style={{ width: '60%' }} />
+          <div className="ds-shimmer h-4 rounded-md" style={{ width: '40%' }} />
         </div>
       </div>
       <div className="space-y-2">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-5/6" />
-        <Skeleton className="h-4 w-2/3" />
+        <div className="ds-shimmer h-4 rounded-md" style={{ width: '100%' }} />
+        <div className="ds-shimmer h-4 rounded-md" style={{ width: '85%' }} />
+        <div className="ds-shimmer h-4 rounded-md" style={{ width: '70%' }} />
       </div>
-      <Skeleton className="h-[120px] w-full rounded-md" />
+      <div className="ds-shimmer h-20 w-full rounded-xl" />
+    </div>
+  );
+}
+
+function LoadingStatePreview() {
+  return (
+    <div className="w-full max-w-sm space-y-6">
+      <div className="flex items-center space-x-3">
+        <div
+          className="animate-spin rounded-full h-5 w-5 border-2 border-[#A371F7]"
+          style={{ borderTopColor: 'transparent' }}
+        />
+        <span style={{ color: '#C9D1D9', fontSize: 14 }}>Loading data...</span>
+      </div>
+      <div className="space-y-2">
+        <div className="flex justify-between" style={{ fontSize: 13, color: '#8B949E' }}>
+          <span>Processing tasks</span>
+          <span>68%</span>
+        </div>
+        <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: '#21262D' }}>
+          <div
+            className="h-full rounded-full"
+            style={{ width: '68%', background: 'linear-gradient(90deg, #A371F7, #06B6D4)' }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EmptyPlaceholderPreview() {
+  return (
+    <div className="w-full max-w-sm flex flex-col items-center text-center space-y-4 py-6">
+      <div
+        className="flex items-center justify-center rounded-2xl"
+        style={{
+          width: 64,
+          height: 64,
+          border: '1px dashed rgba(163,113,247,0.25)',
+          background: 'rgba(163,113,247,0.08)',
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#A371F7"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+      </div>
+      <div className="space-y-1">
+        <h3 style={{ color: '#C9D1D9', fontSize: 16, fontWeight: 600 }}>No results found</h3>
+        <p style={{ color: '#8B949E', fontSize: 13 }}>
+          Try adjusting your filters or create a new item to get started.
+        </p>
+      </div>
+      <button
+        className="rounded-lg px-4 py-2 text-sm font-medium"
+        style={{ background: 'hsl(33, 90%, 55%)', color: '#000' }}
+      >
+        Create new
+      </button>
     </div>
   );
 }
@@ -1625,6 +1694,36 @@ import { Label } from '@/components/ui/label';
 
 <Skeleton className="h-4 w-[200px]" />
 <Skeleton className="h-12 w-12 rounded-full" />`,
+  },
+  'Loading State': {
+    preview: <LoadingStatePreview />,
+    usage: `{/* Spinner */}
+<div className="flex items-center space-x-3">
+  <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#A371F7]"
+       style={{ borderTopColor: 'transparent' }} />
+  <span>Loading data...</span>
+</div>
+
+{/* Progress bar */}
+<div className="w-full h-2 rounded-full" style={{ background: '#21262D' }}>
+  <div className="h-full rounded-full"
+       style={{ width: '68%', background: 'linear-gradient(90deg, #A371F7, #06B6D4)' }} />
+</div>`,
+  },
+  'Empty Placeholder': {
+    preview: <EmptyPlaceholderPreview />,
+    usage: `<div className="flex flex-col items-center text-center space-y-4 py-6">
+  <div style={{
+    width: 64, height: 64,
+    border: '1px dashed rgba(163,113,247,0.25)',
+    background: 'rgba(163,113,247,0.08)',
+  }} className="flex items-center justify-center rounded-2xl">
+    <SearchIcon className="h-6 w-6 text-[#A371F7]" />
+  </div>
+  <h3>No results found</h3>
+  <p>Try adjusting your filters or create a new item to get started.</p>
+  <Button>Create new</Button>
+</div>`,
   },
   Slider: {
     preview: <SliderPreview />,
