@@ -154,8 +154,10 @@ const ComponentsListing: React.FC = () => {
                       </Link>
                       <hr className="border-border my-3" />
                       {preview ? (
-                        <div className="flex items-center justify-center min-h-[60px] overflow-x-auto rounded-xl bg-card p-3 sm:p-6">
-                          {preview.preview}
+                        <div className="min-h-[60px] overflow-x-auto rounded-xl bg-card p-3 sm:p-6">
+                          <div className="flex items-center justify-center">
+                            {preview.preview}
+                          </div>
                         </div>
                       ) : (
                         <div className="flex items-center justify-center min-h-[60px] rounded-xl bg-card p-3 sm:p-6">
