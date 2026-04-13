@@ -379,6 +379,248 @@
       "dependencies": [
         "@radix-ui/react-tooltip"
       ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:component",
+      "title": "Alert Dialog",
+      "description": "Confirmation dialog requiring user action",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [
+        "button"
+      ],
+      "dependencies": [
+        "@radix-ui/react-alert-dialog"
+      ]
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:component",
+      "title": "Aspect Ratio",
+      "description": "Maintain consistent width-to-height ratio",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-aspect-ratio"
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:component",
+      "title": "Calendar",
+      "description": "Date picker calendar component",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [
+        "button"
+      ],
+      "dependencies": [
+        "react-day-picker"
+      ]
+    },
+    {
+      "name": "carousel",
+      "type": "registry:component",
+      "title": "Carousel",
+      "description": "Scrollable content carousel with navigation",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [
+        "button"
+      ],
+      "dependencies": [
+        "embla-carousel-react"
+      ]
+    },
+    {
+      "name": "chart",
+      "type": "registry:component",
+      "title": "Chart",
+      "description": "Data visualization chart components built on Recharts",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "recharts"
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:component",
+      "title": "Collapsible",
+      "description": "Expandable/collapsible content section",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-collapsible"
+      ]
+    },
+    {
+      "name": "command",
+      "type": "registry:component",
+      "title": "Command",
+      "description": "Command palette with search and filtering",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [
+        "dialog"
+      ],
+      "dependencies": [
+        "cmdk"
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:component",
+      "title": "Context Menu",
+      "description": "Right-click context menu with nested items",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-context-menu"
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:component",
+      "title": "Drawer",
+      "description": "Bottom sheet drawer overlay",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "vaul"
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:component",
+      "title": "Hover Card",
+      "description": "Content card shown on hover",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-hover-card"
+      ]
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:component",
+      "title": "Input OTP",
+      "description": "One-time password input with segmented fields",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "input-otp"
+      ]
+    },
+    {
+      "name": "menubar",
+      "type": "registry:component",
+      "title": "Menubar",
+      "description": "Horizontal menu bar with dropdown items",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-menubar"
+      ]
+    },
+    {
+      "name": "navigation-menu",
+      "type": "registry:component",
+      "title": "Navigation Menu",
+      "description": "Accessible navigation menu with submenus",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-navigation-menu",
+        "class-variance-authority"
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:component",
+      "title": "Pagination",
+      "description": "Page navigation with previous/next controls",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [
+        "button"
+      ],
+      "dependencies": []
+    },
+    {
+      "name": "resizable",
+      "type": "registry:component",
+      "title": "Resizable",
+      "description": "Resizable panel layout with drag handles",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "react-resizable-panels"
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:component",
+      "title": "Slider",
+      "description": "Range slider input control",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-slider"
+      ]
+    },
+    {
+      "name": "sonner",
+      "type": "registry:component",
+      "title": "Sonner",
+      "description": "Toast notification system",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "sonner",
+        "next-themes"
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:component",
+      "title": "Toggle",
+      "description": "Two-state toggle button with variants",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-toggle",
+        "class-variance-authority"
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:component",
+      "title": "Toggle Group",
+      "description": "Group of toggle buttons with single/multi selection",
+      "category": "UI",
+      "version": "0.1.0",
+      "registryDependencies": [
+        "toggle"
+      ],
+      "dependencies": [
+        "@radix-ui/react-toggle-group",
+        "class-variance-authority"
+      ]
     }
   ]
 }
