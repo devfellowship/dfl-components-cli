@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, Search, Eye } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import { Component } from '@/types/component';
 import { mockComponents } from '@/data/mockComponents';
 import designSystemData from '@/data/designSystemData.json';
@@ -65,7 +64,7 @@ const ComponentsListing: React.FC = () => {
   return (
     <SidebarProvider>
       <ComponentSidebar components={allComponents} />
-      <SidebarInset className="bg-background">
+      <SidebarInset className="bg-sidebar">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-6 py-3">
           <SidebarTrigger className="-ml-1" />
@@ -141,50 +140,28 @@ const ComponentsListing: React.FC = () => {
                 <span className="text-sm text-muted-foreground">({comps.length})</span>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-8">
                 {comps.map(comp => {
                   const preview = componentPreviews[comp.name];
-                  const dsComp = components.find(d => d.name.toLowerCase() === comp.name.toLowerCase());
-                  const isAvailable = dsComp?.available ?? true;
 
                   return (
-                    <div
-                      key={comp.name}
-                      className="rounded-lg border border-border bg-card overflow-hidden transition-colors hover:border-accent-foreground/20"
-                    >
-                      {/* Header row */}
-                      <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/20">
-                        <Link
-                          to={`/components/${slugify(comp.name)}`}
-                          className="text-base font-semibold hover:text-blue-400 transition-colors"
-                        >
-                          {comp.name}
-                        </Link>
-                        {isAvailable && (
-                          <Badge variant="secondary" className="text-xs gap-1">
-                            <CheckCircle2 className="w-3 h-3 text-green-400" />
-                            Available
-                          </Badge>
-                        )}
-                      </div>
-
-                      {/* Preview area */}
-                      <div className="px-5 py-4">
-                        {preview ? (
-                          <div className="border border-border rounded-md p-4 bg-muted/30 flex items-center justify-center min-h-[80px] overflow-hidden">
-                            <div className="w-full flex items-center justify-center">
-                              {preview.preview}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="border border-border rounded-md p-4 bg-muted/10 flex items-center justify-center min-h-[80px]">
-                            <div className="text-center">
-                              <Eye className="w-6 h-6 mx-auto mb-2 text-muted-foreground/40" />
-                              <p className="text-xs text-muted-foreground/60">Preview not available</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                    <div key={comp.name}>
+                      <Link
+                        to={`/components/${slugify(comp.name)}`}
+                        className="text-base font-semibold hover:text-blue-400 transition-colors"
+                      >
+                        {comp.name}
+                      </Link>
+                      <hr className="border-border my-3" />
+                      {preview ? (
+                        <div className="flex items-center justify-center min-h-[60px] overflow-hidden">
+                          {preview.preview}
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center min-h-[60px]">
+                          <p className="text-xs text-muted-foreground/60">Preview not available</p>
+                        </div>
+                      )}
                     </div>
                   );
                 })}

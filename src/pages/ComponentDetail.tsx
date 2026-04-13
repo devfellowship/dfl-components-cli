@@ -86,7 +86,7 @@ const ComponentDetail: React.FC = () => {
     return (
       <SidebarProvider>
         <ComponentSidebar components={allComponents} />
-        <SidebarInset className="bg-background">
+        <SidebarInset className="bg-sidebar">
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
               <h1 className="text-2xl font-bold mb-2">Component not found</h1>
@@ -118,7 +118,7 @@ const ComponentDetail: React.FC = () => {
   return (
     <SidebarProvider>
       <ComponentSidebar components={allComponents} />
-      <SidebarInset className="bg-background">
+      <SidebarInset className="bg-sidebar">
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-6 py-3">
           <SidebarTrigger className="-ml-1" />
