@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { toast } from "sonner";
-import { Toaster } from "../components/sonner";
+import { SonnerToaster } from "../components/sonner";
 import { Button } from "../components/button";
 
-const meta: Meta<typeof Toaster> = {
+const meta: Meta<typeof SonnerToaster> = {
   title: "Primitivos/Sonner",
-  component: Toaster,
+  component: SonnerToaster,
   tags: ["autodocs"],
 };
 
 export default meta;
-type Story = StoryObj<typeof Toaster>;
+type Story = StoryObj<typeof SonnerToaster>;
 
 export const Default: Story = {
   render: () => (
     <>
-      <Toaster />
+      <SonnerToaster />
       <Button
         variant="outline"
         onClick={() =>
