@@ -18,7 +18,7 @@ export * from "./components";
 export { cn } from "./lib/utils";
 
 // Hooks re-export for convenience (full set at @dfl/components/hooks)
-export { useIsMobile, useToast, toast, useAuth, useSession } from "./hooks";
+export { useIsMobile, useToast, toast, useAuth, useSession, useIframeAuth, useIframeNavigate } from "./hooks";
 export type { ToastProps, ToastVariant, AuthContextType, UserProfile } from "./hooks";
 
 // Providers re-export for convenience
