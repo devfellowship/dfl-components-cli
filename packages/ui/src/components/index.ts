@@ -49,5 +49,8 @@ export * from "./toggle-group";
 export * from "./tooltip";
 export * from "./protected-route";
 
+// ─── Iframe primitives ───────────────────────────────────────────────────────
+export * from "./iframe";
+
 // ─── Organisms ────────────────────────────────────────────────────────────────
 export * from "./organisms";
