@@ -1,0 +1,13 @@
+name: Scaffold Guard
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scaffold-guard:
+    uses: devfellowship/dfl-ci/.github/workflows/scaffold-guard.yml@main
+    secrets: inherit
+
