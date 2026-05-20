@@ -1,0 +1,400 @@
+/*
+ * @dfl/components — Design System v0 Tokens
+ *
+ * Hand-written 3-layer token architecture (per ADR-1 in plan
+ * https://plans.tainanfidelis.com/20260520-dfl-components-ds-v0-revamp):
+ *
+ *   1. --p-*  primitives    Raw atoms (color stops, type scale, spacing, etc.).
+ *                           Never consumed by component code directly.
+ *   2. --s-*  semantic      Intent-mapped (surface-page, ink-muted, brand-solid…)
+ *                           Components MAY consume these as fallback chain.
+ *   3. --c-*  component     Per-component knobs (--c-button-primary-bg, …).
+ *                           This is what component CSS reaches for first.
+ *
+ * Plain CSS vars, no compile step (per Tainan Q5=C — Round-1 TG msg 5645).
+ *
+ * Brand color: #E07A4A (DS v0 amber-500). Previous #F39325 retired in v1.0.0.
+ *
+ * Usage in consumer app:
+ *   @import '@devfellowship/components/styles';   ← this file via theme.css
+ *
+ * Override any variable in your own CSS to retheme.
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 1 — Primitives (--p-*)
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Color stops — extracted from DS v0 artifact (302 vars total) ─────────── */
+
+  /* Sand (neutral) */
+  --p-sand-50:  #f6f1e7;
+  --p-sand-100: #e8e0d0;
+  --p-sand-200: #c9c0b4;
+  --p-sand-300: #a89e8f;
+  --p-sand-400: #7d7568;
+  --p-sand-500: #5a5249;
+  --p-sand-600: #3a3530;
+  --p-sand-700: #2a2622;
+  --p-sand-800: #1f1c18;
+  --p-sand-850: #1a1714;
+  --p-sand-900: #141210;
+  --p-sand-950: #0a0908;
+
+  /* Amber (brand) */
+  --p-amber-50:  #fff1e6;
+  --p-amber-100: #fadcc0;
+  --p-amber-200: #f5c298;
+  --p-amber-300: #f0a872;
+  --p-amber-400: #ea915a;
+  --p-amber-500: #E07A4A;   /* ← DS v0 brand */
+  --p-amber-600: #c2663b;
+  --p-amber-700: #9e5230;
+  --p-amber-800: #783e25;
+  --p-amber-900: #4d2818;
+
+  /* Green (success) */
+  --p-green-100: #d2eed9;
+  --p-green-400: #7ad79a;
+  --p-green-500: #5ec27e;
+  --p-green-700: #2f7a4a;
+  --p-green-900: #143b22;
+
+  /* Yellow (warning) */
+  --p-yellow-400: #f0c875;
+  --p-yellow-500: #e0b04a;
+  --p-yellow-700: #9c781f;
+  --p-yellow-900: #4a3b12;
+
+  /* Blue (info) */
+  --p-blue-400: #9ab9e8;
+  --p-blue-500: #7aa2e0;
+  --p-blue-700: #3b5c9c;
+  --p-blue-900: #1a2b4c;
+
+  /* Red (danger) */
+  --p-red-400: #e89898;
+  --p-red-500: #e07a7a;
+  --p-red-700: #9c3b3b;
+  --p-red-900: #4c1a1a;
+
+  /* Avatar / accent palette */
+  --p-amber:       #E07A4A;
+  --p-blue:        #7aa2e0;
+  --p-green:       #5ec27e;
+  --p-lilac:       #b58fe0;
+  --p-mustard:     #e0b04a;
+  --p-teal:        #7ad6cd;
+  --p-coral:       #e07a7a;
+  --p-mint:        #7ae0a8;
+  --p-peach:       #e0b8a8;
+  --p-periwinkle:  #9aa8e0;
+
+  /* Typography */
+  --p-font-display: 'Barlow Condensed', 'Inter', system-ui, sans-serif;
+  --p-font-sans:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --p-font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --p-text-10: 10px;
+  --p-text-11: 11px;
+  --p-text-12: 12px;
+  --p-text-13: 13px;
+  --p-text-14: 14px;
+  --p-text-15: 15px;
+  --p-text-16: 16px;
+  --p-text-18: 18px;
+  --p-text-20: 20px;
+  --p-text-24: 24px;
+  --p-text-32: 32px;
+  --p-text-40: 40px;
+
+  --p-weight-400: 400;
+  --p-weight-500: 500;
+  --p-weight-600: 600;
+  --p-weight-700: 700;
+
+  --p-leading-tight:   1.2;
+  --p-leading-snug:    1.4;
+  --p-leading-normal:  1.55;
+  --p-leading-relaxed: 1.7;
+
+  --p-tracking-tight:  -0.4px;
+  --p-tracking-normal: 0;
+  --p-tracking-wide:   0.5px;
+  --p-tracking-wider:  0.8px;
+
+  /* Spacing scale (4px grid) */
+  --p-space-0:  0;
+  --p-space-1:  4px;
+  --p-space-2:  8px;
+  --p-space-3:  12px;
+  --p-space-4:  16px;
+  --p-space-5:  20px;
+  --p-space-6:  24px;
+  --p-space-8:  32px;
+  --p-space-10: 40px;
+  --p-space-12: 48px;
+  --p-space-16: 64px;
+  --p-space-20: 80px;
+
+  /* Radius scale */
+  --p-radius-0:    0;
+  --p-radius-sm:   4px;
+  --p-radius-md:   6px;
+  --p-radius-lg:   10px;
+  --p-radius-xl:   14px;
+  --p-radius-2xl:  20px;
+  --p-radius-pill: 999px;
+
+  /* Shadow scale */
+  --p-shadow-sm:      0 1px 2px rgba(0,0,0,0.4);
+  --p-shadow:         0 4px 12px rgba(0,0,0,0.45);
+  --p-shadow-lg:      0 12px 30px rgba(0,0,0,0.6);
+  --p-shadow-overlay: 0 24px 60px rgba(0,0,0,0.7);
+
+  /* Motion */
+  --p-ease-out:      cubic-bezier(0.2, 0.7, 0.3, 1);
+  --p-ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --p-duration-fast: 120ms;
+  --p-duration:      180ms;
+  --p-duration-slow: 280ms;
+
+  /* Breakpoints (referenced from @media, not applied here) */
+  --p-bp-phone: 0px;
+  --p-bp-sm:    640px;
+  --p-bp-md:    768px;
+  --p-bp-lg:    1024px;
+  --p-bp-xl:    1280px;
+  --p-bp-2xl:   1536px;
+
+  /* Touch targets (a11y minimums) */
+  --p-touch-target:  44px;
+  --p-touch-comfort: 48px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 2 — Semantic (--s-*)
+ *   Intent-mapped tokens. Components may consume directly when no --c-* exists.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Surface (background hierarchy) */
+  --s-surface-page:     var(--p-sand-950);
+  --s-surface-panel:    var(--p-sand-900);
+  --s-surface-raised:   var(--p-sand-850);
+  --s-surface-elevated: var(--p-sand-800);
+  --s-surface-overlay:  var(--p-sand-850);
+  --s-surface-scrim:    rgba(10, 9, 8, 0.72);
+
+  /* Border */
+  --s-border-subtle:    var(--p-sand-700);
+  --s-border-strong:    var(--p-sand-600);
+  --s-border-focus:     var(--p-amber-500);
+
+  /* Ink (text) */
+  --s-ink-primary:      var(--p-sand-50);
+  --s-ink-secondary:    var(--p-sand-200);
+  --s-ink-muted:        var(--p-sand-400);
+  --s-ink-disabled:     var(--p-sand-500);
+  --s-ink-inverse:      var(--p-sand-950);
+
+  /* Brand */
+  --s-brand-solid:      var(--p-amber-500);
+  --s-brand-hover:      var(--p-amber-400);
+  --s-brand-pressed:    var(--p-amber-600);
+  --s-brand-fg:         var(--p-amber-300);
+  --s-brand-subtle:     rgba(224, 122, 74, 0.10);
+  --s-brand-border:     rgba(224, 122, 74, 0.22);
+  --s-brand-ring:       rgba(224, 122, 74, 0.45);
+
+  /* Success */
+  --s-success-solid:    var(--p-green-500);
+  --s-success-fg:       var(--p-green-400);
+  --s-success-subtle:   rgba(94, 194, 126, 0.12);
+  --s-success-border:   rgba(94, 194, 126, 0.40);
+
+  /* Warning */
+  --s-warning-solid:    var(--p-yellow-500);
+  --s-warning-fg:       var(--p-yellow-400);
+  --s-warning-subtle:   rgba(224, 176, 74, 0.12);
+  --s-warning-border:   rgba(224, 176, 74, 0.40);
+
+  /* Danger */
+  --s-danger-solid:     var(--p-red-500);
+  --s-danger-fg:        var(--p-red-400);
+  --s-danger-subtle:    rgba(224, 122, 122, 0.12);
+  --s-danger-border:    rgba(224, 122, 122, 0.40);
+
+  /* Info */
+  --s-info-solid:       var(--p-blue-500);
+  --s-info-fg:          var(--p-blue-400);
+  --s-info-subtle:      rgba(122, 162, 224, 0.12);
+  --s-info-border:      rgba(122, 162, 224, 0.40);
+
+  /* Type stacks */
+  --s-font-display:     var(--p-font-display);
+  --s-font-body:        var(--p-font-sans);
+  --s-font-mono:        var(--p-font-mono);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Component (--c-*)
+ *   ~5-10 knobs per component (per Tainan Q10=B). Pragmatic, not exhaustive.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Button */
+  --c-button-radius:                 var(--p-radius-md);
+  --c-button-font-weight:            var(--p-weight-500);
+  --c-button-primary-bg:             var(--s-brand-solid);
+  --c-button-primary-fg:             var(--p-sand-950);
+  --c-button-primary-border:         var(--s-brand-solid);
+  --c-button-primary-bg-hover:       var(--s-brand-hover);
+  --c-button-primary-bg-active:      var(--s-brand-pressed);
+  --c-button-secondary-bg:           var(--s-surface-raised);
+  --c-button-secondary-fg:           var(--s-ink-secondary);
+  --c-button-secondary-border:       var(--s-border-subtle);
+  --c-button-secondary-bg-hover:     var(--s-surface-elevated);
+  --c-button-secondary-border-hover: var(--s-border-strong);
+  --c-button-ghost-fg:               var(--s-ink-secondary);
+  --c-button-ghost-bg-hover:         var(--s-surface-raised);
+  --c-button-destructive-bg:         transparent;
+  --c-button-destructive-fg:         var(--s-danger-fg);
+  --c-button-destructive-border:     var(--s-danger-border);
+  --c-button-destructive-bg-hover:   var(--s-danger-subtle);
+  --c-button-success-bg:             var(--s-success-solid);
+  --c-button-success-fg:             var(--p-sand-950);
+  --c-button-success-border:         var(--s-success-solid);
+
+  /* Input / Textarea / Select share the same knobs */
+  --c-input-bg:            var(--s-surface-raised);
+  --c-input-fg:            var(--s-ink-primary);
+  --c-input-placeholder:   var(--s-ink-muted);
+  --c-input-border:        var(--s-border-subtle);
+  --c-input-border-hover:  var(--s-border-strong);
+  --c-input-border-focus:  var(--s-border-focus);
+  --c-input-ring-focus:    var(--s-brand-ring);
+  --c-input-border-error:  var(--s-danger-solid);
+  --c-input-radius:        var(--p-radius-md);
+
+  /* Card */
+  --c-card-bg:           var(--s-surface-panel);
+  --c-card-bg-raised:    var(--s-surface-raised);
+  --c-card-border:       var(--s-border-subtle);
+  --c-card-border-hover: var(--s-border-strong);
+  --c-card-radius:       var(--p-radius-lg);
+  --c-card-padding:      var(--p-space-5);
+  --c-card-shadow:       var(--p-shadow-sm);
+
+  /* Dialog / Sheet / Drawer */
+  --c-dialog-bg:     var(--s-surface-raised);
+  --c-dialog-border: var(--s-border-subtle);
+  --c-dialog-radius: var(--p-radius-xl);
+  --c-dialog-shadow: var(--p-shadow-overlay);
+  --c-dialog-scrim:  var(--s-surface-scrim);
+
+  /* Tooltip */
+  --c-tooltip-bg:     var(--s-surface-elevated);
+  --c-tooltip-fg:     var(--s-ink-primary);
+  --c-tooltip-border: var(--s-border-subtle);
+  --c-tooltip-radius: var(--p-radius-sm);
+  --c-tooltip-shadow: var(--p-shadow);
+
+  /* Table */
+  --c-table-header-fg:     var(--s-ink-muted);
+  --c-table-header-bg:     transparent;
+  --c-table-divider:       var(--s-border-subtle);
+  --c-table-row-hover-bg:  var(--s-surface-raised);
+
+  /* Tabs */
+  --c-tabs-fg:         var(--s-ink-muted);
+  --c-tabs-fg-active:  var(--s-ink-primary);
+  --c-tabs-indicator:  var(--s-brand-solid);
+  --c-tabs-divider:    var(--s-border-subtle);
+
+  /* Avatar */
+  --c-avatar-ring:         var(--s-surface-panel);
+  --c-avatar-fallback-bg:  var(--s-surface-elevated);
+
+  /* Badge / Pill */
+  --c-badge-radius: var(--p-radius-sm);
+  --c-pill-radius:  var(--p-radius-pill);
+
+  /* Layout chrome */
+  --c-sidebar-w:           224px;
+  --c-sidebar-w-collapsed: 56px;
+  --c-header-h:            56px;
+  --c-statusbar-h:         24px;
+  --c-content-max:         1280px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Compatibility aliases (read-only, do not override)
+ *
+ *   --background, --foreground, --primary etc. used to be raw HSL channels
+ *   (Tailwind v3 style) in `theme.css`. v1.0.0 removed those.
+ *
+ *   These hex aliases are the *replacement* for downstream consumers still
+ *   relying on `bg-background`, `text-foreground`, etc. via Tailwind v4
+ *   (`@theme inline` block in tailwind.css → maps to `--color-*: var(--*)`).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --background:           var(--s-surface-page);
+  --foreground:           var(--s-ink-primary);
+
+  --card:                 var(--c-card-bg);
+  --card-foreground:      var(--s-ink-primary);
+
+  --popover:              var(--c-dialog-bg);
+  --popover-foreground:   var(--s-ink-primary);
+
+  --primary:              var(--s-brand-solid);
+  --primary-foreground:   var(--p-sand-950);
+
+  --secondary:            var(--s-surface-raised);
+  --secondary-foreground: var(--s-ink-secondary);
+
+  --muted:                var(--s-surface-raised);
+  --muted-foreground:     var(--s-ink-muted);
+
+  --accent:               var(--s-brand-solid);
+  --accent-foreground:    var(--p-sand-950);
+
+  --destructive:          var(--s-danger-solid);
+  --destructive-foreground: var(--s-ink-primary);
+
+  --border:               var(--s-border-subtle);
+  --input:                var(--c-input-border);
+  --ring:                 var(--s-border-focus);
+
+  --radius:               var(--p-radius-md);
+
+  /* Brand shortcuts kept for backwards-compat — point to new amber */
+  --brand-orange:         var(--p-amber-500);
+  --brand-dark:           var(--p-sand-950);
+  --brand-accent:         var(--p-amber-500);
+
+  /* Sidebar surface aliases */
+  --sidebar-background:         var(--s-surface-page);
+  --sidebar-foreground:         var(--s-ink-secondary);
+  --sidebar-primary:            var(--s-brand-solid);
+  --sidebar-primary-foreground: var(--p-sand-950);
+  --sidebar-accent:             var(--s-surface-raised);
+  --sidebar-accent-foreground:  var(--s-ink-primary);
+  --sidebar-border:             var(--s-border-subtle);
+  --sidebar-ring:               var(--s-border-focus);
+
+  /* Charts — keep existing 5-slot API, map onto DS v0 avatar palette */
+  --chart-1: var(--p-amber-500);
+  --chart-2: var(--p-blue-500);
+  --chart-3: var(--p-green-500);
+  --chart-4: var(--p-mustard);
+  --chart-5: var(--p-lilac);
+
+  /* Font shortcuts (legacy theme.css names) */
+  --font-sans:      var(--p-font-sans);
+  --font-condensed: var(--p-font-display);
+  --font-mono:      var(--p-font-mono);
+}

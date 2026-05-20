@@ -1,6 +1,6 @@
 {
   "name": "@devfellowship/components",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "DFL Design System — UI components, hooks, utils and providers",
   "type": "module",
   "sideEffects": [
@@ -28,6 +28,7 @@
       "require": "./dist/providers.cjs"
     },
     "./styles": "./dist/styles/theme.css",
+    "./tokens": "./dist/styles/tokens.css",
     "./tailwind": "./dist/styles/tailwind.css"
   },
   "main": "./dist/index.cjs",

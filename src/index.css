@@ -1,137 +1,157 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+ * dfl-components-cli — showcase global CSS (DS v0)
+ *
+ * Migrated to Tailwind v4 in v1.0.0 (per Tainan Q3=A). Legacy HSL-channel
+ * vars (--background: 0 0% 100%; etc.) were removed (per Tainan Q9=B).
+ *
+ * Tokens come from ./styles/tokens.css (3-layer architecture). The
+ * `@theme inline` block below maps Tailwind utility classes onto those
+ * tokens, so `bg-background` resolves through `--c-*`/`--s-*` chains.
+ */
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+@import './styles/tokens.css';
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+/* Dark mode variant — class-based (matches packages/ui tailwind preset). */
+@variant dark (&:is(.dark *));
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+@theme inline {
+  /* ─── Colors ──────────────────────────────────────────────────────────── */
+  --color-background:          var(--background);
+  --color-foreground:          var(--foreground);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+  --color-card:                var(--card);
+  --color-card-foreground:     var(--card-foreground);
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+  --color-popover:             var(--popover);
+  --color-popover-foreground:  var(--popover-foreground);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+  --color-primary:             var(--primary);
+  --color-primary-foreground:  var(--primary-foreground);
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+  --color-secondary:           var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+  --color-muted:               var(--muted);
+  --color-muted-foreground:    var(--muted-foreground);
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+  --color-accent:              var(--accent);
+  --color-accent-foreground:   var(--accent-foreground);
 
-    --radius: 0.5rem;
+  --color-destructive:         var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
-    --sidebar-background: 0 0% 98%;
+  --color-border:              var(--border);
+  --color-input:               var(--input);
+  --color-ring:                var(--ring);
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+  /* Brand shortcuts */
+  --color-brand:        var(--p-amber-500);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-dark:   var(--brand-dark);
 
-    --sidebar-primary: 240 5.9% 10%;
+  /* Sidebar */
+  --color-sidebar:                     var(--sidebar-background);
+  --color-sidebar-foreground:          var(--sidebar-foreground);
+  --color-sidebar-primary:             var(--sidebar-primary);
+  --color-sidebar-primary-foreground:  var(--sidebar-primary-foreground);
+  --color-sidebar-accent:              var(--sidebar-accent);
+  --color-sidebar-accent-foreground:   var(--sidebar-accent-foreground);
+  --color-sidebar-border:              var(--sidebar-border);
+  --color-sidebar-ring:                var(--sidebar-ring);
 
-    --sidebar-primary-foreground: 0 0% 98%;
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 
-    --sidebar-accent: 240 4.8% 95.9%;
+  /* ─── Border radius ───────────────────────────────────────────────────── */
+  --radius-sm: var(--p-radius-sm);
+  --radius:    var(--p-radius-md);
+  --radius-md: var(--p-radius-md);
+  --radius-lg: var(--p-radius-lg);
+  --radius-xl: var(--p-radius-xl);
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
+  /* ─── Fonts ───────────────────────────────────────────────────────────── */
+  --font-sans:      var(--p-font-sans);
+  --font-condensed: var(--p-font-display);
+  --font-heading:   var(--p-font-display);
+  --font-body:      var(--p-font-sans);
+  --font-mono:      var(--p-font-mono);
 
-    --sidebar-border: 220 13% 91%;
+  /* ─── Container ───────────────────────────────────────────────────────── */
+  --container-2xl: 1400px;
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 216 27.8% 7.1%;
-    --foreground: 207.7 35.1% 92.7%;
-
-    --card: 215 21.4% 11%;
-    --card-foreground: 207.7 35.1% 92.7%;
-
-    --popover: 215 21.4% 11%;
-    --popover-foreground: 207.7 35.1% 92.7%;
-
-    --primary: 33 90% 55%;
-    --primary-foreground: 0 0% 0%;
-
-    --secondary: 215 15.4% 15.3%;
-    --secondary-foreground: 207.7 35.1% 92.7%;
-
-    --muted: 212.3 11.9% 21.4%;
-    --muted-foreground: 211.6 8.9% 58.2%;
-
-    --accent: 33 90% 55%;
-    --accent-foreground: 0 0% 0%;
-
-    --destructive: 0 86% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 215 15.4% 15.3%;
-    --input: 215 15.4% 15.3%;
-    --ring: 270 90% 71%;
-    --sidebar-background: 216 27.8% 7.1%;
-    --sidebar-foreground: 207.7 35.1% 92.7%;
-    --sidebar-primary: 33 90% 55%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 215 15.4% 15.3%;
-    --sidebar-accent-foreground: 207.7 35.1% 92.7%;
-    --sidebar-border: 215 15.4% 15.3%;
-    --sidebar-ring: 270 90% 71%;
-  }
+  /* ─── Animation keyframes (kept from v3 config) ───────────────────────── */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up:   accordion-up 0.2s ease-out;
+  --animate-caret-blink:    caret-blink 1.25s ease-out infinite;
 }
 
+@keyframes accordion-down {
+  from { height: 0; }
+  to   { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to   { height: 0; }
+}
+@keyframes caret-blink {
+  0%, 70%, 100% { opacity: 1; }
+  20%, 50%      { opacity: 0; }
+}
+
+/* DS v0 shimmer */
 @keyframes ds-shimmer {
   0%   { background-position: -600px 0; }
   100% { background-position:  600px 0; }
 }
 .ds-shimmer {
-  background: linear-gradient(90deg, #21262D 25%, #2D333B 50%, #21262D 75%);
+  background: linear-gradient(90deg, var(--p-sand-800) 25%, var(--p-sand-700) 50%, var(--p-sand-800) 75%);
   background-size: 1200px 100%;
   animation: ds-shimmer 1.6s infinite linear;
 }
 
+/* Base layer — typography defaults */
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--s-border-subtle);
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    background-color: var(--s-surface-page);
+    color: var(--s-ink-primary);
+    font-family: var(--s-font-body);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--s-font-display);
+  }
+
+  code, kbd, pre, samp {
+    font-family: var(--s-font-mono);
   }
 }
 
-/* Dark scrollbars */
-.dark ::-webkit-scrollbar {
+/* Dark scrollbars (DS v0 is dark-by-default; keep behavior). */
+::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
-.dark ::-webkit-scrollbar-track {
-  background: #0D1117;
+::-webkit-scrollbar-track {
+  background: var(--s-surface-page);
 }
-.dark ::-webkit-scrollbar-thumb {
-  background: #30363D;
+::-webkit-scrollbar-thumb {
+  background: var(--s-border-strong);
   border-radius: 4px;
 }
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #484F58;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--p-sand-500);
 }
-.dark {
-  scrollbar-color: #30363D #0D1117;
+:root {
+  scrollbar-color: var(--s-border-strong) var(--s-surface-page);
 }

@@ -151,7 +151,7 @@ export function LoginPage({
                         href={termsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[var(--brand-accent,#F39325)] underline-offset-4 hover:underline"
+                        className="text-[var(--brand-accent,#E07A4A)] underline-offset-4 hover:underline"
                       >
                         Terms and Conditions
                       </a>
@@ -164,7 +164,7 @@ export function LoginPage({
               <div className="space-y-4 mt-6">
                 <Button
                   type="submit"
-                  className="w-full h-11 bg-[var(--brand-accent,#F39325)] hover:bg-[var(--brand-accent,#F39325)]/90 text-primary-foreground transition-colors duration-200"
+                  className="w-full h-11 bg-[var(--brand-accent,#E07A4A)] hover:bg-[var(--brand-accent,#E07A4A)]/90 text-primary-foreground transition-colors duration-200"
                   disabled={isSubmitting || (mode === "signup" && !acceptedTerms)}
                 >
                   {isSubmitting ? (
@@ -183,7 +183,7 @@ export function LoginPage({
                       <button
                         type="button"
                         onClick={() => setMode("signup")}
-                        className="text-[var(--brand-accent,#F39325)] underline-offset-4 hover:underline"
+                        className="text-[var(--brand-accent,#E07A4A)] underline-offset-4 hover:underline"
                       >
                         Sign up
                       </button>
@@ -194,7 +194,7 @@ export function LoginPage({
                       <button
                         type="button"
                         onClick={() => setMode("login")}
-                        className="text-[var(--brand-accent,#F39325)] underline-offset-4 hover:underline"
+                        className="text-[var(--brand-accent,#E07A4A)] underline-offset-4 hover:underline"
                       >
                         Sign in
                       </button>
