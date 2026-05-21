@@ -125,12 +125,37 @@
       "name": "button",
       "type": "registry:component",
       "title": "Button",
-      "description": "Interactive button with variants and sizes",
+      "description": "DS v0 button — primary/secondary/ghost/destructive/success/link variants, sm/default/lg/icon sizes, loading + kbd hint props",
       "category": "UI",
-      "version": "0.1.0",
+      "version": "1.0.0",
       "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-slot",
+        "class-variance-authority"
+      ]
+    },
+    {
+      "name": "icon-button",
+      "type": "registry:component",
+      "title": "IconButton",
+      "description": "DS v0 icon-only button — 4 sizes × 4 variants, aria-pressed paints brand-subtle (NEW in v1.0.0)",
+      "category": "UI",
+      "version": "1.0.0",
+      "registryDependencies": [],
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority"
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:component",
+      "title": "Kbd",
+      "description": "DS v0 single-key chip in JetBrains Mono (NEW in v1.0.0)",
+      "category": "UI",
+      "version": "1.0.0",
+      "registryDependencies": [],
+      "dependencies": [
         "class-variance-authority"
       ]
     },
@@ -197,9 +222,9 @@
       "name": "input",
       "type": "registry:component",
       "title": "Input",
-      "description": "Text input field",
+      "description": "DS v0 text input — 36px tall, surface-raised, brand focus ring",
       "category": "UI",
-      "version": "0.1.0",
+      "version": "1.0.0",
       "registryDependencies": [],
       "dependencies": []
     },
@@ -207,9 +232,9 @@
       "name": "label",
       "type": "registry:component",
       "title": "Label",
-      "description": "Accessible form label",
+      "description": "DS v0 form label — default (Inter 12px) and mono (JetBrains uppercase) variants",
       "category": "UI",
-      "version": "0.1.0",
+      "version": "1.0.0",
       "registryDependencies": [],
       "dependencies": [
         "@radix-ui/react-label",
@@ -362,9 +387,9 @@
       "name": "textarea",
       "type": "registry:component",
       "title": "Textarea",
-      "description": "Multi-line text input",
+      "description": "DS v0 multi-line input, shares --c-input-* tokens with Input",
       "category": "UI",
-      "version": "0.1.0",
+      "version": "1.0.0",
       "registryDependencies": [],
       "dependencies": []
     },

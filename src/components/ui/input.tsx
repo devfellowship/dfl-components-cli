@@ -2,22 +2,36 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Input — DFL Design System v0
+ *
+ * Mirrors packages/ui/src/components/input.tsx. Tokens consumed:
+ *   --c-input-{bg,fg,placeholder,border,border-hover,border-focus,ring-focus,border-error,radius}
+ */
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
     return (
       <input
         type={type}
         className={cn(
-          "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-background transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-          "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-          "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-          className
+          "flex h-9 w-full min-w-0 px-3 py-1.5 text-[13px] leading-none",
+          "bg-[var(--c-input-bg)] text-[var(--c-input-fg)]",
+          "placeholder:text-[var(--c-input-placeholder)]",
+          "rounded-[var(--c-input-radius)] border border-[var(--c-input-border)]",
+          "hover:border-[var(--c-input-border-hover)]",
+          "outline-none transition-[border-color,box-shadow,background-color] duration-150",
+          "focus-visible:border-[var(--c-input-border-focus)] focus-visible:ring-[3px] focus-visible:ring-[var(--c-input-ring-focus)]",
+          "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-[13px] file:font-medium file:text-[var(--s-ink-primary)]",
+          "selection:bg-[var(--s-brand-solid)] selection:text-[var(--p-sand-950)]",
+          "aria-invalid:border-[var(--c-input-border-error)] aria-invalid:focus-visible:ring-[var(--s-danger-subtle)]",
+          "disabled:cursor-not-allowed disabled:opacity-50",
+          className,
         )}
         ref={ref}
         {...props}
       />
     )
-  }
+  },
 )
 Input.displayName = "Input"
 
