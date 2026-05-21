@@ -252,7 +252,7 @@ function BadgePreview() {
       <div>
         <p className="text-xs text-muted-foreground mb-2 font-semibold uppercase tracking-wider">Brand Colors</p>
         <div className="flex flex-wrap gap-2">
-          <Badge className="bg-[#F39325] text-black hover:bg-[#F39325]/80">Orange</Badge>
+          <Badge className="bg-[#E07A4A] text-black hover:bg-[#E07A4A]/80">Orange</Badge>
           <Badge className="bg-[#4AADE8] text-black hover:bg-[#4AADE8]/80">Cyan</Badge>
           <Badge className="bg-[#A371F7] text-black hover:bg-[#A371F7]/80">Purple</Badge>
           <Badge className="bg-emerald-600 text-white hover:bg-emerald-600/80">Success</Badge>
@@ -455,13 +455,13 @@ function AvatarPreview() {
         <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8B949E' }}>Variants</p>
         <div className="flex items-center gap-3">
           {/* Image placeholder */}
-          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ border: '2px solid #F39325', background: 'transparent' }}>
-            <User size={16} color="#F39325" />
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ border: '2px solid #E07A4A', background: 'transparent' }}>
+            <User size={16} color="#E07A4A" />
           </div>
           {/* Initials */}
           <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(163,113,247,0.15)', fontSize: 12, fontWeight: 700, color: '#A371F7' }}>JP</div>
           <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(6,182,212,0.15)', fontSize: 12, fontWeight: 700, color: '#06B6D4' }}>AF</div>
-          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(243,147,37,0.15)', fontSize: 12, fontWeight: 700, color: '#F39325' }}>CO</div>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(224,122,74,0.15)', fontSize: 12, fontWeight: 700, color: '#E07A4A' }}>CO</div>
           {/* Icon default */}
           <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: '#161B22' }}>
             <User size={16} color="#8B949E" />
@@ -486,7 +486,7 @@ function AvatarPreview() {
       <div>
         <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#8B949E' }}>With Badge</p>
         <div className="relative inline-flex">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(243,147,37,0.15)', fontSize: 14, fontWeight: 700, color: '#F39325' }}>TF</div>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(224,122,74,0.15)', fontSize: 14, fontWeight: 700, color: '#E07A4A' }}>TF</div>
           <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#F4C542', fontSize: 10, fontWeight: 700, color: '#0D1117' }}>2</div>
         </div>
       </div>
@@ -550,7 +550,7 @@ function CalendarPreview() {
               fontSize: 11,
               fontWeight: d === today ? 700 : 400,
               color: d === today ? '#0D1117' : '#C6CDD5',
-              background: d === today ? '#F39325' : 'transparent',
+              background: d === today ? '#E07A4A' : 'transparent',
               cursor: 'pointer',
             }}
           >
@@ -564,7 +564,7 @@ function CalendarPreview() {
 
 function CarouselPreview() {
   const slides = [
-    { label: 'Stage 1 \u2014 Onboarding', color: '#F39325', sub: 'Weeks 1\u20134' },
+    { label: 'Stage 1 \u2014 Onboarding', color: '#E07A4A', sub: 'Weeks 1\u20134' },
     { label: 'Stage 2 \u2014 Builder', color: '#4AADE8', sub: 'Weeks 5\u20138' },
     { label: 'Stage 3 \u2014 Architect', color: '#A371F7', sub: 'Weeks 9\u201312' },
   ];
@@ -797,7 +797,7 @@ function DrawerPreview() {
             <div className="rounded-lg px-3 py-2" style={{ background: '#0D1117', border: '1px solid #21262D', color: '#E6EDF3', fontSize: 13 }}>Tainan Fidelis</div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="flex-1 px-4 py-2 rounded-lg" style={{ background: 'rgba(243,147,37,0.12)', border: '1px solid rgba(243,147,37,0.3)', color: '#F39325', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+            <button className="flex-1 px-4 py-2 rounded-lg" style={{ background: 'rgba(224,122,74,0.12)', border: '1px solid rgba(224,122,74,0.3)', color: '#E07A4A', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
               Save Changes
             </button>
             <button className="px-4 py-2 rounded-lg" style={{ background: 'transparent', border: '1px solid #21262D', color: '#C6CDD5', fontSize: 13, cursor: 'pointer' }}>
@@ -859,7 +859,7 @@ function HoverCardPreview() {
         style={{ background: '#1C2128', border: '1px solid #21262D', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}
       >
         <div className="flex gap-3">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(243,147,37,0.15)', fontSize: 12, fontWeight: 700, color: '#F39325' }}>DF</div>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(224,122,74,0.15)', fontSize: 12, fontWeight: 700, color: '#E07A4A' }}>DF</div>
           <div>
             <h4 style={{ color: '#E6EDF3', fontSize: 14, fontWeight: 600 }}>DevFellowship</h4>
             <p style={{ color: '#8B949E', fontSize: 12, lineHeight: 1.5, marginTop: 2 }}>Building the next generation of developer tools and design systems.</p>
@@ -935,10 +935,10 @@ function NavigationMenuPreview() {
       >
         {/* Logo */}
         <div className="flex items-center gap-2 shrink-0">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(243,147,37,0.2)' }}>
-            <Star size={13} style={{ color: '#F39325' }} />
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'rgba(224,122,74,0.2)' }}>
+            <Star size={13} style={{ color: '#E07A4A' }} />
           </div>
-          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: '#F39325', fontSize: 15, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>DEVFELLOWSHIP</span>
+          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, color: '#E07A4A', fontSize: 15, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>DEVFELLOWSHIP</span>
         </div>
         {/* Nav links */}
         <nav className="flex items-center gap-1 ml-6 shrink-0">
@@ -947,7 +947,7 @@ function NavigationMenuPreview() {
               key={item}
               className="px-3 py-1.5 rounded-lg"
               style={i === 0
-                ? { background: 'rgba(243,147,37,0.12)', color: '#F39325', fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer' }
+                ? { background: 'rgba(224,122,74,0.12)', color: '#E07A4A', fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer' }
                 : { color: '#8B949E', fontSize: 13, background: 'none', border: 'none', cursor: 'pointer' }
               }
             >
@@ -1076,7 +1076,7 @@ function ScrollAreaPreview() {
 
 function SelectPreview() {
   const options = [
-    { value: 'stage-1', label: 'Stage 1 \u2014 Discovery', color: '#F39325' },
+    { value: 'stage-1', label: 'Stage 1 \u2014 Discovery', color: '#E07A4A' },
     { value: 'stage-2', label: 'Stage 2 \u2014 Builder', color: '#4AADE8' },
     { value: 'stage-3', label: 'Stage 3 \u2014 Launch', color: '#A371F7' },
   ];
@@ -1297,7 +1297,7 @@ function TablePreview() {
     "Doing": "#4AADE8", "Done": "#22C55E", "In Review": "#F4C542", "To Do": "#8B949E",
   };
   const stageColor: Record<string, string> = {
-    "Stage 1": "#F39325", "Stage 2": "#4AADE8", "Stage 3": "#A371F7",
+    "Stage 1": "#E07A4A", "Stage 2": "#4AADE8", "Stage 3": "#A371F7",
   };
   return (
     <div className="w-full overflow-x-auto">
@@ -1374,11 +1374,11 @@ function TabsPreview() {
           style={{
             fontSize: 13,
             fontWeight: tab.active ? 600 : 400,
-            color: tab.active ? '#F39325' : '#8B949E',
-            background: tab.active ? 'rgba(243,147,37,0.08)' : 'transparent',
+            color: tab.active ? '#E07A4A' : '#8B949E',
+            background: tab.active ? 'rgba(224,122,74,0.08)' : 'transparent',
             border: 'none',
             cursor: 'pointer',
-            borderBottom: tab.active ? '2px solid #F39325' : '2px solid transparent',
+            borderBottom: tab.active ? '2px solid #E07A4A' : '2px solid transparent',
           }}
         >
           {tab.label}
@@ -1527,7 +1527,7 @@ function SliderPreview() {
     <div className="w-full max-w-sm space-y-3">
       <div className="flex justify-between" style={{ fontSize: 13 }}>
         <span style={{ color: '#E6EDF3', fontWeight: 500 }}>Completion threshold</span>
-        <span style={{ color: '#F39325', fontWeight: 600 }}>{pct}%</span>
+        <span style={{ color: '#E07A4A', fontWeight: 600 }}>{pct}%</span>
       </div>
       {/* Track */}
       <div style={{ position: 'relative', height: 20, display: 'flex', alignItems: 'center' }}>
@@ -1537,7 +1537,7 @@ function SliderPreview() {
               width: `${pct}%`,
               height: '100%',
               borderRadius: 3,
-              background: 'linear-gradient(90deg, #F39325, #F39325)',
+              background: 'linear-gradient(90deg, #E07A4A, #E07A4A)',
             }}
           />
         </div>
@@ -1551,9 +1551,9 @@ function SliderPreview() {
             width: 18,
             height: 18,
             borderRadius: '50%',
-            background: '#F39325',
+            background: '#E07A4A',
             border: '2px solid #0D1117',
-            boxShadow: '0 0 0 2px rgba(243,147,37,0.3)',
+            boxShadow: '0 0 0 2px rgba(224,122,74,0.3)',
           }}
         />
       </div>
@@ -1687,7 +1687,7 @@ function FormPreview() {
           padding: '10px 0',
           borderRadius: 12,
           border: 'none',
-          background: '#F39325',
+          background: '#E07A4A',
           color: '#000',
           fontSize: 13,
           fontWeight: 600,
@@ -1737,7 +1737,7 @@ function ListItemsPreview() {
 
 function CardGridPreview() {
   const cards = [
-    { icon: Layers, label: "Stage 1", sub: "Onboarding", color: '#F39325', done: 80 },
+    { icon: Layers, label: "Stage 1", sub: "Onboarding", color: '#E07A4A', done: 80 },
     { icon: GripVertical, label: "Stage 2", sub: "Builder", color: '#4AADE8', done: 45 },
     { icon: Award, label: "Stage 3", sub: "Architect", color: '#A371F7', done: 0 },
   ];
@@ -1778,17 +1778,17 @@ function ButtonGroupPreview() {
   return (
     <div className="flex flex-wrap gap-3">
       {/* Brand orange variant */}
-      <div className="flex items-stretch rounded-xl overflow-hidden" style={{ border: '1px solid rgba(243,147,37,0.4)' }}>
+      <div className="flex items-stretch rounded-xl overflow-hidden" style={{ border: '1px solid rgba(224,122,74,0.4)' }}>
         <button
           className="flex items-center gap-2 px-4 py-2.5"
-          style={{ background: 'rgba(243,147,37,0.12)', color: '#F39325', fontSize: 13, fontWeight: 700, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.04em', borderRight: '1px solid rgba(243,147,37,0.3)' }}
+          style={{ background: 'rgba(224,122,74,0.12)', color: '#E07A4A', fontSize: 13, fontWeight: 700, fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: '0.04em', borderRight: '1px solid rgba(224,122,74,0.3)' }}
         >
           <Plus size={14} />
           New Task
         </button>
         <button
           className="flex items-center px-3 py-2.5"
-          style={{ background: 'rgba(243,147,37,0.07)', color: '#F39325' }}
+          style={{ background: 'rgba(224,122,74,0.07)', color: '#E07A4A' }}
         >
           <ChevronDown size={14} />
         </button>
@@ -1913,11 +1913,11 @@ export const componentPreviews: Record<string, ComponentPreviewData> = {
     preview: <ButtonGroupPreview />,
     usage: `{/* Split button: primary action + dropdown */}
 <div className="flex items-stretch rounded-xl overflow-hidden"
-     style={{ border: '1px solid rgba(243,147,37,0.4)' }}>
-  <button style={{ background: 'rgba(243,147,37,0.12)', color: '#F39325' }}>
+     style={{ border: '1px solid rgba(224,122,74,0.4)' }}>
+  <button style={{ background: 'rgba(224,122,74,0.12)', color: '#E07A4A' }}>
     <Plus size={14} /> New Task
   </button>
-  <button style={{ background: 'rgba(243,147,37,0.07)', color: '#F39325' }}>
+  <button style={{ background: 'rgba(224,122,74,0.07)', color: '#E07A4A' }}>
     <ChevronDown size={14} />
   </button>
 </div>`,

@@ -24,6 +24,7 @@ export default defineConfig({
     mkdirSync('dist/styles', { recursive: true });
     copyFileSync('src/styles/theme.css', 'dist/styles/theme.css');
     copyFileSync('src/styles/tailwind.css', 'dist/styles/tailwind.css');
+    copyFileSync('src/styles/tokens.css', 'dist/styles/tokens.css');
     console.log('CSS files copied to dist/styles/');
   },
 });

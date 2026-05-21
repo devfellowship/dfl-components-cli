@@ -105,7 +105,7 @@ function SidebarInner({
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand-accent,#F39325)] shrink-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand-accent,#E07A4A)] shrink-0">
             {logoEl}
           </div>
           {!isCollapsed && (

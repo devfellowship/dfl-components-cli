@@ -3,6 +3,24 @@
 
 A dark-themed, minimalist micro-app for browsing, previewing, and copying reusable frontend components within your development team.
 
+## Design System Reference
+
+The canonical DS v0 reference (single-file static HTML, 48 component anchors) is hosted at:
+
+- **DS v0 artifact (live):** https://devfellowship.s3.amazonaws.com/media/1779275454681-1779273267327-AgADbwUAAn7PaEQ.html
+
+Tokens live in [`packages/ui/src/styles/tokens.css`](packages/ui/src/styles/tokens.css) (mirrored to `src/styles/tokens.css` for the showcase). The 3-layer architecture is:
+
+| Layer            | Prefix     | Role                                       | Count |
+| ---------------- | ---------- | ------------------------------------------ | ----- |
+| **Primitives**   | `--p-*`    | Raw atoms (color stops, type, spacing)     | 112   |
+| **Semantic**     | `--s-*`    | Intent-mapped (surface-page, ink-muted, …) | 40    |
+| **Component**    | `--c-*`    | Per-component knobs (5–10 each)            | 64    |
+
+Brand color is `#E07A4A` (DS v0 amber-500). The legacy `#F39325` was retired in v1.0.0.
+
+Phase plan: https://plans.tainanfidelis.com/20260520-dfl-components-ds-v0-revamp
+
 ## Features
 
 - **Component Browser**: Grid-based layout with category filtering and search
@@ -17,7 +35,7 @@ A dark-themed, minimalist micro-app for browsing, previewing, and copying reusab
 ## Tech Stack
 
 - React 18 with TypeScript
-- Tailwind CSS for styling
+- Tailwind CSS v4 (CSS-first config via `@theme inline`) for styling
 - shadcn/ui components
 - Lucide React icons
 - Vite for development and building

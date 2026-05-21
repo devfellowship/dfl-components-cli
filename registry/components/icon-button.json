@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "icon-button",
+  "type": "registry:component",
+  "title": "IconButton",
+  "description": "DS v0 icon-only button — 4 sizes × 4 variants, aria-pressed paints brand-subtle for toggle/toolbar states",
+  "category": "UI",
+  "version": "1.0.0",
+  "tags": [
+    "icon-button",
+    "ds-v0",
+    "new-in-v1"
+  ],
+  "dependencies": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "icon-button.tsx",
+      "type": "registry:component",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"../lib/utils\";\n\nconst iconButtonVariants = cva(\n  [\n    \"inline-flex items-center justify-center shrink-0\",\n    \"rounded-[var(--c-button-radius)]\",\n    \"transition-[background-color,border-color,color,box-shadow] duration-150\",\n    \"outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--s-brand-ring)]\",\n    \"disabled:pointer-events-none disabled:opacity-50\",\n    \"border border-transparent\",\n    \"select-none cursor-pointer\",\n    \"[&_svg]:pointer-events-none [&_svg]:shrink-0\",\n    \"aria-pressed:bg-[var(--s-brand-subtle)] aria-pressed:text-[var(--s-brand-fg)]\",\n  ].join(\" \"),\n  {\n    variants: {\n      variant: {\n        ghost: \"bg-transparent text-[var(--c-button-ghost-fg)] hover:bg-[var(--c-button-ghost-bg-hover)] hover:text-[var(--s-ink-primary)]\",\n        outline: \"bg-transparent text-[var(--s-ink-secondary)] border-[var(--s-border-subtle)] hover:bg-[var(--s-surface-raised)] hover:border-[var(--s-border-strong)] hover:text-[var(--s-ink-primary)]\",\n        solid: \"bg-[var(--c-button-primary-bg)] text-[var(--c-button-primary-fg)] hover:bg-[var(--c-button-primary-bg-hover)]\",\n        destructive: \"bg-transparent text-[var(--c-button-destructive-fg)] hover:bg-[var(--c-button-destructive-bg-hover)]\",\n      },\n      size: {\n        xs: \"h-5 w-5 [&_svg]:size-3\",\n        sm: \"h-7 w-7 [&_svg]:size-3.5\",\n        default: \"h-[34px] w-[34px] [&_svg]:size-4\",\n        lg: \"h-10 w-10 [&_svg]:size-[18px]\",\n      },\n    },\n    defaultVariants: { variant: \"ghost\", size: \"default\" },\n  },\n);\n\nexport interface IconButtonProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement>,\n    VariantProps<typeof iconButtonVariants> {\n  asChild?: boolean;\n  \"aria-label\": string;\n}\n\nconst IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(\n  ({ className, variant, size, asChild = false, ...props }, ref) => {\n    const Comp = asChild ? Slot : \"button\";\n    return <Comp ref={ref} className={cn(iconButtonVariants({ variant, size, className }))} {...props} />;\n  },\n);\nIconButton.displayName = \"IconButton\";\n\nexport { IconButton, iconButtonVariants };\n"
+    }
+  ]
+}
