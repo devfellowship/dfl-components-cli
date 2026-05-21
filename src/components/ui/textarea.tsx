@@ -5,12 +5,24 @@ import { cn } from "@/lib/utils"
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
+/**
+ * Textarea — DFL Design System v0. Mirrors packages/ui copy.
+ */
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {
     return (
       <textarea
         className={cn(
-          "resize-none border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-input-background px-3 py-2 text-base transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "flex min-h-[80px] w-full px-3 py-2 text-[13px] leading-[1.55]",
+          "bg-[var(--c-input-bg)] text-[var(--c-input-fg)]",
+          "placeholder:text-[var(--c-input-placeholder)]",
+          "rounded-[var(--c-input-radius)] border border-[var(--c-input-border)]",
+          "hover:border-[var(--c-input-border-hover)]",
+          "outline-none transition-[border-color,box-shadow,background-color] duration-150",
+          "focus-visible:border-[var(--c-input-border-focus)] focus-visible:ring-[3px] focus-visible:ring-[var(--c-input-ring-focus)]",
+          "aria-invalid:border-[var(--c-input-border-error)] aria-invalid:focus-visible:ring-[var(--s-danger-subtle)]",
+          "disabled:cursor-not-allowed disabled:opacity-50",
+          "resize-y",
           className
         )}
         ref={ref}

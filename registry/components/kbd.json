@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "kbd",
+  "type": "registry:component",
+  "title": "Kbd",
+  "description": "DS v0 single-key chip — JetBrains Mono uppercase, surface-raised. Compose with siblings for combos.",
+  "category": "UI",
+  "version": "1.0.0",
+  "tags": [
+    "kbd",
+    "ds-v0",
+    "new-in-v1"
+  ],
+  "dependencies": [
+    "class-variance-authority"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "kbd.tsx",
+      "type": "registry:component",
+      "content": "import * as React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"../lib/utils\";\n\nconst kbdVariants = cva(\n  \"inline-flex items-center justify-center font-mono uppercase border bg-[var(--s-surface-raised)] border-[var(--s-border-subtle)] text-[var(--s-ink-secondary)] tracking-[0.04em] select-none align-middle\",\n  {\n    variants: {\n      size: {\n        sm: \"text-[9.5px] min-w-[16px] h-[16px] px-1 rounded-[3px]\",\n        default: \"text-[10.5px] min-w-[18px] h-[18px] px-1 rounded-[var(--p-radius-sm)]\",\n        lg: \"text-[12px] min-w-[22px] h-[22px] px-1.5 rounded-[var(--p-radius-sm)]\",\n      },\n    },\n    defaultVariants: { size: \"default\" },\n  },\n);\n\nexport interface KbdProps\n  extends React.HTMLAttributes<HTMLElement>,\n    VariantProps<typeof kbdVariants> {}\n\nconst Kbd = React.forwardRef<HTMLElement, KbdProps>(({ className, size, ...props }, ref) => (\n  <kbd ref={ref} className={cn(kbdVariants({ size }), className)} {...props} />\n));\nKbd.displayName = \"Kbd\";\n\nexport { Kbd, kbdVariants };\n"
+    }
+  ]
+}
