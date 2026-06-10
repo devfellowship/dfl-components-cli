@@ -23,6 +23,7 @@ export default defineConfig({
     // Copy CSS files to dist
     mkdirSync('dist/styles', { recursive: true });
     copyFileSync('src/styles/theme.css', 'dist/styles/theme.css');
+    copyFileSync('src/styles/shadcn.css', 'dist/styles/shadcn.css');
     copyFileSync('src/styles/tailwind.css', 'dist/styles/tailwind.css');
     copyFileSync('src/styles/tokens.css', 'dist/styles/tokens.css');
     copyFileSync('src/styles/fonts.css', 'dist/styles/fonts.css');

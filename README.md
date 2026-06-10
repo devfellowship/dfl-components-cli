@@ -21,6 +21,28 @@ Brand color is `#E07A4A` (DS v0 amber-500). The legacy `#F39325` was retired in 
 
 Phase plan: https://plans.tainanfidelis.com/20260520-dfl-components-ds-v0-revamp
 
+### Consuming the DS styles in an app
+
+Pick the import that matches how your app's Tailwind theme references its CSS vars:
+
+| App type | What your theme does | Import this |
+| --- | --- | --- |
+| **DS-native / hex-var** | reads `var(--background)` directly, or uses the DS Tailwind preset (`bg-background` etc.) | `@import '@devfellowship/components/styles';` (+ `@import '@devfellowship/components/tailwind';` for utilities) |
+| **shadcn-slate** | wraps vars as `hsl(var(--background))`, `hsl(var(--primary))`, … (standard shadcn convention) | `@import '@devfellowship/components/shadcn';` then set dark mode |
+
+**Why two paths?** `@devfellowship/components/styles` ships the semantic vars
+(`--background`, `--primary`, …) as **hex** values. That's correct for DS-native
+apps, but a shadcn-slate app wraps the same names as `hsl(var(--background))` — hex
+inside `hsl()` is invalid CSS and breaks the render. The **`/shadcn`** bridge
+(added in **v1.2.0**) re-declares the standard shadcn semantic vars as bare **HSL
+channels** (`H S% L%`, no wrapper) mapped to the DS v0 dark palette, scoped under
+both `:root` and `.dark`. It's a separate, additive, opt-in export — it does **not**
+change the hex layer, so existing hex-var consumers are untouched. shadcn-slate apps
+just bump to `^1.2.0`, swap their hand-mirrored palette for `@import
+'@devfellowship/components/shadcn'`, and set dark — no more hand-mirroring.
+
+DS v0 is dark-only; the bridge channels are dark.
+
 ## Features
 
 - **Component Browser**: Grid-based layout with category filtering and search
