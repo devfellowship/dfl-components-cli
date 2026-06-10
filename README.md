@@ -163,6 +163,44 @@ function App() {
 
 All configuration props are optional; the provider reads `VITE_*` environment variables as defaults. Set `enabled={false}` or omit the Sentry DSN to disable tracking entirely.
 
+## CLI — `@devfellowship/components-cli`
+
+One published npm CLI for DFL apps. Binary name: `dfl-components`.
+
+```bash
+# add shared components from the registry
+npx @devfellowship/components-cli add button card
+
+# map / validate / stamp this app's UX paths (folds the former dfl-ux-paths CLI)
+npx @devfellowship/components-cli ux-paths init
+npx @devfellowship/components-cli ux-paths validate
+npx @devfellowship/components-cli ux-paths generate-mermaid
+npx @devfellowship/components-cli ux-paths diff web/flows.json mobile/flows.json
+npx @devfellowship/components-cli ux-paths stamp        # minimal-diff by default
+```
+
+### `ux-paths` subcommands
+
+| Command | What it does |
+| --- | --- |
+| `init` | Bootstrap `.dfl-ux-paths/flows.json` in the cwd. |
+| `validate [path]` | Validate a flows.json against the canonical v1 schema (fetched from `dfl-ux-paths`). |
+| `generate-mermaid [path]` | Emit a `flows.mmd` Mermaid graph. |
+| `diff <a> <b>` | Screen/action/flow gap analysis between two flows.json (e.g. web vs mobile). |
+| `stamp [path]` | Refresh `app_version` → `YYYY-MM-DD-<git-sha>` and bump `generated_at`. |
+
+The JSON **Schema** still lives in [`devfellowship/dfl-ux-paths`](https://github.com/devfellowship/dfl-ux-paths)
+(`schema/v1.json`); only the CLI was folded into this hub so there's a single
+published npm CLI. `validate` fetches the schema from the canonical raw URL at
+runtime.
+
+**`stamp` minimal-diff (`--preserve-format`, default-on):** re-stamping updates
+ONLY the volatile `app_version` / `generated_at` fields via surgical string
+replacement, preserving the existing file's formatting. This keeps re-stamps
+from reformatting the whole `flows.json` (compact→multi-line) and producing
+noisy diffs. Pass `--no-preserve-format` to opt into the legacy whole-file
+reformat.
+
 ## Embedding the Component Hub
 
 The entire app is encapsulated in a single `ComponentHubApp` component that can be embedded in larger applications:

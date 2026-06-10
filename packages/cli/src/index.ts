@@ -1,13 +1,14 @@
 import { Command } from 'commander';
 import { init } from './commands/init.js';
 import { add } from './commands/add.js';
+import { registerUxPaths } from './ux-paths/index.js';
 
 const program = new Command();
 
 program
   .name('dfl-components')
   .description('Add DevFellowship components to your project')
-  .version('0.1.0');
+  .version('0.2.0');
 
 program
   .command('init')
@@ -25,5 +26,7 @@ program
   .option('-c, --cwd <path>', 'Working directory', process.cwd())
   .option('-a, --all', 'Add all available components')
   .action(add);
+
+registerUxPaths(program);
 
 program.parse();

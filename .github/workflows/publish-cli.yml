@@ -1,0 +1,124 @@
+name: Publish @devfellowship/components-cli to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version bump type (patch | minor | major) or explicit version (e.g. 0.3.0)'
+        required: true
+        default: 'patch'
+      tag:
+        description: 'NPM dist-tag (latest | next | beta)'
+        required: false
+        default: 'latest'
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write   # needed for the version-bump-back PR (main is ruleset-protected, no direct push)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/cli
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install --include=dev
+
+      - name: Bump version
+        id: version
+        run: |
+          INPUT="${{ github.event.inputs.version }}"
+          # npm version accepts both bump keywords (patch|minor|major) and
+          # explicit semver (e.g. 1.2.0), so a single call handles both cases.
+          npm version "$INPUT" --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # Idempotency guard: if the target version is already on npm, abort BEFORE
+      # publishing so we never hit npm's "cannot publish over existing version"
+      # error (and so re-runs of this workflow are safe / explicit).
+      - name: Guard against re-publishing an existing version
+        run: |
+          TARGET="${{ steps.version.outputs.version }}"
+          PUBLISHED=$(npm view @devfellowship/components-cli@"$TARGET" version 2>/dev/null || true)
+          if [ "$PUBLISHED" = "$TARGET" ]; then
+            echo "::error::@devfellowship/components-cli@$TARGET is already published to npm. Nothing to do — pick a higher version."
+            exit 1
+          fi
+          echo "Version $TARGET is not yet on npm — proceeding to publish."
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to NPM
+        run: npm publish --access public --tag ${{ github.event.inputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # The publish above has ALREADY happened and succeeded by this point.
+      # Syncing the source version back to `main` must NOT be able to fail the
+      # overall publish — `main` is ruleset-protected (PR required, no direct
+      # push), so a plain `git push origin HEAD` here always 403'd. We instead:
+      #   (a) push the git TAG only — tags are not covered by the branch ruleset.
+      #   (b) commit the bump to a NEW branch and open a PR via `gh`.
+      # `continue-on-error` keeps the publish green even if the bump-back can't
+      # happen — the Summary step below makes the outcome loud.
+      - name: Sync version bump back to main (tag + PR)
+        id: bumpback
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd ${{ github.workspace }}
+          VERSION="${{ steps.version.outputs.version }}"
+          BRANCH="chore/release-cli-v${VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # (a) Tag the published commit and push the tag (allowed on protected main).
+          git tag -f "cli-v${VERSION}"
+          git push origin "cli-v${VERSION}"
+
+          # (b) Open a PR with the source version bump (direct push to main is blocked).
+          git checkout -b "$BRANCH"
+          git add packages/cli/package.json
+          git commit -m "chore(release): @devfellowship/components-cli v${VERSION}"
+          git push -u origin "$BRANCH" --force-with-lease
+
+          gh pr create \
+            --title "chore(release): @devfellowship/components-cli v${VERSION}" \
+            --body "Auto-opened by the publish workflow: npm published \`@devfellowship/components-cli@${VERSION}\`. This syncs the source \`packages/cli/package.json\` to match (direct push to \`main\` is blocked by the branch ruleset). Tag \`cli-v${VERSION}\` was pushed already." \
+            --base main \
+            --head "$BRANCH" \
+            || echo "PR create skipped (one may already exist for $BRANCH)"
+
+      - name: Publish summary
+        if: always()
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          {
+            echo "## Publish result"
+            echo ""
+            echo "- 📦 Published \`@devfellowship/components-cli@${VERSION}\` to npm (tag: \`${{ github.event.inputs.tag }}\`)."
+            if [ "${{ steps.bumpback.outcome }}" = "success" ]; then
+              echo "- ✅ Pushed tag \`cli-v${VERSION}\` and opened a source-sync PR against \`main\`. **Merge it to finish the release.**"
+            else
+              echo "- ⚠️ The tag/PR bump-back step did not complete. The npm publish still succeeded, but the source version is NOT synced — open a manual PR bumping \`packages/cli/package.json\` to \`${VERSION}\` and tag \`cli-v${VERSION}\`."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
