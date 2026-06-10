@@ -41,6 +41,7 @@
   --p-sand-850: #1a1714;
   --p-sand-900: #141210;
   --p-sand-950: #0a0908;
+  --p-sand-paper-2: #ece4d2;   /* editorial paper, second tone (ch.5.8 light) */
 
   /* Amber (brand) */
   --p-amber-50:  #fff1e6;
@@ -92,9 +93,10 @@
   --p-periwinkle:  #9aa8e0;
 
   /* Typography */
-  --p-font-display: 'Barlow Condensed', 'Inter', system-ui, sans-serif;
-  --p-font-sans:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --p-font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --p-font-display:   'Barlow Condensed', 'Inter', system-ui, sans-serif;
+  --p-font-sans:      'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --p-font-mono:      'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --p-font-editorial: Georgia, 'Times New Roman', serif;  /* editorial/long-form only */
 
   --p-text-10: 10px;
   --p-text-11: 11px;
@@ -159,6 +161,32 @@
   --p-duration-fast: 120ms;
   --p-duration:      180ms;
   --p-duration-slow: 280ms;
+
+  /* Motion — DS-spec named durations (brand.devfellowship.com ch.11 Motion).
+   * Additive: complements the legacy --p-duration-* names above. */
+  --p-duration-instant:    80ms;
+  --p-duration-fast-named: 120ms;
+  --p-duration-base:       180ms;
+  --p-duration-medium:     220ms;
+  --p-duration-slow-named: 320ms;
+  --p-duration-deliberate: 600ms;
+
+  /* Motion — DS-spec named easings (ch.11 Motion). */
+  --p-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --p-ease-out-std:  cubic-bezier(0, 0, 0.2, 1);
+  --p-ease-in-std:   cubic-bezier(0.4, 0, 1, 1);
+  --p-ease-snap:     cubic-bezier(0.2, 0.8, 0.2, 1);
+  --p-ease-linear:   linear;
+
+  /* Z-index scale (ch.10 Layout). Stacking order is contractual — never
+   * hard-code raw z-index in component CSS; reference these. */
+  --p-z-base:        0;
+  --p-z-sticky:      10;
+  --p-z-dropdown:    20;
+  --p-z-tooltip:     30;
+  --p-z-modal-scrim: 40;
+  --p-z-modal:       50;
+  --p-z-toast:       60;
 
   /* Breakpoints (referenced from @media, not applied here) */
   --p-bp-phone: 0px;
@@ -397,4 +425,53 @@
   --font-sans:      var(--p-font-sans);
   --font-condensed: var(--p-font-display);
   --font-mono:      var(--p-font-mono);
+  --font-editorial: var(--p-font-editorial);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LIGHT / EDITORIAL tokens (ch.5.8) — DEFINED but NOT default.
+ *
+ *   DS v0 is dark-first; these light "paper" tokens exist ONLY for editorial
+ *   / long-form surfaces (printed-feel article views, book/learn reader). They
+ *   are intentionally NOT applied at :root — opt in by scoping `.editorial`
+ *   (or `[data-surface="editorial"]`) on a subtree:
+ *
+ *     <article class="editorial"> … </article>
+ *
+ *   Brand source: brand.devfellowship.com/llms.txt §5.8.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Editorial primitives are always available as vars (so a consumer can
+   * reference --paper directly) but only take effect as page bg/ink under
+   * the .editorial scope below. */
+  --paper:          var(--p-sand-50);        /* #F6F1E7 */
+  --paper-2:        var(--p-sand-paper-2);   /* #ECE4D2 */
+  --ink-on-paper:   var(--p-sand-850);       /* #1A1714 */
+  --brand-on-light: var(--p-amber-600);      /* #C2663B */
+}
+
+.editorial,
+[data-surface='editorial'] {
+  background-color: var(--paper);
+  color: var(--ink-on-paper);
+  font-family: var(--p-font-editorial);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * FOCUS RING (ch.5.2 / ch.11) — 1px amber, 3px offset, INSTANT (no animation).
+ * No drop shadows anywhere; hierarchy is by surface elevation only.
+ * Consumers can adopt this uniform ring via `.ds-focus-ring:focus-visible`.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --ds-focus-ring-width:  1px;
+  --ds-focus-ring-offset: 3px;
+  --ds-focus-ring-color:  var(--s-border-focus);  /* amber #E07A4A */
+}
+
+.ds-focus-ring:focus-visible {
+  outline: var(--ds-focus-ring-width) solid var(--ds-focus-ring-color);
+  outline-offset: var(--ds-focus-ring-offset);
+  transition: none;  /* instant — no animation on focus */
 }

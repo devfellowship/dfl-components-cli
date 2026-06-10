@@ -14,8 +14,14 @@
  * Override any --p-* / --s-* / --c-* variable in your own CSS to retheme.
  */
 
-/* Fonts — Inter (body), Barlow Condensed (display), JetBrains Mono (code). */
+/* Fonts — Inter (body), Barlow Condensed (display), JetBrains Mono (code).
+ *
+ * Self-hosted @font-face declarations live in fonts.css. The WOFF2 binaries
+ * are NOT vendored yet (see TODO(fonts) in fonts.css) — so the Google Fonts
+ * @import below stays as a WORKING FALLBACK until the binaries land. Once
+ * vendored, drop this @import and rely on fonts.css. */
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import './fonts.css';
 
 /* All design tokens live in tokens.css. */
 @import './tokens.css';
