@@ -78,6 +78,28 @@
   --font-sans: var(--font-sans);
   --font-condensed: var(--font-condensed);
   --font-mono: var(--font-mono);
+  --font-editorial: var(--font-editorial);
+
+  /* ─── Editorial / paper (light, NOT default — see tokens.css §5.8) ─────── */
+  --color-paper:          var(--paper);
+  --color-paper-2:        var(--paper-2);
+  --color-ink-on-paper:   var(--ink-on-paper);
+  --color-brand-on-light: var(--brand-on-light);
+
+  /* ─── Motion — DS-spec named easings → `ease-*` utilities ─────────────── */
+  --ease-standard: var(--p-ease-standard);
+  --ease-snap:     var(--p-ease-snap);
+  --ease-out-std:  var(--p-ease-out-std);
+  --ease-in-std:   var(--p-ease-in-std);
+
+  /* ─── Z-index scale → `z-*` utilities (z-sticky, z-modal, z-toast, …) ─── */
+  --z-base:        var(--p-z-base);
+  --z-sticky:      var(--p-z-sticky);
+  --z-dropdown:    var(--p-z-dropdown);
+  --z-tooltip:     var(--p-z-tooltip);
+  --z-modal-scrim: var(--p-z-modal-scrim);
+  --z-modal:       var(--p-z-modal);
+  --z-toast:       var(--p-z-toast);
 
   /* ─── DS v0 component tokens (--c-*) exposed as Tailwind utilities ────── */
   /* Atoms cluster (Phase 1.1) — Button + Input + Card knobs */

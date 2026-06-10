@@ -1,0 +1,102 @@
+/*
+ * @devfellowship/components — Self-hosted @font-face declarations (DS v0)
+ *
+ * Brand source: brand.devfellowship.com/llms.txt §06 Tipografia.
+ *   - Barlow Condensed  → display  (weights 500 / 600 / 700)
+ *   - Inter             → body     (weights 400 / 500 / 600 / 700)
+ *   - JetBrains Mono    → mono     (weights 400 / 500 / 600)
+ *   - Georgia           → editorial (system serif — no @font-face needed)
+ *
+ * ─────────────────────────────────────────────────────────────────────────
+ * TODO(fonts): WOFF2 BINARIES NOT YET COMMITTED.
+ *
+ * These @font-face blocks reference the *expected* self-hosted paths
+ * (`/fonts/<family>/...woff2`). The actual WOFF2 files have NOT been added to
+ * the repo yet (a separate follow-up will vendor them, ideally subset/latin,
+ * so we avoid committing large/unverified binaries in this tokens-only PR).
+ *
+ * UNTIL the binaries land, `theme.css` keeps the Google Fonts `@import` as a
+ * working fallback, so type rendering is unaffected. Once the WOFF2 files are
+ * vendored under `packages/ui/src/styles/fonts/` (and copied to `dist` by
+ * tsup, + into the showcase `public/fonts/`), drop the Google Fonts @import
+ * from theme.css and rely on these declarations.
+ *
+ * Follow-up: vendor subset WOFF2 + add tsup copy step + showcase preload.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
+/* ─── Barlow Condensed (display) ─────────────────────────────────────────── */
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/barlow-condensed/barlow-condensed-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/barlow-condensed/barlow-condensed-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/barlow-condensed/barlow-condensed-700.woff2') format('woff2');
+}
+
+/* ─── Inter (body) ───────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter/inter-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter/inter-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter/inter-700.woff2') format('woff2');
+}
+
+/* ─── JetBrains Mono (mono) ──────────────────────────────────────────────── */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono/jetbrains-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono/jetbrains-mono-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono/jetbrains-mono-600.woff2') format('woff2');
+}
