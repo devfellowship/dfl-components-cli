@@ -58,6 +58,22 @@ export const Disabled: Story = {
   args: { children: "Desabilitado", disabled: true },
 };
 
+/**
+ * `asChild` renders the Button styling onto its single child (Radix Slot) —
+ * the canonical shadcn pattern for link-styled buttons
+ * (`<Button asChild><a/></Button>` or with a router `<Link/>`).
+ * Regression-guarded: must NOT throw `React.Children.only`.
+ */
+export const AsChildLink: Story = {
+  render: () => (
+    <Button asChild variant="primary">
+      <a href="https://devfellowship.com" target="_blank" rel="noreferrer">
+        Anchor styled as Button
+      </a>
+    </Button>
+  ),
+};
+
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
