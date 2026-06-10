@@ -7,8 +7,10 @@ const program = new Command();
 
 program
   .name('dfl-components')
-  .description('Add DevFellowship components to your project')
-  .version('0.2.0');
+  .description(
+    'DevFellowship components CLI — add shared components AND map app UX paths (folds the dfl-ux-paths CLI). Shipped as the `dfl-components` bin of @devfellowship/components.',
+  )
+  .version('1.0.0');
 
 program
   .command('init')

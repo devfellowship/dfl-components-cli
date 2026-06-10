@@ -14,13 +14,17 @@ type: platform
 
 provides:
   - type: package
-    name: dfl-components-cli
+    name: "@devfellowship/components"
     description: >
-      Node.js CLI published as "dfl-components" (Commander.js + tsup).
-      Two commands: `init` (scaffold dfl-components.json config) and
-      `add <component>` (fetch from registry, resolve deps, write files).
-    entry: packages/cli/dist/index.js
+      The DFL design-system package. Ships BOTH the React UI library AND the
+      `dfl-components` CLI bin (Commander.js + tsup) — the CLI was folded in so
+      DFL apps only ever depend on ONE published npm package. The standalone
+      "@devfellowship/components-cli" package is DEPRECATED (folded in here).
+      CLI commands: `init`, `add <component>`, and the `ux-paths` subcommand
+      group (init/validate/generate-mermaid/diff/stamp).
+    entry: packages/ui/dist/cli.js
     bin: dfl-components
+    invocation: npx @devfellowship/components ux-paths <cmd>
 
   - type: registry
     name: component-registry
@@ -160,14 +164,14 @@ environment:
 
 health_check:
   command: npm run build
-  cli_check: cd packages/cli && npm run build
+  cli_check: cd packages/ui && npm run build:cli
 
 scripts:
   dev: vite (showcase app on port 8080)
   build: vite build (showcase app)
   lint: eslint .
   test: vitest run
-  cli_build: cd packages/cli && tsup
-  cli_dev: cd packages/cli && tsup --watch
+  cli_build: cd packages/ui && npm run build:cli   # tsup --config tsup.cli.config.ts
+  cli_dev: cd packages/ui && tsup --config tsup.cli.config.ts --watch
 
 agent_entry_point: CLAUDE.md

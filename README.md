@@ -185,20 +185,23 @@ function App() {
 
 All configuration props are optional; the provider reads `VITE_*` environment variables as defaults. Set `enabled={false}` or omit the Sentry DSN to disable tracking entirely.
 
-## CLI — `@devfellowship/components-cli`
+## CLI — shipped as the `dfl-components` bin of `@devfellowship/components`
 
-One published npm CLI for DFL apps. Binary name: `dfl-components`.
+The CLI is **part of `@devfellowship/components`** — there is **no separate
+`-cli` package**. Installing (or `npx`-ing) `@devfellowship/components` exposes
+the `dfl-components` binary. The standalone `@devfellowship/components-cli`
+package is **deprecated** (folded in here); use the bin below instead.
 
 ```bash
 # add shared components from the registry
-npx @devfellowship/components-cli add button card
+npx @devfellowship/components add button card
 
 # map / validate / stamp this app's UX paths (folds the former dfl-ux-paths CLI)
-npx @devfellowship/components-cli ux-paths init
-npx @devfellowship/components-cli ux-paths validate
-npx @devfellowship/components-cli ux-paths generate-mermaid
-npx @devfellowship/components-cli ux-paths diff web/flows.json mobile/flows.json
-npx @devfellowship/components-cli ux-paths stamp        # minimal-diff by default
+npx @devfellowship/components ux-paths init
+npx @devfellowship/components ux-paths validate
+npx @devfellowship/components ux-paths generate-mermaid
+npx @devfellowship/components ux-paths diff web/flows.json mobile/flows.json
+npx @devfellowship/components ux-paths stamp        # minimal-diff by default
 ```
 
 ### `ux-paths` subcommands

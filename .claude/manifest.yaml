@@ -41,14 +41,17 @@ personas:
 
 entry_points:
   showcase: src/components/ComponentHubApp.tsx
-  cli: packages/cli/src/index.ts
+  # The CLI was folded into @devfellowship/components — it ships as the
+  # `dfl-components` bin of packages/ui (built via tsup.cli.config.ts).
+  cli: packages/ui/src/cli/index.ts
   registry: registry/registry.json
 
 key_files:
-  - packages/cli/src/commands/add.ts
-  - packages/cli/src/commands/init.ts
-  - packages/cli/src/types/config.ts
-  - packages/cli/src/types/registry.ts
+  - packages/ui/src/cli/index.ts
+  - packages/ui/src/cli/commands/add.ts
+  - packages/ui/src/cli/commands/init.ts
+  - packages/ui/src/cli/ux-paths/index.ts
+  - packages/ui/tsup.cli.config.ts
   - registry/registry.json
   - src/data/mockComponents.ts
 
