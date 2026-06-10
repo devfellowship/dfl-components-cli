@@ -43,6 +43,59 @@ just bump to `^1.2.0`, swap their hand-mirrored palette for `@import
 
 DS v0 is dark-only; the bridge channels are dark.
 
+#### ⚠️ Import EXACTLY ONE — NEVER both `/styles` and `/shadcn`
+
+`@devfellowship/components/styles` and `@devfellowship/components/shadcn` are
+**mutually exclusive**. They declare the **same** semantic CSS vars
+(`--background`, `--primary`, `--card`, …) in **incompatible value formats**:
+
+| Export | `--background` value | For apps whose theme reads it as |
+| --- | --- | --- |
+| `/styles` (theme.css) | **hex** — `#0A0908` | `var(--background)` (raw color) |
+| `/shadcn` (shadcn.css) | **HSL channels** — `30 11% 4%` | `hsl(var(--background))` |
+
+If an app imports **both**, whichever lands later in the CSS cascade
+**clobbers** `--background` (and every sibling var):
+
+- `/shadcn` after `/styles` → a hex consumer now reads `30 11% 4%` as a color → garbage.
+- `/styles` after `/shadcn` → an `hsl(var(--background))` consumer evaluates
+  `hsl(#0A0908)` → **invalid CSS** → the declaration is dropped → the surface
+  renders **transparent**. This is exactly the **transparent quiz-dialog bug**:
+  the dialog's `background` silently disappeared because both layers were
+  imported and the bare-HSL channel from `/shadcn` made `/styles`' hex invalid.
+
+**Rule, by app type:**
+
+- **DS-native (hex) app** → import `@devfellowship/components/styles` **only**.
+- **shadcn-slate (HSL-channel) app** → import `@devfellowship/components/shadcn` **only**.
+- **Never import both. Never mix them in the same app** (not in `.css`, not via
+  a JS/TS side-effect `import`).
+
+##### Lint-time guard (deterministic)
+
+A guard ships in the CLI so CI catches the collision before it reaches a browser:
+
+```bash
+# scan the current app (cwd) — exit 1 if BOTH imports are present
+npx @devfellowship/components check-style-imports
+# or point at a subdir, or get machine-readable output
+npx @devfellowship/components check-style-imports ./src --json
+```
+
+It scans every `.css` / `.scss` / `.less` / `.ts` / `.tsx` / `.js` / `.jsx`
+(skipping `node_modules`, `dist`, build dirs) for `@import` **and** JS `import` /
+`require` of the two exports. Exit `0` = clean (zero or one export imported),
+exit `1` = both imported (prints each offending file:line). **Adopt it** by
+adding a step to your app's CI lint job:
+
+```yaml
+- name: Guard DS style co-import collision
+  run: npx @devfellowship/components check-style-imports
+```
+
+(or as a `package.json` script / pre-commit hook). No app needs to bump a
+dependency version to adopt it — it runs straight from the published CLI bin.
+
 ## Features
 
 - **Component Browser**: Grid-based layout with category filtering and search
@@ -202,6 +255,9 @@ npx @devfellowship/components ux-paths validate
 npx @devfellowship/components ux-paths generate-mermaid
 npx @devfellowship/components ux-paths diff web/flows.json mobile/flows.json
 npx @devfellowship/components ux-paths stamp        # minimal-diff by default
+
+# guard against importing BOTH /styles and /shadcn (see "Consuming the DS styles")
+npx @devfellowship/components check-style-imports
 ```
 
 ### `ux-paths` subcommands

@@ -1,0 +1,4 @@
+@import "tailwindcss";
+@import "@devfellowship/components/styles";
+
+body { color: red; }
