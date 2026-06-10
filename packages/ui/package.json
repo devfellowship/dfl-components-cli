@@ -28,6 +28,7 @@
       "require": "./dist/providers.cjs"
     },
     "./styles": "./dist/styles/theme.css",
+    "./shadcn": "./dist/styles/shadcn.css",
     "./tokens": "./dist/styles/tokens.css",
     "./tailwind": "./dist/styles/tailwind.css"
   },
