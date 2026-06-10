@@ -1,3 +1,4 @@
+# Public repo: self-hosted dfl-runner blocked (allows_public=false) + cannot call private dfl-ci reusable workflows. Inlined on ubuntu-latest. Authorized Tainan TG 2026-06-06 (public-repo carve-out) + TG 2026-06-10.
 name: Scaffold Guard
 
 on:
@@ -8,6 +9,93 @@ permissions:
 
 jobs:
   scaffold-guard:
-    uses: devfellowship/dfl-ci/.github/workflows/scaffold-guard.yml@main
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref || 'main' }}
+
+      - name: Run scaffold guard
+        run: |
+          # Prefer a repo-local check; otherwise run the inline guard below.
+          LOCAL=".github/workflows/checks/scaffold-guard.js"
+
+          if [ -f "$LOCAL" ]; then
+            node "$LOCAL" "origin/${{ github.event.pull_request.base.ref || 'main' }}"
+          else
+            echo "scaffold-guard.js not found locally — running inline check"
+            node <<'GUARD_EOF'
+          const { execSync } = require('child_process');
+          const fs = require('fs');
+
+          const baseRef = `origin/${{ github.event.pull_request.base.ref || 'main' }}`;
+          const BEGIN_RE = /^<!--\s*BEGIN GENERATED:([^\s]+)\s*-->/;
+          const END_RE = /^<!--\s*END GENERATED:([^\s]+)\s*-->/;
+
+          function findRanges(content) {
+            const lines = content.split('\n');
+            const ranges = [];
+            let open = null;
+            for (let i = 0; i < lines.length; i++) {
+              const bm = lines[i].match(BEGIN_RE);
+              if (bm) { open = { name: bm[1], startLine: i + 1 }; continue; }
+              const em = lines[i].match(END_RE);
+              if (em && open && em[1] === open.name) { ranges.push({ ...open, endLine: i + 1 }); open = null; }
+            }
+            return ranges;
+          }
+
+          let raw;
+          try { raw = execSync(`git diff --name-only ${baseRef}...HEAD`, { encoding: 'utf8' }); }
+          catch { console.log('No diff — passed.'); process.exit(0); }
+
+          const files = raw.trim().split('\n').filter(Boolean);
+          const violations = [];
+
+          for (const file of files) {
+            let base;
+            try { base = execSync(`git show ${baseRef}:${file}`, { encoding: 'utf8' }); } catch { continue; }
+            const baseRanges = findRanges(base);
+            if (!baseRanges.length) continue;
+
+            let head;
+            try { head = fs.readFileSync(file, 'utf8'); } catch { continue; }
+            const headRanges = findRanges(head);
+
+            let diff;
+            try { diff = execSync(`git diff --unified=0 ${baseRef}...HEAD -- ${file}`, { encoding: 'utf8' }); } catch { continue; }
+
+            const hunkRe = /^@@\s+-(\d+)(?:,(\d+))?\s+\+(\d+)(?:,(\d+))?\s+@@/;
+            for (const line of diff.split('\n')) {
+              const m = line.match(hunkRe);
+              if (!m) continue;
+              const oldStart = +m[1], oldCount = m[2] !== undefined ? +m[2] : 1;
+              const newStart = +m[3], newCount = m[4] !== undefined ? +m[4] : 1;
+              for (let i = 0; i < oldCount; i++) {
+                if (baseRanges.some(r => (oldStart + i) >= r.startLine && (oldStart + i) <= r.endLine)) {
+                  violations.push({ file, block: baseRanges.find(r => (oldStart + i) >= r.startLine && (oldStart + i) <= r.endLine).name });
+                  break;
+                }
+              }
+              for (let i = 0; i < newCount; i++) {
+                if (headRanges.some(r => (newStart + i) >= r.startLine && (newStart + i) <= r.endLine)) {
+                  violations.push({ file, block: headRanges.find(r => (newStart + i) >= r.startLine && (newStart + i) <= r.endLine).name });
+                  break;
+                }
+              }
+            }
+          }
+
+          const unique = [...new Map(violations.map(v => [`${v.file}:${v.block}`, v])).values()];
+          if (unique.length === 0) { console.log(`Scaffold guard passed (${files.length} file(s)).`); process.exit(0); }
+          console.error('Scaffold guard FAILED:\n');
+          for (const v of unique) {
+            console.error(`  ${v.file}: edits inside BEGIN GENERATED:${v.block} block are not allowed — those lines are owned by dfl-hq render.mjs and will be clobbered. Move repo-specific changes to a BEGIN MANUAL block.\n`);
+          }
+          process.exit(1);
+          GUARD_EOF
+          fi
