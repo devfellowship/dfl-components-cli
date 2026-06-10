@@ -100,3 +100,52 @@ export const StagesOnly: Story = {
 export const Empty: Story = {
   args: { stages: [] },
 };
+
+// A long (15-month) program with many week columns and deliberately long
+// titles — exercises horizontal scroll (sticky name column) + name-col width.
+const longStages: GanttStage[] = [
+  ...stages,
+  {
+    id: "s4",
+    title: "Vibecode com padrões avançados e qualidade de código",
+    subtitle: "TypeScript, testes e arquitetura na prática",
+    color: "#7AE0A2",
+    weekStart: 11,
+    weekSpan: 4,
+    milestones: [
+      { id: "m13", title: "Padrões avançados aplicados a um projeto real", points: 20, weekStart: 11, weekSpan: 2 },
+      { id: "m14", title: "Cobertura de testes e CI", points: 15, weekStart: 13, weekSpan: 2 },
+    ],
+  },
+  {
+    id: "s5",
+    title: "Liderança na prática para devs",
+    subtitle: "Comunicação, mentoria e tech-lead",
+    color: "#E0B57A",
+    weekStart: 15,
+    weekSpan: 5,
+    milestones: [
+      { id: "m15", title: "Mentoria e code review como liderança", points: 20, weekStart: 15, weekSpan: 2 },
+      { id: "m16", title: "Conduzindo um projeto end-to-end", points: 25, weekStart: 17, weekSpan: 3 },
+    ],
+  },
+];
+
+export const LongProgramHorizontalScroll: Story = {
+  args: {
+    stages: longStages,
+    dependencies: [
+      ...dependencies,
+      { from: "s3", to: "s4" },
+      { from: "s4", to: "s5" },
+    ],
+    // No explicit `weeks` — derived to ~19 from the furthest stage end, so the
+    // grid overflows its container and scrolls horizontally; the STAGE/TASK
+    // column stays sticky on the left.
+    nameColWidth: 360,
+  },
+};
+
+export const WideNameColumn: Story = {
+  args: { stages, dependencies, weeks: 12, nameColWidth: 420 },
+};

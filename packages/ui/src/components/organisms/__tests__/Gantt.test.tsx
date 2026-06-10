@@ -11,6 +11,8 @@ import {
   resolveWeekCount,
   resolveWeekLabels,
   barGridColumn,
+  resolveNameColWidth,
+  DEFAULT_NAME_COL_WIDTH,
   type GanttStage,
 } from "../Gantt";
 
@@ -126,5 +128,26 @@ describe("barGridColumn", () => {
   });
   it("clamps a start below 1 to 1", () => {
     expect(barGridColumn(0, 3, 12)).toEqual({ start: 1, span: 3 });
+  });
+});
+
+describe("resolveNameColWidth", () => {
+  it("defaults to DEFAULT_NAME_COL_WIDTH when nothing is passed", () => {
+    expect(resolveNameColWidth()).toBe(DEFAULT_NAME_COL_WIDTH);
+    expect(DEFAULT_NAME_COL_WIDTH).toBe(320);
+  });
+  it("prefers nameColWidth over labelWidth", () => {
+    expect(resolveNameColWidth(420, 240)).toBe(420);
+  });
+  it("falls back to labelWidth for back-compat when nameColWidth absent", () => {
+    expect(resolveNameColWidth(undefined, 200)).toBe(200);
+  });
+  it("rounds fractional widths", () => {
+    expect(resolveNameColWidth(360.6)).toBe(361);
+    expect(resolveNameColWidth(undefined, 199.4)).toBe(199);
+  });
+  it("ignores non-positive values and uses the default", () => {
+    expect(resolveNameColWidth(0, 0)).toBe(DEFAULT_NAME_COL_WIDTH);
+    expect(resolveNameColWidth(-10, -5)).toBe(DEFAULT_NAME_COL_WIDTH);
   });
 });

@@ -35,6 +35,8 @@ export {
   resolveWeekCount,
   resolveWeekLabels,
   barGridColumn,
+  resolveNameColWidth,
+  DEFAULT_NAME_COL_WIDTH,
 } from "./Gantt";
 export type {
   GanttProps,
