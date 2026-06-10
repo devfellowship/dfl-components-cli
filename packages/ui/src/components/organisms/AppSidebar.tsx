@@ -202,7 +202,9 @@ export function AppSidebar({
       <div className="flex min-h-screen w-full">
         <SidebarInner {...props} />
         <div className="flex flex-col flex-1 min-w-0">
-          <div className="p-2">
+          {/* Top bar holding the collapse trigger. Lives in the content column
+           * (NOT over the sidebar header) so it never overlaps the brand. */}
+          <div className="sticky top-0 z-20 flex h-12 shrink-0 items-center gap-2 border-b border-sidebar-border bg-background/80 px-2 backdrop-blur">
             <SidebarTrigger />
           </div>
           {children}

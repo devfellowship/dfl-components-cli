@@ -26,6 +26,13 @@
 /* All design tokens live in tokens.css. */
 @import './tokens.css';
 
+/* Tailwind v4 token→utility mappings (--color-popover: var(--popover), etc.).
+ * Importing this here means apps that do `@import 'tailwindcss'` +
+ * `@import '@devfellowship/components/styles'` get the bg-popover / bg-sidebar /
+ * border-sidebar-border / … utilities wired WITHOUT also importing `/tailwind`.
+ * Fixes the transparent-popover / dead-utility regression (v1.2.1). */
+@import './theme-mappings.css';
+
 /* ─── Base resets ────────────────────────────────────────────────────────── */
 *, *::before, *::after {
   border-color: var(--s-border-subtle);

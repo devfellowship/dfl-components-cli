@@ -1,0 +1,153 @@
+/*
+ * @dfl/components — Tailwind v4 token→utility mappings (DS v0)
+ *
+ * Single source of truth for the `@theme inline` color/font/radius mappings
+ * that turn the DS tokens (--popover, --sidebar-background, …) into Tailwind v4
+ * utility classes (bg-popover, bg-sidebar, …).
+ *
+ * Imported by BOTH:
+ *   • theme.css       (the `@devfellowship/components/styles` export) — so apps
+ *     that import `/styles` + `tailwindcss` directly get the utilities wired
+ *     WITHOUT also having to import `/tailwind`. This fixes the "transparent
+ *     popover / dead bg-* utility" class of bugs where bg-popover / bg-sidebar
+ *     resolved to nothing because --color-popover / --color-sidebar were never
+ *     registered. (regression from the DS dark-chrome refactor; fixed v1.2.1)
+ *   • tailwind.css    (the `@devfellowship/components/tailwind` preset export).
+ *
+ * `@theme inline` is additive and idempotent — importing it from both a /styles
+ * consumer and a /tailwind consumer in the same app is a harmless no-op.
+ */
+
+@theme inline {
+  /* ─── Colours ──────────────────────────────────────────────────────────── */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand shortcuts */
+  --color-brand: var(--brand-orange);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-dark: var(--brand-dark);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* ─── Border radius ────────────────────────────────────────────────────── */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+
+  /* ─── Fonts ────────────────────────────────────────────────────────────── */
+  --font-sans: var(--font-sans);
+  --font-condensed: var(--font-condensed);
+  --font-mono: var(--font-mono);
+  --font-editorial: var(--font-editorial);
+
+  /* ─── Editorial / paper (light, NOT default — see tokens.css §5.8) ─────── */
+  --color-paper:          var(--paper);
+  --color-paper-2:        var(--paper-2);
+  --color-ink-on-paper:   var(--ink-on-paper);
+  --color-brand-on-light: var(--brand-on-light);
+
+  /* ─── Motion — DS-spec named easings → `ease-*` utilities ─────────────── */
+  --ease-standard: var(--p-ease-standard);
+  --ease-snap:     var(--p-ease-snap);
+  --ease-out-std:  var(--p-ease-out-std);
+  --ease-in-std:   var(--p-ease-in-std);
+
+  /* ─── Z-index scale → `z-*` utilities (z-sticky, z-modal, z-toast, …) ─── */
+  --z-base:        var(--p-z-base);
+  --z-sticky:      var(--p-z-sticky);
+  --z-dropdown:    var(--p-z-dropdown);
+  --z-tooltip:     var(--p-z-tooltip);
+  --z-modal-scrim: var(--p-z-modal-scrim);
+  --z-modal:       var(--p-z-modal);
+  --z-toast:       var(--p-z-toast);
+
+  /* ─── DS v0 component tokens (--c-*) exposed as Tailwind utilities ────── */
+  /* Atoms cluster (Phase 1.1) — Button + Input + Card knobs */
+  --color-c-button-primary-bg:           var(--c-button-primary-bg);
+  --color-c-button-primary-fg:           var(--c-button-primary-fg);
+  --color-c-button-primary-bg-hover:     var(--c-button-primary-bg-hover);
+  --color-c-button-primary-bg-active:    var(--c-button-primary-bg-active);
+  --color-c-button-secondary-bg:         var(--c-button-secondary-bg);
+  --color-c-button-secondary-fg:         var(--c-button-secondary-fg);
+  --color-c-button-secondary-border:     var(--c-button-secondary-border);
+  --color-c-button-secondary-bg-hover:   var(--c-button-secondary-bg-hover);
+  --color-c-button-secondary-border-hover: var(--c-button-secondary-border-hover);
+  --color-c-button-ghost-fg:             var(--c-button-ghost-fg);
+  --color-c-button-ghost-bg-hover:       var(--c-button-ghost-bg-hover);
+  --color-c-button-destructive-fg:       var(--c-button-destructive-fg);
+  --color-c-button-destructive-border:   var(--c-button-destructive-border);
+  --color-c-button-destructive-bg-hover: var(--c-button-destructive-bg-hover);
+  --color-c-button-success-bg:           var(--c-button-success-bg);
+  --color-c-button-success-fg:           var(--c-button-success-fg);
+  --color-c-input-bg:                    var(--c-input-bg);
+  --color-c-input-fg:                    var(--c-input-fg);
+  --color-c-input-placeholder:           var(--c-input-placeholder);
+  --color-c-input-border:                var(--c-input-border);
+  --color-c-input-border-hover:          var(--c-input-border-hover);
+  --color-c-input-border-focus:          var(--c-input-border-focus);
+  --color-c-input-ring-focus:            var(--c-input-ring-focus);
+  --color-c-input-border-error:          var(--c-input-border-error);
+
+  /* Semantic ink as utilities */
+  --color-s-ink-primary:    var(--s-ink-primary);
+  --color-s-ink-secondary:  var(--s-ink-secondary);
+  --color-s-ink-muted:      var(--s-ink-muted);
+  --color-s-ink-disabled:   var(--s-ink-disabled);
+  --color-s-surface-page:   var(--s-surface-page);
+  --color-s-surface-panel:  var(--s-surface-panel);
+  --color-s-surface-raised: var(--s-surface-raised);
+  --color-s-surface-elevated: var(--s-surface-elevated);
+  --color-s-border-subtle:  var(--s-border-subtle);
+  --color-s-border-strong:  var(--s-border-strong);
+  --color-s-border-focus:   var(--s-border-focus);
+  --color-s-brand-solid:    var(--s-brand-solid);
+  --color-s-brand-hover:    var(--s-brand-hover);
+  --color-s-brand-subtle:   var(--s-brand-subtle);
+  --color-s-brand-ring:     var(--s-brand-ring);
+}
+
+/* Dark mode variant — class-based */
+@variant dark (&:is(.dark *));
