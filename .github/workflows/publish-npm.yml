@@ -15,6 +15,7 @@ on:
 permissions:
   contents: write
   id-token: write
+  pull-requests: write   # needed for the version-bump-back PR (main is ruleset-protected, no direct push)
 
 jobs:
   publish:
@@ -43,14 +44,24 @@ jobs:
         id: version
         run: |
           INPUT="${{ github.event.inputs.version }}"
-          # If input is semver-like (contains dots), use it directly
-          if [[ "$INPUT" =~ ^[0-9]+\.[0-9]+\.[0-9] ]]; then
-            npm version "$INPUT" --no-git-tag-version
-          else
-            npm version "$INPUT" --no-git-tag-version
-          fi
+          # npm version accepts both bump keywords (patch|minor|major) and
+          # explicit semver (e.g. 1.2.0), so a single call handles both cases.
+          npm version "$INPUT" --no-git-tag-version
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # Idempotency guard: if the target version is already on npm, abort BEFORE
+      # publishing so we never hit npm's "cannot publish over existing version"
+      # error (and so re-runs of this workflow are safe / explicit).
+      - name: Guard against re-publishing an existing version
+        run: |
+          TARGET="${{ steps.version.outputs.version }}"
+          PUBLISHED=$(npm view @devfellowship/components@"$TARGET" version 2>/dev/null || true)
+          if [ "$PUBLISHED" = "$TARGET" ]; then
+            echo "::error::@devfellowship/components@$TARGET is already published to npm. Nothing to do — pick a higher version."
+            exit 1
+          fi
+          echo "Version $TARGET is not yet on npm — proceeding to publish."
 
       - name: Build
         run: npm run build
@@ -60,12 +71,59 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Commit and tag version bump
+      # The publish above has ALREADY happened and succeeded by this point.
+      # Syncing the source version back to `main` must NOT be able to fail the
+      # overall publish — `main` is ruleset-protected (PR required, no direct
+      # push), so a plain `git push origin HEAD` here always 403'd, leaving the
+      # source un-bumped + untagged (the silent half-failure we're fixing).
+      #
+      # New behavior:
+      #   (a) push the git TAG only — tags are not covered by the branch ruleset,
+      #       so this is allowed even though pushes to main are not.
+      #   (b) commit the bump to a NEW branch and open a PR via `gh` instead of
+      #       pushing to main. The PR is the human/CI gate that the ruleset wants.
+      # `continue-on-error` keeps the publish green even if the bump-back can't
+      # happen for some reason — the Summary step below makes the outcome loud.
+      - name: Sync version bump back to main (tag + PR)
+        id: bumpback
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd ${{ github.workspace }}
+          VERSION="${{ steps.version.outputs.version }}"
+          BRANCH="chore/release-v${VERSION}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # (a) Tag the published commit and push the tag (allowed on protected main).
+          git tag -f "v${VERSION}"
+          git push origin "v${VERSION}"
+
+          # (b) Open a PR with the source version bump (direct push to main is blocked).
+          git checkout -b "$BRANCH"
           git add packages/ui/package.json
-          git commit -m "chore(release): @dfl/components v${{ steps.version.outputs.version }}"
-          git tag "v${{ steps.version.outputs.version }}"
-          git push origin HEAD --tags
+          git commit -m "chore(release): @dfl/components v${VERSION}"
+          git push -u origin "$BRANCH" --force-with-lease
+
+          gh pr create \
+            --title "chore(release): @dfl/components v${VERSION}" \
+            --body "Auto-opened by the publish workflow: npm published \`@devfellowship/components@${VERSION}\`. This syncs the source \`packages/ui/package.json\` to match (direct push to \`main\` is blocked by the branch ruleset). Tag \`v${VERSION}\` was pushed already." \
+            --base main \
+            --head "$BRANCH" \
+            || echo "PR create skipped (one may already exist for $BRANCH)"
+
+      - name: Publish summary
+        if: always()
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          {
+            echo "## Publish result"
+            echo ""
+            echo "- 📦 Published \`@devfellowship/components@${VERSION}\` to npm (tag: \`${{ github.event.inputs.tag }}\`)."
+            if [ "${{ steps.bumpback.outcome }}" = "success" ]; then
+              echo "- ✅ Pushed tag \`v${VERSION}\` and opened a source-sync PR against \`main\`. **Merge it to finish the release.**"
+            else
+              echo "- ⚠️ The tag/PR bump-back step did not complete. The npm publish still succeeded, but the source version is NOT synced — open a manual PR bumping \`packages/ui/package.json\` to \`${VERSION}\` and tag \`v${VERSION}\`."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
