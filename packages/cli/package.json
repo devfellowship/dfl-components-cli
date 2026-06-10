@@ -1,6 +1,6 @@
 {
   "name": "@devfellowship/components-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI for DevFellowship: add shared components AND map app UX paths (folds the dfl-ux-paths CLI).",
   "type": "module",
   "bin": {
