@@ -76,10 +76,33 @@ export interface GanttProps extends React.HTMLAttributes<HTMLDivElement> {
   stagesOnly?: boolean;
   /** Optional header strip (e.g. member + per-stage progress pills). */
   header?: React.ReactNode;
-  /** Px width of the left rows column. Defaults to 240. */
+  /**
+   * Px width of the left (sticky) name column.
+   * @deprecated prefer `nameColWidth` — kept as a fallback for back-compat.
+   */
   labelWidth?: number;
+  /**
+   * Px width of the left (sticky) STAGE/TASK name column. Takes precedence
+   * over `labelWidth`. Defaults to 320 — wide enough that long stage/task
+   * titles read in full; overflow ellipsizes with a native tooltip. Bump this
+   * higher (e.g. 420) on full-width pages where you have the room.
+   */
+  nameColWidth?: number;
   /** Min px width of a single week column. Defaults to 64. */
   weekMinWidth?: number;
+}
+
+/** Default width of the sticky name column. ~2× the original 240 → readable. */
+export const DEFAULT_NAME_COL_WIDTH = 320;
+
+/** Resolve the effective name-column width: `nameColWidth` > `labelWidth` > default. */
+export function resolveNameColWidth(
+  nameColWidth?: number,
+  labelWidth?: number,
+): number {
+  if (typeof nameColWidth === "number" && nameColWidth > 0) return Math.round(nameColWidth);
+  if (typeof labelWidth === "number" && labelWidth > 0) return Math.round(labelWidth);
+  return DEFAULT_NAME_COL_WIDTH;
 }
 
 // ─── Pure layout helpers (unit-tested, node-safe) ────────────────────────────
@@ -152,7 +175,8 @@ export function Gantt({
   rowsHeader = "Stage / Task",
   stagesOnly = false,
   header,
-  labelWidth = 240,
+  labelWidth,
+  nameColWidth,
   weekMinWidth = 64,
   className,
   style,
@@ -160,6 +184,7 @@ export function Gantt({
 }: GanttProps) {
   const weekCount = resolveWeekCount(stages, weeks);
   const weekLabels = resolveWeekLabels(weekCount, weeks);
+  const nameWidth = resolveNameColWidth(nameColWidth, labelWidth);
 
   const [collapsed, setCollapsed] = React.useState<Record<string, boolean>>(() =>
     Object.fromEntries(stages.filter((s) => s.collapsed).map((s) => [s.id, true])),
@@ -210,7 +235,13 @@ export function Gantt({
     return () => window.removeEventListener("resize", handler);
   }, [dependencies.length, recomputeEdges]);
 
-  const trackTemplate = `${labelWidth}px repeat(${weekCount}, minmax(${weekMinWidth}px, 1fr))`;
+  const trackTemplate = `${nameWidth}px repeat(${weekCount}, minmax(${weekMinWidth}px, 1fr))`;
+
+  // The left name column is sticky so it stays put while the week grid scrolls
+  // horizontally. Each row-type carries its own opaque background (matching the
+  // row) so the scrolling bars never bleed through under the sticky column.
+  const stickyCol =
+    "sticky left-0 z-20 after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-[var(--s-border-subtle,#2A2622)]";
 
   return (
     <div
@@ -277,7 +308,12 @@ export function Gantt({
             className="grid items-center border-b border-[var(--s-border-subtle,#2A2622)] bg-[var(--s-surface-raised,#1A1714)]"
             style={{ gridTemplateColumns: trackTemplate }}
           >
-            <div className="px-4 py-2.5 font-[var(--s-font-mono,monospace)] text-[10.5px] font-medium uppercase tracking-[0.6px] text-[var(--s-ink-muted,#7D7568)]">
+            <div
+              className={cn(
+                stickyCol,
+                "bg-[var(--s-surface-raised,#1A1714)] px-4 py-2.5 font-[var(--s-font-mono,monospace)] text-[10.5px] font-medium uppercase tracking-[0.6px] text-[var(--s-ink-muted,#7D7568)]",
+              )}
+            >
               {rowsHeader}
             </div>
             {weekLabels.map((label, i) => (
@@ -309,7 +345,10 @@ export function Gantt({
                   <button
                     type="button"
                     onClick={() => toggle(stage.id)}
-                    className="flex items-center gap-2 px-4 py-3 text-left hover:bg-[var(--s-surface-raised,#1A1714)] transition-colors"
+                    className={cn(
+                      stickyCol,
+                      "flex items-center gap-2 bg-[var(--s-surface-panel,#141210)] px-4 py-3 text-left transition-colors hover:bg-[var(--s-surface-raised,#1A1714)]",
+                    )}
                     aria-expanded={!isCollapsed}
                   >
                     <Chevron open={!isCollapsed} />
@@ -318,11 +357,17 @@ export function Gantt({
                       style={{ background: dot }}
                     />
                     <span className="min-w-0">
-                      <span className="block truncate text-[13px] font-semibold text-[var(--s-ink-primary,#F6F1E7)]">
+                      <span
+                        className="block truncate text-[13px] font-semibold text-[var(--s-ink-primary,#F6F1E7)]"
+                        title={stage.title}
+                      >
                         {stage.title}
                       </span>
                       {stage.subtitle && (
-                        <span className="block truncate text-[11px] text-[var(--s-ink-muted,#7D7568)]">
+                        <span
+                          className="block truncate text-[11px] text-[var(--s-ink-muted,#7D7568)]"
+                          title={stage.subtitle}
+                        >
                           {stage.subtitle}
                         </span>
                       )}
@@ -376,7 +421,12 @@ export function Gantt({
                         className="grid items-center border-b border-[var(--s-border-subtle,#2A2622)] bg-[var(--s-surface-page,#0A0908)]"
                         style={{ gridTemplateColumns: trackTemplate }}
                       >
-                        <div className="flex items-center gap-2 py-2 pl-10 pr-4">
+                        <div
+                          className={cn(
+                            stickyCol,
+                            "flex items-center gap-2 bg-[var(--s-surface-page,#0A0908)] py-2 pl-10 pr-4",
+                          )}
+                        >
                           <StatusDot done={m.done} color={dot} />
                           <span
                             className={cn(
@@ -385,6 +435,7 @@ export function Gantt({
                                 ? "text-[var(--s-ink-muted,#7D7568)] line-through"
                                 : "text-[var(--s-ink-secondary,#C9C0B4)]",
                             )}
+                            title={m.title}
                           >
                             {m.title}
                           </span>
