@@ -264,6 +264,20 @@
   --s-font-display:     var(--p-font-display);
   --s-font-body:        var(--p-font-sans);
   --s-font-mono:        var(--p-font-mono);
+
+  /* Member palette — 10 deterministic avatar hues.
+   * Consumed by <UserAvatar> which hashes a name/id to --member-1..10.
+   * Mapped to the primitive "Avatar / accent palette" (Layer 1). */
+  --member-1:  var(--p-amber);
+  --member-2:  var(--p-blue);
+  --member-3:  var(--p-green);
+  --member-4:  var(--p-lilac);
+  --member-5:  var(--p-mustard);
+  --member-6:  var(--p-teal);
+  --member-7:  var(--p-coral);
+  --member-8:  var(--p-mint);
+  --member-9:  var(--p-peach);
+  --member-10: var(--p-periwinkle);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

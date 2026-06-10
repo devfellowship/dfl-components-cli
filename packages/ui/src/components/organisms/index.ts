@@ -1,6 +1,27 @@
 export { LoginPage } from "./LoginPage";
 export type { LoginPageProps } from "./LoginPage";
 
+export { LoginScreen } from "./LoginScreen";
+export type { LoginScreenProps } from "./LoginScreen";
+
+export { PasswordInput } from "./PasswordInput";
+export type { PasswordInputProps } from "./PasswordInput";
+
+export {
+  UserAvatar,
+  getInitials,
+  memberHueIndex,
+  memberHueVar,
+  MEMBER_PALETTE_SIZE,
+} from "./UserAvatar";
+export type { UserAvatarProps } from "./UserAvatar";
+
+export { UserMenu } from "./UserMenu";
+export type { UserMenuProps, UserMenuItem } from "./UserMenu";
+
+export { ConfirmDialog } from "./ConfirmDialog";
+export type { ConfirmDialogProps } from "./ConfirmDialog";
+
 export { AppSidebar } from "./AppSidebar";
 export type { AppSidebarProps, NavItem, NavGroup, UserInfo } from "./AppSidebar";
 
