@@ -111,15 +111,47 @@ const Spinner = () => (
   </svg>
 );
 
+const Kbd = ({ children }: { children: React.ReactNode }) => (
+  <kbd
+    className={cn(
+      "ml-1 inline-flex items-center justify-center font-mono uppercase tracking-[0.04em]",
+      "text-[10.5px] text-[var(--s-ink-muted)]",
+      "min-w-[18px] h-[18px] px-1 rounded-[var(--p-radius-sm)]",
+      "border border-[var(--s-border-subtle)] bg-[var(--s-surface-raised)]",
+    )}
+  >
+    {children}
+  </kbd>
+);
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     { className, variant, size, asChild = false, loading = false, disabled, kbd, children, ...props },
     ref,
   ) => {
-    const Comp = asChild ? Slot : "button";
+    const classes = cn(buttonVariants({ variant, size, className }));
+
+    // asChild path: Radix `Slot` requires EXACTLY ONE React element child.
+    // Injecting sibling adornments (spinner/kbd) here triggers
+    // `React.Children.only expected to receive a single React element child`.
+    // So in this mode we pass `children` straight through and skip adornments.
+    // This is the standard shadcn `<Button asChild><Link/></Button>` pattern.
+    if (asChild) {
+      return (
+        <Slot
+          className={classes}
+          ref={ref}
+          data-loading={loading ? "" : undefined}
+          {...props}
+        >
+          {children}
+        </Slot>
+      );
+    }
+
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+      <button
+        className={classes}
         ref={ref}
         disabled={disabled || loading}
         data-loading={loading ? "" : undefined}
@@ -127,19 +159,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading ? <Spinner /> : null}
         {children}
-        {kbd ? (
-          <kbd
-            className={cn(
-              "ml-1 inline-flex items-center justify-center font-mono uppercase tracking-[0.04em]",
-              "text-[10.5px] text-[var(--s-ink-muted)]",
-              "min-w-[18px] h-[18px] px-1 rounded-[var(--p-radius-sm)]",
-              "border border-[var(--s-border-subtle)] bg-[var(--s-surface-raised)]",
-            )}
-          >
-            {kbd}
-          </kbd>
-        ) : null}
-      </Comp>
+        {kbd ? <Kbd>{kbd}</Kbd> : null}
+      </button>
     );
   },
 );
