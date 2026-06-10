@@ -29,6 +29,21 @@ export { AppNavbar } from "./AppNavbar";
 export type { AppNavbarProps, BreadcrumbEntry, NavbarUserInfo } from "./AppNavbar";
 
 export {
+  Gantt,
+  clampPct,
+  stageProgress,
+  resolveWeekCount,
+  resolveWeekLabels,
+  barGridColumn,
+} from "./Gantt";
+export type {
+  GanttProps,
+  GanttStage,
+  GanttMilestone,
+  GanttDependency,
+} from "./Gantt";
+
+export {
   PublishDrawer,
   parseTags,
   filterPublishableAccounts,
