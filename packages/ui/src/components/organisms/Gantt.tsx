@@ -90,6 +90,14 @@ export interface GanttProps extends React.HTMLAttributes<HTMLDivElement> {
   nameColWidth?: number;
   /** Min px width of a single week column. Defaults to 64. */
   weekMinWidth?: number;
+  /**
+   * Optional click handler for a milestone. When provided, each milestone's
+   * name-column cell becomes a keyboard-accessible button that invokes this
+   * callback with the milestone and its parent stage. When omitted, milestone
+   * rows render exactly as before (a non-interactive cell) — fully
+   * backward-compatible, so existing consumers are unaffected.
+   */
+  onMilestoneClick?: (milestone: GanttMilestone, stage: GanttStage) => void;
 }
 
 /** Default width of the sticky name column. ~2× the original 240 → readable. */
@@ -178,6 +186,7 @@ export function Gantt({
   labelWidth,
   nameColWidth,
   weekMinWidth = 64,
+  onMilestoneClick,
   className,
   style,
   ...rest
@@ -428,17 +437,33 @@ export function Gantt({
                           )}
                         >
                           <StatusDot done={m.done} color={dot} />
-                          <span
-                            className={cn(
-                              "min-w-0 flex-1 truncate text-[13px]",
-                              m.done
-                                ? "text-[var(--s-ink-muted,#7D7568)] line-through"
-                                : "text-[var(--s-ink-secondary,#C9C0B4)]",
-                            )}
-                            title={m.title}
-                          >
-                            {m.title}
-                          </span>
+                          {onMilestoneClick ? (
+                            <button
+                              type="button"
+                              onClick={() => onMilestoneClick(m, stage)}
+                              title={m.title}
+                              className={cn(
+                                "min-w-0 flex-1 truncate rounded-[var(--p-radius-sm,4px)] text-left text-[13px] transition-colors hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-brand-solid,#E07A4A)]",
+                                m.done
+                                  ? "text-[var(--s-ink-muted,#7D7568)] line-through"
+                                  : "text-[var(--s-ink-secondary,#C9C0B4)]",
+                              )}
+                            >
+                              {m.title}
+                            </button>
+                          ) : (
+                            <span
+                              className={cn(
+                                "min-w-0 flex-1 truncate text-[13px]",
+                                m.done
+                                  ? "text-[var(--s-ink-muted,#7D7568)] line-through"
+                                  : "text-[var(--s-ink-secondary,#C9C0B4)]",
+                              )}
+                              title={m.title}
+                            >
+                              {m.title}
+                            </span>
+                          )}
                           {m.points != null && (
                             <span className="shrink-0 font-[var(--s-font-mono,monospace)] text-[10px] tabular-nums text-[var(--s-ink-muted,#7D7568)]">
                               {m.points}
