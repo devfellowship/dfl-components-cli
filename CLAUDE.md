@@ -75,4 +75,8 @@ When adding a new component or hook to @dfl/components:
 4. **Verify the Component Hub** — `npm run dev` and confirm the new component appears on the hub listing AND detail page
 5. **Verify after deploy** — confirm it appears on components.devfellowship.com
 6. **If it doesn't appear** — check that the individual JSON file, the registry.json entry, AND the designSystemData.json all include the component
-<!-- END MANUAL:repo/local-notes -->
+<!-- END MANUAL:repo/local-notes -->## Edge Functions
+
+Edge functions are owned by `dfl-schema`. Do NOT add or modify files under `supabase/functions/` in this repo.
+Open your PR in [dfl-schema](https://github.com/devfellowship/dfl-schema) instead.
+The `push-functions.yml` workflow auto-deploys on merge to main.
