@@ -1,0 +1,28 @@
+# Cloudflare Pages _redirects — copied verbatim into the Storybook build output
+# (via `.storybook/main.ts` staticDirs) and picked up by CF Pages at deploy.
+#
+# WHY THIS EXISTS (defense-in-depth against a real incident):
+# storybook.devfellowship.com is a STATIC Storybook build, NOT a single-page
+# app. But CF Pages' default `not_found_handling` serves `/index.html`
+# (HTTP 200, text/html) for ANY path that doesn't match a file. When a hashed
+# JS/CSS chunk or a font asset 404s, the browser receives that HTML instead of
+# a real 404 and tries to execute it as a module. Because Storybook's HTML
+# re-references addon chunks with RELATIVE paths, the browser resolves them
+# against the failing request's directory → another miss → another HTML
+# fallback → an ever-deeper compounding path → an INFINITE fetch loop
+# (~1000 req/s, pegged CPU, multi-GB tab memory). That hosed a machine once.
+#
+# These rules force a genuine 404 for the asset/chunk directories, so a missing
+# file fails FAST and BOUNDED instead of amplifying into a loop. Existing files
+# still serve normally — `_redirects` only fires for paths with no matching
+# static file. HTML routes (/, /iframe.html, story deep-links) are untouched.
+#
+# The status-code splat form (`/dir/* /dir/:splat 404`) returns 404 while
+# echoing the requested path, so devtools still shows the real missing URL.
+
+/assets/*   /assets/:splat        404
+/sb-addons/* /sb-addons/:splat     404
+/sb-manager/* /sb-manager/:splat   404
+/sb-common-assets/* /sb-common-assets/:splat 404
+/sb-preview/* /sb-preview/:splat   404
+/fonts/*    /fonts/:splat          404
