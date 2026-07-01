@@ -7,22 +7,35 @@
  *   - JetBrains Mono    → mono     (weights 400 / 500 / 600)
  *   - Georgia           → editorial (system serif — no @font-face needed)
  *
- * ─────────────────────────────────────────────────────────────────────────
+ * -------------------------------------------------------------------------
  * TODO(fonts): WOFF2 BINARIES NOT YET COMMITTED.
  *
- * These @font-face blocks reference the *expected* self-hosted paths
- * (`/fonts/<family>/...woff2`). The actual WOFF2 files have NOT been added to
- * the repo yet (a separate follow-up will vendor them, ideally subset/latin,
- * so we avoid committing large/unverified binaries in this tokens-only PR).
+ * These font-face blocks describe the expected self-hosted families. The
+ * actual WOFF2 files have NOT been vendored yet (a separate follow-up will add
+ * them, ideally subset/latin, so we avoid committing large/unverified binaries
+ * in a tokens-only change).
  *
- * UNTIL the binaries land, `theme.css` keeps the Google Fonts `@import` as a
- * working fallback, so type rendering is unaffected. Once the WOFF2 files are
- * vendored under `packages/ui/src/styles/fonts/` (and copied to `dist` by
- * tsup, + into the showcase `public/fonts/`), drop the Google Fonts @import
- * from theme.css and rely on these declarations.
+ * WARNING: do NOT set the font src back to a /fonts/<family>/...woff2 URL
+ * until those binaries actually ship in the build output. Doing so was the
+ * ROOT CAUSE of a runaway on storybook.devfellowship.com (Cloudflare Pages):
+ * every missing /fonts woff2 404 is served by the CF Pages SPA-fallback as
+ * index.html (HTTP 200, text/html). That HTML re-references addon chunks with
+ * RELATIVE paths, which the browser resolves against the failing /fonts/inter
+ * base, giving another 404, another HTML fallback, an ever-deeper compounding
+ * path, and an INFINITE fetch loop (~1000 req/s, pegged CPU, multi-GB memory).
+ * The _redirects guard shipped alongside this file (public/_redirects) forces
+ * such misses to a real 404 as a second line of defense.
  *
- * Follow-up: vendor subset WOFF2 + add tsup copy step + showcase preload.
- * ─────────────────────────────────────────────────────────────────────────
+ * UNTIL the binaries land, we use local()-only sources: they resolve against
+ * fonts already installed on the machine and emit ZERO network requests, so
+ * there is no 404 to amplify. theme.css keeps the Google Fonts import as the
+ * real working webfont source, so type rendering is unaffected. Once the WOFF2
+ * files are vendored under packages/ui/src/styles/fonts/ (and copied into the
+ * build output), swap each src back to a url(...) woff2 source and drop the
+ * Google Fonts import from theme.css.
+ *
+ * Follow-up: vendor subset WOFF2 + add tsup copy step + build preload.
+ * -------------------------------------------------------------------------
  */
 
 /* ─── Barlow Condensed (display) ─────────────────────────────────────────── */
@@ -31,21 +44,21 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/fonts/barlow-condensed/barlow-condensed-500.woff2') format('woff2');
+  src: local('Barlow Condensed Medium'), local('BarlowCondensed-Medium');
 }
 @font-face {
   font-family: 'Barlow Condensed';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/fonts/barlow-condensed/barlow-condensed-600.woff2') format('woff2');
+  src: local('Barlow Condensed SemiBold'), local('BarlowCondensed-SemiBold');
 }
 @font-face {
   font-family: 'Barlow Condensed';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/barlow-condensed/barlow-condensed-700.woff2') format('woff2');
+  src: local('Barlow Condensed Bold'), local('BarlowCondensed-Bold');
 }
 
 /* ─── Inter (body) ───────────────────────────────────────────────────────── */
@@ -54,28 +67,28 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/inter/inter-400.woff2') format('woff2');
+  src: local('Inter'), local('Inter-Regular');
 }
 @font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/fonts/inter/inter-500.woff2') format('woff2');
+  src: local('Inter Medium'), local('Inter-Medium');
 }
 @font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/fonts/inter/inter-600.woff2') format('woff2');
+  src: local('Inter SemiBold'), local('Inter-SemiBold');
 }
 @font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/inter/inter-700.woff2') format('woff2');
+  src: local('Inter Bold'), local('Inter-Bold');
 }
 
 /* ─── JetBrains Mono (mono) ──────────────────────────────────────────────── */
@@ -84,19 +97,19 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/jetbrains-mono/jetbrains-mono-400.woff2') format('woff2');
+  src: local('JetBrains Mono'), local('JetBrainsMono-Regular');
 }
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/fonts/jetbrains-mono/jetbrains-mono-500.woff2') format('woff2');
+  src: local('JetBrains Mono Medium'), local('JetBrainsMono-Medium');
 }
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/fonts/jetbrains-mono/jetbrains-mono-600.woff2') format('woff2');
+  src: local('JetBrains Mono SemiBold'), local('JetBrainsMono-SemiBold');
 }
