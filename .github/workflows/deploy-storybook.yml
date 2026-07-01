@@ -34,11 +34,15 @@ jobs:
           node-version: 20
           cache: npm
 
+      # packages/ui is NOT an npm workspace of the root — it has its own
+      # package-lock.json and its own storybook dep, so install + build there.
       - name: Install dependencies
+        working-directory: packages/ui
         run: npm ci
 
       - name: Build Storybook
-        run: npm run build-storybook --prefix packages/ui
+        working-directory: packages/ui
+        run: npm run build-storybook
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
