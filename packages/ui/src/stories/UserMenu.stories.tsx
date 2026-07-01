@@ -3,7 +3,7 @@ import { LayoutGrid } from "lucide-react";
 import { UserMenu } from "../components/organisms/UserMenu";
 
 const meta: Meta<typeof UserMenu> = {
-  title: "Organismos/UserMenu",
+  title: "Components/Organisms/UserMenu",
   component: UserMenu,
   tags: ["autodocs"],
   parameters: { layout: "centered" },

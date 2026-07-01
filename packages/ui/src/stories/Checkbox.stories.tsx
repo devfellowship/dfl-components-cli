@@ -3,7 +3,7 @@ import { Checkbox } from "../components/checkbox";
 import { Label } from "../components/label";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "Primitivos/Checkbox",
+  title: "Components/Atoms/Checkbox",
   component: Checkbox,
   tags: ["autodocs"],
   argTypes: {

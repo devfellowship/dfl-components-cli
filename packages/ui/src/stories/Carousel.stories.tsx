@@ -9,7 +9,7 @@ import {
 import { Card, CardContent } from "../components/card";
 
 const meta: Meta<typeof Carousel> = {
-  title: "Primitivos/Carousel",
+  title: "Components/Organisms/Carousel",
   component: Carousel,
   tags: ["autodocs"],
 };

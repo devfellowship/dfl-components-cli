@@ -9,7 +9,7 @@ import {
 } from "../components/navigation-menu";
 
 const meta: Meta<typeof NavigationMenu> = {
-  title: "Primitivos/NavigationMenu",
+  title: "Components/Organisms/NavigationMenu",
   component: NavigationMenu,
   tags: ["autodocs"],
 };

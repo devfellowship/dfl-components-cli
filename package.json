@@ -13,7 +13,8 @@
     "test": "NODE_ENV=test vitest run",
     "test:watch": "vitest",
     "storybook": "npm run storybook --prefix packages/ui",
-    "build-storybook": "npm run build-storybook --prefix packages/ui"
+    "build-storybook": "npm run build-storybook --prefix packages/ui",
+    "guard:playground": "node scripts/check-no-playground-export.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

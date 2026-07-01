@@ -9,7 +9,7 @@ import {
 } from "../components/context-menu";
 
 const meta: Meta<typeof ContextMenu> = {
-  title: "Primitivos/ContextMenu",
+  title: "Components/Organisms/ContextMenu",
   component: ContextMenu,
   tags: ["autodocs"],
 };

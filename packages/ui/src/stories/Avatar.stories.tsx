@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/avatar";
 
 const meta: Meta<typeof Avatar> = {
-  title: "Primitivos/Avatar",
+  title: "Components/Atoms/Avatar",
   component: Avatar,
   tags: ["autodocs"],
 };
@@ -27,14 +27,12 @@ export const Fallback: Story = {
   ),
 };
 
-export const MultipleAvatars: Story = {
+/** Broken/missing image src → the fallback initials render (single state). */
+export const ImageError: Story = {
   render: () => (
-    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-      {["AB", "CD", "EF", "GH"].map((initials) => (
-        <Avatar key={initials}>
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
-      ))}
-    </div>
+    <Avatar>
+      <AvatarImage src="https://invalid.example/nope.png" alt="broken" />
+      <AvatarFallback>DF</AvatarFallback>
+    </Avatar>
   ),
 };

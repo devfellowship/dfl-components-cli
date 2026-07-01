@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Badge } from "../components/badge";
 
 const meta: Meta<typeof Badge> = {
-  title: "Primitivos/Badge",
+  title: "Components/Atoms/Badge",
   component: Badge,
   tags: ["autodocs"],
   argTypes: {
@@ -31,14 +31,4 @@ export const Destructive: Story = {
 
 export const Outline: Story = {
   args: { children: "Outline", variant: "outline" },
-};
-
-export const AllVariants: Story = {
-  render: () => (
-    <div style={{ display: "flex", gap: "8px" }}>
-      {(["default", "secondary", "destructive", "outline"] as const).map((v) => (
-        <Badge key={v} variant={v}>{v}</Badge>
-      ))}
-    </div>
-  ),
 };

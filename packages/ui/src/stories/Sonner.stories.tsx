@@ -4,7 +4,7 @@ import { SonnerToaster } from "../components/sonner";
 import { Button } from "../components/button";
 
 const meta: Meta<typeof SonnerToaster> = {
-  title: "Primitivos/Sonner",
+  title: "Components/Atoms/Sonner",
   component: SonnerToaster,
   tags: ["autodocs"],
 };

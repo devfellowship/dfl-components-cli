@@ -11,7 +11,7 @@ import {
 } from "../components/command";
 
 const meta: Meta<typeof Command> = {
-  title: "Primitivos/Command",
+  title: "Components/Organisms/Command",
   component: Command,
   tags: ["autodocs"],
 };

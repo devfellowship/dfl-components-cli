@@ -43,7 +43,7 @@ const mockSupabase: PublishDrawerSupabase = {
 };
 
 const meta: Meta<typeof PublishDrawer> = {
-  title: "Organismos/PublishDrawer",
+  title: "Components/Organisms/PublishDrawer",
   component: PublishDrawer,
   tags: ["autodocs"],
 };

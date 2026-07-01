@@ -10,7 +10,7 @@ import {
 } from "../components/pagination";
 
 const meta: Meta<typeof Pagination> = {
-  title: "Primitivos/Pagination",
+  title: "Components/Molecules/Pagination",
   component: Pagination,
   tags: ["autodocs"],
 };

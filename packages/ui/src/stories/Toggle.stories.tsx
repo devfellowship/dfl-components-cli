@@ -4,7 +4,7 @@ import { Toggle } from "../components/toggle";
 import { ToggleGroup, ToggleGroupItem } from "../components/toggle-group";
 
 const meta: Meta<typeof Toggle> = {
-  title: "Primitivos/Toggle",
+  title: "Components/Atoms/Toggle",
   component: Toggle,
   tags: ["autodocs"],
 };

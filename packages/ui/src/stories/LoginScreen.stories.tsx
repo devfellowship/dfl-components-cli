@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { LoginScreen } from "../components/organisms/LoginScreen";
 
 const meta: Meta<typeof LoginScreen> = {
-  title: "Organismos/LoginScreen",
+  title: "Components/Organisms/LoginScreen",
   component: LoginScreen,
   tags: ["autodocs"],
   parameters: { layout: "fullscreen" },

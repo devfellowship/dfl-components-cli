@@ -4,7 +4,7 @@ import { AppNavbar } from "../components/organisms/AppNavbar";
 import { Button } from "../components/button";
 
 const meta: Meta<typeof AppNavbar> = {
-  title: "Organismos/AppNavbar",
+  title: "Components/Organisms/AppNavbar",
   component: AppNavbar,
   tags: ["autodocs"],
   argTypes: {

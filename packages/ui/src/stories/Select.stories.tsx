@@ -8,7 +8,7 @@ import {
 } from "../components/select";
 
 const meta: Meta<typeof Select> = {
-  title: "Primitivos/Select",
+  title: "Components/Molecules/Select",
   component: Select,
   tags: ["autodocs"],
 };

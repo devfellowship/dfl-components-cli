@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/card";
 
 const meta: Meta<typeof Tabs> = {
-  title: "Primitivos/Tabs",
+  title: "Components/Molecules/Tabs",
   component: Tabs,
   tags: ["autodocs"],
 };

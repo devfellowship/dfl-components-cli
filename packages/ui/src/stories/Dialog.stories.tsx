@@ -13,7 +13,7 @@ import { Input } from "../components/input";
 import { Label } from "../components/label";
 
 const meta: Meta<typeof Dialog> = {
-  title: "Primitivos/Dialog",
+  title: "Components/Organisms/Dialog",
   component: Dialog,
   tags: ["autodocs"],
 };
@@ -21,7 +21,8 @@ const meta: Meta<typeof Dialog> = {
 export default meta;
 type Story = StoryObj<typeof Dialog>;
 
-export const Default: Story = {
+/** A form rendered inside the dialog body (edit-profile pattern). */
+export const FormInDialog: Story = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
@@ -46,6 +47,49 @@ export const Default: Story = {
         </div>
         <DialogFooter>
           <Button type="submit">Salvar</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  ),
+};
+
+/** Header (title + description) + a confirm/cancel footer — no form body. */
+export const HeaderDescFooter: Story = {
+  render: () => (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Abrir Dialog</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Publicar aula?</DialogTitle>
+          <DialogDescription>
+            A aula ficará visível para todos os fellows imediatamente.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline">Cancelar</Button>
+          <Button>Publicar</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  ),
+};
+
+/** Footer confirm action in its loading state. */
+export const LoadingFooter: Story = {
+  render: () => (
+    <Dialog open>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Salvando alterações</DialogTitle>
+          <DialogDescription>Aguarde enquanto persistimos os dados.</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" disabled>
+            Cancelar
+          </Button>
+          <Button loading>Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
