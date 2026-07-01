@@ -119,6 +119,26 @@ two top-level sections and they mean very different things:
   tsup build entries — and if any non-story/non-README module is added under
   `src/design-playground/`.
 
+### `Templates/<Name>` — page-level compositions of Components
+
+- Lives in `packages/ui/src/stories/templates/*.stories.tsx` (auto-discovered by
+  the existing `../src/**/*.stories.*` glob). Each file is a **DEMONSTRATION**
+  that COMPOSES the real exported `@devfellowship/components` organisms/molecules
+  (AppNavbar, AppSidebar, Table, Card, Badge, Button, Select, Input, Skeleton,
+  Chart, Pagination, …) into a page-level archetype with realistic mock data.
+- **These are NOT new exported components** — no `src/index.ts` entry, no
+  registry, no CLI. They only show how to assemble a page from primitives, and
+  share the same theme / CSS / tokens as production.
+- **Title convention:** `Templates/<Name>`. Current tracks: **AppShell**
+  (AppSidebar + AppNavbar + `<main>`), **ListPage** (PageHeader + FilterBar +
+  sortable Table + Pagination; `WithData`/`Loading`/`Empty`), **Dashboard**
+  (StatCard grid + Chart + recent-activity), **Kanban** (columns with count
+  Badges + static "draggable" Cards — no dnd lib added).
+- **One primary story per template** (a template is a page composition, so it
+  gets a `Default`/`WithData` plus a small number of meaningful states — e.g.
+  AppShell `Default`/`Collapsed`, ListPage `WithData`/`Loading`/`Empty`). **No
+  giant gallery mixing all 4** — each template is its own `*.stories.tsx` file.
+
 ### Pods graduation flow (experiment → promote to Components)
 
 1. **Experiment** in `DesignPlayground/<Experiment>` — iterate on new
