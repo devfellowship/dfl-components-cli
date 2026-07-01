@@ -1,0 +1,48 @@
+name: Deploy Storybook
+
+# Builds the packages/ui Storybook (Storybook 8.6, @storybook/react-vite) and
+# publishes the static build to Cloudflare Pages project `dfl-storybook`
+# (custom domain storybook.devfellowship.com). Direct-Upload via wrangler —
+# mirrors the dfl-mcp-docs / itera-storybook Pages pattern.
+#
+# runs-on: ubuntu-latest — public repo carve-out (self-hosted dfl-runner is
+# blocked on public devfellowship/* repos, allows_public=false). Authorized
+# Tainan TG 2026-06-06. Consistent with this repo's existing ci.yml.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/ui/**"
+      - ".github/workflows/deploy-storybook.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-storybook
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Storybook
+        run: npm run build-storybook --prefix packages/ui
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy packages/ui/storybook-static --project-name=dfl-storybook --branch=main
