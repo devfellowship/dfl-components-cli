@@ -60,6 +60,13 @@ different meanings (full detail in `CLAUDE.md` → "Storybook: atomic hierarchy"
   `.github/workflows/guard-playground-export.yml` (`npm run guard:playground`)
   fails the build on any playground export leak or any non-story/non-README
   module under `src/design-playground/`.
+- **`Templates/<Name>`** (`packages/ui/src/stories/templates/*.stories.tsx`) =
+  page-level DEMONSTRATIONS that COMPOSE the real exported organisms/molecules
+  (AppNavbar, AppSidebar, Table, Card, Badge, Button, Select, Input, Skeleton,
+  Chart, Pagination, …) into page archetypes with mock data — **NOT new exported
+  components** (no index/registry/CLI). Titles are `Templates/<Name>`. Current:
+  AppShell, ListPage, Dashboard, Kanban. One primary story per template (plus a
+  few meaningful states); each template is its own file — no all-in-one gallery.
 
 **One-state-per-story (NON-NEGOTIABLE):** each story export = EXACTLY ONE
 state/variant. No galleries — never author `AllVariants`/`Showcase`; split any
