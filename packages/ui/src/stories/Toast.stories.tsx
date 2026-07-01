@@ -24,7 +24,7 @@ function ToastDemo() {
 }
 
 const meta: Meta<typeof ToastDemo> = {
-  title: "Primitivos/Toast",
+  title: "Components/Organisms/Toast",
   component: ToastDemo,
   tags: ["autodocs"],
 };

@@ -7,7 +7,7 @@ import {
 } from "../components/input-otp";
 
 const meta: Meta<typeof InputOTP> = {
-  title: "Primitivos/InputOTP",
+  title: "Components/Molecules/InputOTP",
   component: InputOTP,
   tags: ["autodocs"],
 };

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Calendar } from "../components/calendar";
 
 const meta: Meta<typeof Calendar> = {
-  title: "Primitivos/Calendar",
+  title: "Components/Organisms/Calendar",
   component: Calendar,
   tags: ["autodocs"],
 };

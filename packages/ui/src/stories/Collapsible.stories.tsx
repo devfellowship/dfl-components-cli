@@ -9,7 +9,7 @@ import { Button } from "../components/button";
 import { ChevronsUpDown } from "lucide-react";
 
 const meta: Meta<typeof Collapsible> = {
-  title: "Primitivos/Collapsible",
+  title: "Components/Molecules/Collapsible",
   component: Collapsible,
   tags: ["autodocs"],
 };

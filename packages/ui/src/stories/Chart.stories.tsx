@@ -24,7 +24,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const meta: Meta<typeof ChartContainer> = {
-  title: "Primitivos/Chart",
+  title: "Components/Organisms/Chart",
   component: ChartContainer,
   tags: ["autodocs"],
 };

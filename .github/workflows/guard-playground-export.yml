@@ -1,0 +1,29 @@
+# Public repo: self-hosted dfl-runner blocked (allows_public=false). Inlined on ubuntu-latest. Authorized Tainan TG 2026-06-06 (public-repo carve-out).
+# Own workflow file (NOT ci.yml) so it never collides with the Storybook-v9 upgrade agent's CI edits.
+name: Guard Playground Export
+
+on:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: guard-playground-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  guard-playground-export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Ensure DesignPlayground never enters the exported registry/package
+        run: node scripts/check-no-playground-export.mjs

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PasswordInput } from "../components/organisms/PasswordInput";
 
 const meta: Meta<typeof PasswordInput> = {
-  title: "Organismos/PasswordInput",
+  title: "Components/Molecules/PasswordInput",
   component: PasswordInput,
   tags: ["autodocs"],
   parameters: { layout: "centered" },

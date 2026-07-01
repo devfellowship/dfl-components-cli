@@ -2,7 +2,17 @@ import { defineConfig } from 'tsup';
 import { copyFileSync, mkdirSync } from 'fs';
 import { resolve } from 'path';
 
+// Build ignore-glob — the DesignPlayground sandbox is NEVER bundled/exported.
+//   IGNORE GLOB: src/design-playground/**
+// That folder is a Storybook-only experimentation surface; it is intentionally
+// excluded from every tsup `entry` below (the entry map is an explicit
+// allow-list) and is enforced by the CI guard
+// scripts/check-no-playground-export.mjs
+// (workflow .github/workflows/guard-playground-export.yml).
+
 export default defineConfig({
+  // NOTE: entries are an explicit allow-list. Do NOT add any
+  // design-playground module here — see the IGNORE GLOB comment above.
   entry: {
     index: 'src/index.ts',
     hooks: 'src/hooks/index.ts',

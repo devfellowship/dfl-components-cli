@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Gantt, type GanttStage, type GanttDependency } from "../components/organisms/Gantt";
 
 const meta: Meta<typeof Gantt> = {
-  title: "Organisms/Gantt",
+  title: "Components/Organisms/Gantt",
   component: Gantt,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

@@ -12,7 +12,7 @@ import {
 import { Button } from "../components/button";
 
 const meta: Meta<typeof Drawer> = {
-  title: "Primitivos/Drawer",
+  title: "Components/Organisms/Drawer",
   component: Drawer,
   tags: ["autodocs"],
 };

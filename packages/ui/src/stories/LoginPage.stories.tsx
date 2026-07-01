@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { LoginPage } from "../components/organisms/LoginPage";
 
 const meta: Meta<typeof LoginPage> = {
-  title: "Organismos/LoginPage",
+  title: "Components/Organisms/LoginPage",
   component: LoginPage,
   tags: ["autodocs"],
   parameters: {

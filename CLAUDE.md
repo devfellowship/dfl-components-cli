@@ -75,4 +75,70 @@ When adding a new component or hook to @dfl/components:
 4. **Verify the Component Hub** — `npm run dev` and confirm the new component appears on the hub listing AND detail page
 5. **Verify after deploy** — confirm it appears on components.devfellowship.com
 6. **If it doesn't appear** — check that the individual JSON file, the registry.json entry, AND the designSystemData.json all include the component
+
+## Storybook: atomic hierarchy + one-state-per-story
+
+The Storybook stories in `packages/ui/src/stories/*.tsx` are organized into an
+**atomic hierarchy** with a strict **one-state-per-story** convention. There are
+two top-level sections and they mean very different things:
+
+### `Components/{Atoms,Molecules,Organisms}/<Name>` — the REAL exported library
+
+- These are the **actual `@devfellowship/components` library** components,
+  **distributed via the registry (`registry/registry.json`) and the
+  `dfl-components add <name>` CLI**. What you see in this section ships to
+  consumers.
+- **Tier map** (which component is Atom vs Molecule vs Organism):
+  - **Atoms** — smallest primitives: Button, IconButton, Badge, Kbd, Input,
+    Textarea, Label, Checkbox, Switch, RadioGroup, Slider, Toggle, Avatar,
+    Progress, Skeleton, Separator, AspectRatio, Alert, ScrollArea, Toaster, Sonner.
+  - **Molecules** — small compositions: Card, Accordion, Tabs, Breadcrumb,
+    Pagination, Tooltip, HoverCard, Popover, Collapsible, ToggleGroup, InputOTP,
+    Select, PasswordInput, UserAvatar.
+  - **Organisms** — larger/assembled: Dialog, AlertDialog, Drawer, Sheet,
+    DropdownMenu, ContextMenu, Menubar, NavigationMenu, Command, Table, Form,
+    Calendar, Carousel, Chart, Sidebar, Resizable, Toast, AppNavbar, AppSidebar,
+    Gantt, PublishDrawer, ConfirmDialog, LoginPage, LoginScreen, UserMenu.
+- **Title convention (ENFORCE):** every story's Meta `title` is
+  `Components/<Tier>/<Name>` — e.g. `Components/Atoms/Button`,
+  `Components/Molecules/Card`, `Components/Organisms/Dialog`.
+
+### `DesignPlayground/<Experiment>` — experimentation SANDBOX (NOT exported)
+
+- Lives in `packages/ui/src/design-playground/` (e.g.
+  `DesignPlayground/ButtonLab`, `DesignPlayground/ThemeTokens`). It shows up in
+  Storybook but is **NEVER exported** — not from `src/index.ts`, not in
+  `registry/registry.json`, not via the CLI.
+- It **shares the same theme / CSS / design tokens** as production (playground
+  stories import the real components + real `src/styles/*` tokens) — the only
+  difference is distribution.
+- **Enforced by CI:** `scripts/check-no-playground-export.mjs`
+  (workflow `.github/workflows/guard-playground-export.yml`, plus
+  `npm run guard:playground`) **fails the build** if any `design-playground`
+  module leaks into the public export surface, the registry manifest, or the
+  tsup build entries — and if any non-story/non-README module is added under
+  `src/design-playground/`.
+
+### Pods graduation flow (experiment → promote to Components)
+
+1. **Experiment** in `DesignPlayground/<Experiment>` — iterate on new
+   treatments/variants freely.
+2. **Promote** the winner into the real library: add the variant/props to the
+   component's `class-variance-authority` config in `src/components/<name>.tsx`,
+   add one-state-per-story exports under `Components/{Atoms,Molecules,Organisms}/<Name>`,
+   and (if new) register it in `registry/registry.json` for CLI distribution.
+3. **Trim** the playground experiment once it has graduated.
+
+### One-state-per-story rule (NON-NEGOTIABLE)
+
+- **EACH story export = EXACTLY ONE state/variant.** No galleries.
+- **Do NOT author `AllVariants` / `Showcase` / grid-of-everything stories.** If a
+  render-based gallery exists, **SPLIT it into individual named `StoryObj`
+  exports (one per state)** and delete the gallery.
+- Keep `argTypes.options` in sync with the component's real `cva` config (a
+  drifted control is a bug — e.g. Button's real variants are
+  `primary|secondary|outline|ghost|destructive|success|link` and sizes are
+  `sm|default|lg|icon|icon-sm|icon-lg`).
+- Reference for the desired per-component scenarios/states style:
+  `https://components.devfellowship.com/components`.
 <!-- END MANUAL:repo/local-notes -->

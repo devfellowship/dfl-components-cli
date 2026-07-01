@@ -42,5 +42,31 @@
 <!-- END GENERATED:agents/base -->
 
 <!-- BEGIN MANUAL:repo/agent-notes -->
-<!-- repo-specific notes live here -->
+
+## Storybook: atomic hierarchy + one-state-per-story
+
+Stories live in `packages/ui/src/stories/*.tsx`. Two top-level sections, very
+different meanings (full detail in `CLAUDE.md` → "Storybook: atomic hierarchy"):
+
+- **`Components/{Atoms,Molecules,Organisms}/<Name>`** = the REAL exported
+  `@devfellowship/components` library — distributed via `registry/registry.json`
+  and the `dfl-components add <name>` CLI. Titles MUST be `Components/<Tier>/<Name>`
+  per the tier map in CLAUDE.md.
+- **`DesignPlayground/<Experiment>`** (`packages/ui/src/design-playground/`) = an
+  experimentation SANDBOX. Shows in Storybook but is **NEVER exported** (not from
+  `src/index.ts`, not in the registry, not via the CLI). Shares the same
+  theme/CSS/tokens as production. Enforced by CI:
+  `scripts/check-no-playground-export.mjs` /
+  `.github/workflows/guard-playground-export.yml` (`npm run guard:playground`)
+  fails the build on any playground export leak or any non-story/non-README
+  module under `src/design-playground/`.
+
+**One-state-per-story (NON-NEGOTIABLE):** each story export = EXACTLY ONE
+state/variant. No galleries — never author `AllVariants`/`Showcase`; split any
+render-based gallery into individual named `StoryObj` exports. Keep
+`argTypes.options` in sync with the component's real `cva`.
+
+**Pods graduation:** experiment in `DesignPlayground/` → promote the winner into
+`src/components/<name>.tsx` cva + `Components/{...}/<Name>` stories + the registry.
+
 <!-- END MANUAL:repo/agent-notes -->

@@ -3,7 +3,7 @@ import { Button } from "../components/button";
 import { ConfirmDialog } from "../components/organisms/ConfirmDialog";
 
 const meta: Meta<typeof ConfirmDialog> = {
-  title: "Organismos/ConfirmDialog",
+  title: "Components/Organisms/ConfirmDialog",
   component: ConfirmDialog,
   tags: ["autodocs"],
   parameters: { layout: "centered" },
@@ -25,7 +25,7 @@ export const Default: Story = {
   },
 };
 
-export const Destructive: Story = {
+export const DestructiveConfirm: Story = {
   args: {
     title: "Delete this track?",
     body: "This action cannot be undone.",
