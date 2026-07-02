@@ -399,6 +399,25 @@
   --c-alert-danger-icon:     var(--s-danger-fg);
   --c-alert-danger-accent:   var(--s-danger-solid);
 
+  /* Checkbox — DFL Design System v0
+   * Two-layer amber focus ring: 0 0 0 2px page-bg gap + 0 0 0 3px amber ring.
+   * Error state keyed off aria-invalid (mirrors Input/Textarea pattern).
+   * Indeterminate state uses the Radix `checked="indeterminate"` prop + Minus icon. */
+  --c-checkbox-size:              16px;
+  --c-checkbox-radius:            var(--p-radius-sm);
+  --c-checkbox-border-width:      1.5px;
+  --c-checkbox-bg:                var(--s-surface-raised);
+  --c-checkbox-border:            var(--s-border-subtle);
+  --c-checkbox-border-hover:      var(--s-border-strong);
+  --c-checkbox-checked-bg:        var(--s-brand-solid);
+  --c-checkbox-checked-border:    var(--s-brand-solid);
+  --c-checkbox-checked-fg:        var(--s-ink-inverse);
+  --c-checkbox-focus-ring:        var(--s-border-focus);   /* amber #E07A4A */
+  --c-checkbox-disabled-opacity:  0.40;
+  --c-checkbox-danger-border:     var(--s-danger-solid);
+  --c-checkbox-danger-bg:         rgba(224, 122, 122, 0.06);  /* very subtle red tint */
+  --c-checkbox-danger-checked-bg: var(--s-danger-solid);
+
   /* Layout chrome */
   --c-sidebar-w:           224px;
   --c-sidebar-w-collapsed: 56px;
