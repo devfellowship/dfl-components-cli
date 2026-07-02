@@ -642,6 +642,11 @@
  *   legible against the page (#0a0908). Fill is brand amber by default;
  *   semantic variants map to their --s-{intent}-solid tokens.
  *   Height sizes: sm=4px / md=8px (default, replaces hardcoded h-4=16px) / lg=12px.
+ * LAYER 3 — Slider component tokens (--c-slider-*)
+ *
+ * Resolves to existing --s-* semantic tokens. Track height reduced from
+ * h-4 (16px) to 4px (sleek DS-aligned line with protruding thumb).
+ * Focus ring uses DS uniform double-shadow spec (ch.5.2).
  * ─────────────────────────────────────────────────────────────────────── */
 
 :root {
@@ -788,4 +793,20 @@
     animation: none;
     background: var(--c-skeleton-bg);
   }
+  --c-slider-track-h:            4px;
+  --c-slider-track-bg:           var(--s-border-subtle);      /* #2a2622 — subtle track line */
+
+  /* Range fill */
+  --c-slider-range-bg:           var(--s-brand-solid);        /* #E07A4A amber */
+
+  /* Thumb */
+  --c-slider-thumb-size:         20px;
+  --c-slider-thumb-bg:           var(--s-surface-page);       /* #0a0908 page-bg — creates border contrast */
+  --c-slider-thumb-border:       var(--s-brand-solid);        /* #E07A4A amber border */
+
+  /* Shadows — composed per state (base, hover, focus) */
+  --c-slider-thumb-shadow:       0 1px 4px rgba(0, 0, 0, 0.55);
+  --c-slider-thumb-hover-shadow: 0 0 0 7px rgba(224, 122, 74, 0.18), 0 1px 4px rgba(0, 0, 0, 0.55);
+  /* DS uniform focus ring: 2px bg gap + 3px amber ring + base shadow */
+  --c-slider-thumb-focus-shadow: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid), 0 1px 4px rgba(0, 0, 0, 0.55);
 }
