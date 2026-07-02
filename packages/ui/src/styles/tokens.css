@@ -525,6 +525,64 @@
   --c-appsidebar-item-active-border: var(--s-brand-solid);         /* #E07A4A — 3px left indicator */
   --c-appsidebar-focus-ring-gap:     var(--s-surface-panel);       /* 2px gap matches sidebar panel bg */
   --c-appsidebar-focus-ring-color:   var(--s-brand-solid);         /* 1px amber ring */
+  /* Calendar — DFL DS v0 component tokens.
+   * All knobs resolve to --s-* semantic tokens; none touch --p-* primitives
+   * directly (except rgba tints that reference the amber primitive colour).
+   *
+   * Layer layout:
+   *   Container    --c-cal-bg / --c-cal-border / --c-cal-radius / --c-cal-padding
+   *   Nav buttons  --c-cal-nav-btn-*
+   *   Caption/head --c-cal-caption-fg / --c-cal-head-fg
+   *   Day cells    --c-cal-day-{radius,fg,bg-hover,fg-outside}
+   *   Today state  --c-cal-day-today-{bg,fg,border}   ← tinted, NOT filled
+   *   Selected     --c-cal-day-selected-{bg,fg,bg-hover}  ← solid amber fill
+   *   Range mid    --c-cal-range-mid-{bg,fg}           ← amber 14% tint
+   *   Range end    --c-cal-range-end-{bg,fg}           ← same solid fill as selected
+   *   Disabled     --c-cal-day-disabled-fg
+   */
+  --c-cal-bg:                     var(--s-surface-panel);
+  --c-cal-border:                 var(--s-border-subtle);
+  --c-cal-radius:                 var(--p-radius-lg);
+  --c-cal-padding:                var(--p-space-4);
+
+  --c-cal-nav-btn-bg:             transparent;
+  --c-cal-nav-btn-bg-hover:       var(--s-surface-elevated);
+  --c-cal-nav-btn-fg:             var(--s-ink-muted);
+  --c-cal-nav-btn-fg-hover:       var(--s-ink-primary);
+  --c-cal-nav-btn-border:         var(--s-border-subtle);
+  --c-cal-nav-btn-border-hover:   var(--s-border-strong);
+  --c-cal-nav-btn-radius:         var(--p-radius-md);
+
+  --c-cal-caption-fg:             var(--s-ink-primary);
+  --c-cal-head-fg:                var(--s-ink-muted);
+
+  --c-cal-day-radius:             var(--p-radius-md);
+  --c-cal-day-fg:                 var(--s-ink-primary);
+  --c-cal-day-bg-hover:           var(--s-surface-elevated);
+  --c-cal-day-fg-outside:         var(--s-ink-disabled);
+
+  /* Today: amber 12%-opacity tinted bg + 30%-opacity amber border.
+   * Intentionally LIGHTER than the selected fill so the two states are visually
+   * distinct even when both land on the same day. */
+  --c-cal-day-today-bg:           rgba(224, 122, 74, 0.12);
+  --c-cal-day-today-fg:           var(--s-brand-fg);
+  --c-cal-day-today-border:       rgba(224, 122, 74, 0.30);
+
+  /* Selected: solid amber fill (same brand-solid as button primary). */
+  --c-cal-day-selected-bg:        var(--s-brand-solid);
+  --c-cal-day-selected-fg:        var(--p-sand-950);
+  --c-cal-day-selected-bg-hover:  var(--s-brand-hover);
+
+  /* Range mid: amber 14% tint spanning the interior of a range selection. */
+  --c-cal-range-mid-bg:           rgba(224, 122, 74, 0.14);
+  --c-cal-range-mid-fg:           var(--s-brand-fg);
+
+  /* Range start / end caps: same solid fill as selected day. */
+  --c-cal-range-end-bg:           var(--s-brand-solid);
+  --c-cal-range-end-fg:           var(--p-sand-950);
+
+  /* Disabled: use --s-ink-disabled at 0.45 opacity via the component class. */
+  --c-cal-day-disabled-fg:        var(--s-ink-disabled);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
