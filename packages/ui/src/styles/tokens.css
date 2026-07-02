@@ -426,6 +426,33 @@
   --c-kbd-fg:        var(--s-ink-primary);         /* label ink #f6f1e7 (↑ from ink-secondary for legibility) */
   --c-kbd-shine:     rgba(255, 255, 255, 0.055);   /* top inset highlight — literal (no semantic equivalent) */
   --c-kbd-radius:    var(--p-radius-sm);           /* 4px */
+  /* Label
+   * Layer 3 knobs that resolve into Layer 2 semantic tokens.
+   * Component code reaches for --c-label-* first; consuming apps may override
+   * just these vars without touching the shared --s-* semantic palette.
+   *
+   * Token chain:
+   *   --c-label-fg             → --s-ink-secondary   (default variant color)
+   *   --c-label-fg-muted       → --s-ink-muted        (mono variant color)
+   *   --c-label-fg-error       → --s-danger-fg        (error state color)
+   *   --c-label-fg-disabled    → --s-ink-disabled     (disabled state color)
+   *   --c-label-required-color → --s-brand-solid      (required asterisk)
+   *   --c-label-font-size      → --p-text-12          (default: 12px)
+   *   --c-label-mono-font-size → 10.5px               (mono: no exact primitive)
+   *   --c-label-mono-tracking  → 0.06em               (mono letter-spacing)
+   */
+  --c-label-font:           var(--p-font-sans);
+  --c-label-font-size:      var(--p-text-12);
+  --c-label-line-height:    var(--p-leading-snug);
+  --c-label-weight:         var(--p-weight-500);
+  --c-label-fg:             var(--s-ink-secondary);
+  --c-label-fg-muted:       var(--s-ink-muted);
+  --c-label-fg-error:       var(--s-danger-fg);
+  --c-label-fg-disabled:    var(--s-ink-disabled);
+  --c-label-required-color: var(--s-brand-solid);
+  --c-label-mono-font:      var(--p-font-mono);
+  --c-label-mono-font-size: 10.5px;   /* no --p-text-10-5 primitive exists */
+  --c-label-mono-tracking:  0.06em;
 
   /* Layout chrome */
   --c-sidebar-w:           224px;
