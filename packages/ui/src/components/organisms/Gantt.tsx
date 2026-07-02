@@ -255,14 +255,14 @@ export function Gantt({
   return (
     <div
       className={cn(
-        "dfl-gantt rounded-[var(--c-card-radius,10px)] border border-[var(--s-border-subtle,#2A2622)] bg-[var(--s-surface-panel,#141210)] text-[var(--s-ink-primary,#F6F1E7)] overflow-hidden",
+        "dfl-gantt rounded-[var(--c-card-radius,10px)] border border-[var(--c-gantt-border,#2A2622)] bg-[var(--c-gantt-bg,#141210)] text-[var(--s-ink-primary,#F6F1E7)] overflow-hidden",
         className,
       )}
       style={style}
       {...rest}
     >
       {header && (
-        <div className="border-b border-[var(--s-border-subtle,#2A2622)] px-5 py-4">
+        <div className="border-b border-[var(--c-gantt-border,#2A2622)] px-5 py-4">
           {header}
         </div>
       )}
@@ -286,7 +286,7 @@ export function Gantt({
                 >
                   <path
                     d="M0,0 L6,3 L0,6 Z"
-                    fill="var(--s-brand-solid, #E07A4A)"
+                    fill="var(--c-gantt-dep-color, #E07A4A)"
                   />
                 </marker>
               </defs>
@@ -302,7 +302,7 @@ export function Gantt({
                     key={e.id}
                     d={`M ${e.x1} ${e.y1} C ${c1x} ${e.y1}, ${c2x} ${e.y2}, ${e.x2} ${e.y2}`}
                     fill="none"
-                    stroke="var(--s-brand-solid, #E07A4A)"
+                    stroke="var(--c-gantt-dep-color, #E07A4A)"
                     strokeWidth={1.5}
                     strokeOpacity={0.65}
                     markerEnd="url(#dfl-gantt-arrow)"
@@ -314,13 +314,13 @@ export function Gantt({
 
           {/* Week axis header */}
           <div
-            className="grid items-center border-b border-[var(--s-border-subtle,#2A2622)] bg-[var(--s-surface-raised,#1A1714)]"
+            className="grid items-center border-b border-[var(--c-gantt-border,#2A2622)] bg-[var(--c-gantt-header-bg,#1A1714)]"
             style={{ gridTemplateColumns: trackTemplate }}
           >
             <div
               className={cn(
                 stickyCol,
-                "bg-[var(--s-surface-raised,#1A1714)] px-4 py-2.5 font-[var(--s-font-mono,monospace)] text-[10.5px] font-medium uppercase tracking-[0.6px] text-[var(--s-ink-muted,#7D7568)]",
+                "bg-[var(--c-gantt-header-bg,#1A1714)] px-4 py-2.5 font-[var(--s-font-mono,monospace)] text-[10.5px] font-medium uppercase tracking-[0.6px] text-[var(--s-ink-muted,#7D7568)]",
               )}
             >
               {rowsHeader}
@@ -328,7 +328,7 @@ export function Gantt({
             {weekLabels.map((label, i) => (
               <div
                 key={i}
-                className="border-l border-[var(--s-border-subtle,#2A2622)] py-2.5 text-center font-[var(--s-font-mono,monospace)] text-[11px] tabular-nums text-[var(--s-ink-muted,#7D7568)]"
+                className="border-l border-[var(--c-gantt-border,#2A2622)] py-2.5 text-center font-[var(--s-font-mono,monospace)] text-[11px] tabular-nums text-[var(--s-ink-muted,#7D7568)]"
               >
                 {label}
               </div>
@@ -348,7 +348,7 @@ export function Gantt({
               <React.Fragment key={stage.id}>
                 {/* Stage row */}
                 <div
-                  className="grid items-center border-b border-[var(--s-border-subtle,#2A2622)]"
+                  className="grid items-center border-b border-[var(--c-gantt-border,#2A2622)]"
                   style={{ gridTemplateColumns: trackTemplate }}
                 >
                   <button
@@ -356,7 +356,9 @@ export function Gantt({
                     onClick={() => toggle(stage.id)}
                     className={cn(
                       stickyCol,
-                      "flex items-center gap-2 bg-[var(--s-surface-panel,#141210)] px-4 py-3 text-left transition-colors hover:bg-[var(--s-surface-raised,#1A1714)]",
+                      "flex items-center gap-2 bg-[var(--c-gantt-bg,#141210)] px-4 py-3 text-left transition-colors",
+                      "hover:bg-[var(--c-gantt-header-bg,#1A1714)]",
+                      "focus-visible:outline-none focus-visible:rounded-[var(--p-radius-sm,4px)] focus-visible:shadow-[0_0_0_2px_var(--c-gantt-bg,#141210),0_0_0_3px_var(--s-border-focus,#E07A4A)]",
                     )}
                     aria-expanded={!isCollapsed}
                   >
@@ -399,12 +401,12 @@ export function Gantt({
                       ref={(el) => {
                         barRefs.current[stage.id] = el;
                       }}
-                      className="absolute inset-y-2 inset-x-1 overflow-hidden rounded-[var(--p-radius-sm,4px)]"
+                      className="absolute inset-y-2 inset-x-1 overflow-hidden rounded-[var(--c-gantt-bar-radius,4px)]"
                       style={{ background: tint(dot, 0.16) }}
                       title={`${stage.title} · ${pct}%`}
                     >
                       <div
-                        className="h-full rounded-[var(--p-radius-sm,4px)]"
+                        className="h-full rounded-[var(--c-gantt-bar-radius,4px)]"
                         style={{ width: `${pct}%`, background: dot }}
                       />
                       <span className="absolute inset-0 flex items-center px-2 font-[var(--s-font-mono,monospace)] text-[10.5px] font-medium tabular-nums text-[var(--s-ink-primary,#F6F1E7)]">
@@ -427,7 +429,7 @@ export function Gantt({
                     return (
                       <div
                         key={m.id}
-                        className="grid items-center border-b border-[var(--s-border-subtle,#2A2622)] bg-[var(--s-surface-page,#0A0908)]"
+                        className="grid items-center border-b border-[var(--c-gantt-border,#2A2622)] bg-[var(--s-surface-page,#0A0908)]"
                         style={{ gridTemplateColumns: trackTemplate }}
                       >
                         <div
@@ -443,7 +445,8 @@ export function Gantt({
                               onClick={() => onMilestoneClick(m, stage)}
                               title={m.title}
                               className={cn(
-                                "min-w-0 flex-1 truncate rounded-[var(--p-radius-sm,4px)] text-left text-[13px] transition-colors hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--s-brand-solid,#E07A4A)]",
+                                "min-w-0 flex-1 truncate rounded-[var(--p-radius-sm,4px)] text-left text-[13px] transition-colors hover:underline",
+                                "focus-visible:outline-none focus-visible:shadow-[0_0_0_2px_var(--s-surface-page,#0A0908),0_0_0_3px_var(--s-border-focus,#E07A4A)]",
                                 m.done
                                   ? "text-[var(--s-ink-muted,#7D7568)] line-through"
                                   : "text-[var(--s-ink-secondary,#C9C0B4)]",
@@ -478,7 +481,7 @@ export function Gantt({
                         >
                           <div
                             className={cn(
-                              "absolute inset-y-1.5 inset-x-1 rounded-[var(--p-radius-sm,4px)]",
+                              "absolute inset-y-1.5 inset-x-1 rounded-[var(--c-gantt-bar-radius,4px)]",
                               m.done ? "" : "border",
                             )}
                             style={
@@ -507,11 +510,11 @@ export function Gantt({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 border-t border-[var(--s-border-subtle,#2A2622)] px-5 py-2.5 font-[var(--s-font-mono,monospace)] text-[10.5px] uppercase tracking-[0.6px] text-[var(--s-ink-muted,#7D7568)]">
-        <LegendItem swatch={<span className="h-2.5 w-3 rounded-[2px]" style={{ background: "var(--s-brand-solid, #E07A4A)" }} />} label="Completed" />
+      <div className="flex flex-wrap items-center gap-4 border-t border-[var(--c-gantt-border,#2A2622)] px-5 py-2.5 font-[var(--s-font-mono,monospace)] text-[10.5px] uppercase tracking-[0.6px] text-[var(--s-ink-muted,#7D7568)]">
+        <LegendItem swatch={<span className="h-2.5 w-3 rounded-[2px]" style={{ background: "var(--c-gantt-dep-color, #E07A4A)" }} />} label="Completed" />
         <LegendItem swatch={<span className="h-2.5 w-3 rounded-[2px] border" style={{ background: "rgba(224,122,74,0.08)", borderColor: "rgba(224,122,74,0.4)" }} />} label="Upcoming" />
         {dependencies.length > 0 && (
-          <LegendItem swatch={<span className="block h-0.5 w-4" style={{ background: "var(--s-brand-solid, #E07A4A)", opacity: 0.7 }} />} label="Depends on" />
+          <LegendItem swatch={<span className="block h-0.5 w-4" style={{ background: "var(--c-gantt-dep-color, #E07A4A)", opacity: 0.7 }} />} label="Depends on" />
         )}
       </div>
     </div>

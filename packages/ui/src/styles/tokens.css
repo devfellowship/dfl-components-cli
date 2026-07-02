@@ -405,6 +405,14 @@
   --c-header-h:            56px;
   --c-statusbar-h:         24px;
   --c-content-max:         1280px;
+
+  /* Gantt */
+  --c-gantt-bg:          var(--s-surface-panel);
+  --c-gantt-header-bg:   var(--s-surface-raised);
+  --c-gantt-border:      var(--s-border-subtle);
+  --c-gantt-bar-radius:  var(--p-radius-sm);
+  --c-gantt-dep-color:   var(--s-brand-solid);
+  --c-gantt-name-col:    320px;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
