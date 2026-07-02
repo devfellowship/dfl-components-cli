@@ -55,7 +55,6 @@ export const Checked: Story = {
  */
 export const Focus: Story = {
   render: () => (
-    // eslint-disable-next-line jsx-a11y/no-autofocus
     <Switch id="switch-focus" autoFocus aria-label="Focused unchecked switch" />
   ),
 };
@@ -66,7 +65,6 @@ export const Focus: Story = {
  */
 export const FocusChecked: Story = {
   render: () => (
-    // eslint-disable-next-line jsx-a11y/no-autofocus
     <Switch id="switch-focus-checked" defaultChecked autoFocus aria-label="Focused checked switch" />
   ),
 };

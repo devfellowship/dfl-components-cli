@@ -80,7 +80,6 @@ export const InputFocused: Story = {
       <CommandInput
         placeholder="Digite um comando ou pesquise..."
         defaultValue="perfil"
-        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
       />
       <CommandList>

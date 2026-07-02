@@ -399,237 +399,12 @@
   --c-alert-danger-icon:     var(--s-danger-fg);
   --c-alert-danger-accent:   var(--s-danger-solid);
 
-  /* Checkbox — DFL Design System v0
-   * Two-layer amber focus ring: 0 0 0 2px page-bg gap + 0 0 0 3px amber ring.
-   * Error state keyed off aria-invalid (mirrors Input/Textarea pattern).
-   * Indeterminate state uses the Radix `checked="indeterminate"` prop + Minus icon. */
-  --c-checkbox-size:              16px;
-  --c-checkbox-radius:            var(--p-radius-sm);
-  --c-checkbox-border-width:      1.5px;
-  --c-checkbox-bg:                var(--s-surface-raised);
-  --c-checkbox-border:            var(--s-border-subtle);
-  --c-checkbox-border-hover:      var(--s-border-strong);
-  --c-checkbox-checked-bg:        var(--s-brand-solid);
-  --c-checkbox-checked-border:    var(--s-brand-solid);
-  --c-checkbox-checked-fg:        var(--s-ink-inverse);
-  --c-checkbox-focus-ring:        var(--s-border-focus);   /* amber #E07A4A */
-  --c-checkbox-disabled-opacity:  0.40;
-  --c-checkbox-danger-border:     var(--s-danger-solid);
-  --c-checkbox-danger-bg:         rgba(224, 122, 122, 0.06);  /* very subtle red tint */
-  --c-checkbox-danger-checked-bg: var(--s-danger-solid);
-  /* Kbd — single-key chip with physical-key depth shadow.
-   * Resolves: --c-kbd-* → --s-* → --p-* (3-layer contract).
-   * Override --c-kbd-* in isolation to retheme Kbd without touching shared semantics. */
-  --c-kbd-bg:        var(--s-surface-raised);      /* resting key surface #1a1714 */
-  --c-kbd-bg-depth:  var(--s-surface-panel);       /* bottom shadow ridge #141210 */
-  --c-kbd-border:    var(--s-border-subtle);       /* key border #2a2622 */
-  --c-kbd-fg:        var(--s-ink-primary);         /* label ink #f6f1e7 (↑ from ink-secondary for legibility) */
-  --c-kbd-shine:     rgba(255, 255, 255, 0.055);   /* top inset highlight — literal (no semantic equivalent) */
-  --c-kbd-radius:    var(--p-radius-sm);           /* 4px */
-  /* Label
-   * Layer 3 knobs that resolve into Layer 2 semantic tokens.
-   * Component code reaches for --c-label-* first; consuming apps may override
-   * just these vars without touching the shared --s-* semantic palette.
-   *
-   * Token chain:
-   *   --c-label-fg             → --s-ink-secondary   (default variant color)
-   *   --c-label-fg-muted       → --s-ink-muted        (mono variant color)
-   *   --c-label-fg-error       → --s-danger-fg        (error state color)
-   *   --c-label-fg-disabled    → --s-ink-disabled     (disabled state color)
-   *   --c-label-required-color → --s-brand-solid      (required asterisk)
-   *   --c-label-font-size      → --p-text-12          (default: 12px)
-   *   --c-label-mono-font-size → 10.5px               (mono: no exact primitive)
-   *   --c-label-mono-tracking  → 0.06em               (mono letter-spacing)
-   */
-  --c-label-font:           var(--p-font-sans);
-  --c-label-font-size:      var(--p-text-12);
-  --c-label-line-height:    var(--p-leading-snug);
-  --c-label-weight:         var(--p-weight-500);
-  --c-label-fg:             var(--s-ink-secondary);
-  --c-label-fg-muted:       var(--s-ink-muted);
-  --c-label-fg-error:       var(--s-danger-fg);
-  --c-label-fg-disabled:    var(--s-ink-disabled);
-  --c-label-required-color: var(--s-brand-solid);
-  --c-label-mono-font:      var(--p-font-mono);
-  --c-label-mono-font-size: 10.5px;   /* no --p-text-10-5 primitive exists */
-  --c-label-mono-tracking:  0.06em;
-  /* Pagination — compound nav (DS v0 amber active tile + DS focus ring).
-   * All values resolve to existing --s-* or --p-* tokens — never raw hex. */
-  --c-pagination-item-size:          34px;
-  --c-pagination-item-radius:        var(--p-radius-sm);       /* 4px  — square-ish tiles */
-  --c-pagination-nav-radius:         var(--p-radius-md);       /* 6px  — nav controls */
-  --c-pagination-item-font:          var(--p-text-13);         /* 13px */
-  --c-pagination-item-weight:        var(--p-weight-500);
-  --c-pagination-item-fg:            var(--s-ink-muted);       /* inactive tile label */
-  --c-pagination-item-fg-hover:      var(--s-ink-primary);
-  --c-pagination-item-bg-hover:      var(--s-surface-raised);
-  --c-pagination-active-bg:          var(--s-brand-solid);     /* #E07A4A amber solid fill */
-  --c-pagination-active-fg:          var(--p-sand-950);        /* #0a0908 dark on amber */
-  --c-pagination-active-weight:      var(--p-weight-600);
-  --c-pagination-nav-fg:             var(--s-ink-secondary);
-  --c-pagination-nav-fg-hover:       var(--s-ink-primary);
-  --c-pagination-nav-bg-hover:       var(--s-surface-raised);
-  --c-pagination-ellipsis-fg:        var(--s-ink-muted);
-  --c-pagination-disabled-opacity:   0.35;
-  --c-pagination-gap:                var(--p-space-1);         /* 4px between tiles */
-  /* Command palette — --c-command-*
-   * Layer 3 additions for Organisms/Command. All values resolve to existing
-   * --s-* semantic tokens (no new primitives added).
-   * Fix: bg-accent (#E07A4A) as item hover → surface-elevated + amber left-bar.
-   * Fix: outline-hidden on input → uniform DFL focus ring via box-shadow.
-   * Fix: shortcut font → --s-font-mono (JetBrains Mono). */
-  --c-command-bg:               var(--s-surface-raised);     /* #1a1714 */
-  --c-command-border:           var(--s-border-subtle);      /* #2a2622 */
-  --c-command-radius:           var(--p-radius-lg);          /* 10px */
-  --c-command-shadow:           var(--p-shadow);             /* 0 4px 12px … */
-  --c-command-input-sep:        var(--s-border-subtle);      /* separator below input */
-  --c-command-group-fg:         var(--s-ink-muted);          /* headings + icons default */
-  --c-command-item-fg:          var(--s-ink-secondary);      /* item text default */
-  --c-command-item-hover-bg:    var(--s-surface-elevated);   /* #1f1c18 — replaces bg-accent */
-  --c-command-item-hover-fg:    var(--s-ink-primary);        /* #f6f1e7 on hover/selected */
-  --c-command-item-icon-hover-fg: var(--s-ink-secondary);    /* #c9c0b4 icon on hover */
-  --c-command-item-sel-bar:     var(--s-brand-solid);        /* amber 2px left indicator */
-  --c-command-shortcut-fg:      var(--s-ink-muted);          /* shortcut text */
-  --c-command-sep:              var(--s-border-subtle);      /* CommandSeparator line */
-  --c-command-empty-fg:         var(--s-ink-muted);          /* empty state text */
-  --c-command-focus-color:      var(--s-border-focus);       /* amber #E07A4A for focus ring */
-
   /* Layout chrome */
   --c-sidebar-w:           224px;
   --c-sidebar-w-collapsed: 56px;
   --c-header-h:            56px;
   --c-statusbar-h:         24px;
   --c-content-max:         1280px;
-
-  /* Toggle — Layer 3 component knobs.
-   * On-state uses brand-subtle (10 % tint) + brand-fg (amber-300) to signal
-   * "selected", NOT the solid-amber CTA fill that bg-accent would produce.
-   * Outline-hover steps up the surface (raised) without bleeding solid amber. */
-  --c-toggle-radius:           var(--p-radius-md);
-  --c-toggle-bg:               transparent;
-  --c-toggle-fg:               var(--s-ink-secondary);
-  --c-toggle-bg-hover:         var(--s-surface-raised);
-  --c-toggle-fg-hover:         var(--s-ink-primary);
-  --c-toggle-bg-on:            var(--s-brand-subtle);
-  --c-toggle-fg-on:            var(--s-brand-fg);
-  --c-toggle-border-on:        var(--s-brand-border);
-  --c-toggle-outline-border:   var(--s-border-subtle);
-  --c-toggle-outline-bg-hover: var(--s-surface-raised);
-  --c-toggle-fg-disabled:      var(--s-ink-disabled);
-  /* Textarea — uniform focus rings (DS v0 ch.5.2)
-   * Structure: 2px page-bg gap + 1px solid outer ring.
-   * Kept separate from the shared --c-input-ring-focus (single translucent spread)
-   * to avoid cross-PR conflicts with Input/Select refactors. */
-  --c-textarea-ring-focus:       0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
-  --c-textarea-ring-focus-error: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-danger-solid);
-  /* Collapsible (Molecules) — panel with animated reveal + amber trigger affordance.
-   * Resolves to existing --s-* semantic tokens; never touches --p-* primitives.
-   * Ring: double-layer box-shadow — 2px page-bg gap + 1px amber outer ring. */
-  --c-collapsible-bg:               var(--s-surface-panel);
-  --c-collapsible-bg-hover:         var(--s-surface-raised);
-  --c-collapsible-border:           var(--s-border-subtle);
-  --c-collapsible-border-hover:     var(--s-border-strong);
-  --c-collapsible-radius:           var(--p-radius-md);
-  --c-collapsible-header-fg:        var(--s-ink-primary);
-  --c-collapsible-content-bg:       var(--s-surface-raised);
-  --c-collapsible-content-border:   var(--s-border-subtle);
-  --c-collapsible-item-fg:          var(--s-ink-secondary);
-  --c-collapsible-trigger-fg:       var(--s-ink-muted);
-  --c-collapsible-trigger-fg-hover: var(--s-brand-solid);
-  --c-collapsible-trigger-ring:     0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A;
-  /* AppSidebar organism — Layer 3 component tokens.
-   * All values resolve to existing --s-* semantic tokens.
-   * Override these to retheme the AppSidebar without touching semantics. */
-  --c-appsidebar-bg:                 var(--s-surface-panel);       /* #141210 — panel depth, NOT page bg */
-  --c-appsidebar-item-active-bg:     var(--s-brand-subtle);        /* rgba(224,122,74,0.10) — brand tint */
-  --c-appsidebar-item-active-fg:     var(--s-brand-fg);            /* #f0a872 — amber-300 text */
-  --c-appsidebar-item-active-border: var(--s-brand-solid);         /* #E07A4A — 3px left indicator */
-  --c-appsidebar-focus-ring-gap:     var(--s-surface-panel);       /* 2px gap matches sidebar panel bg */
-  --c-appsidebar-focus-ring-color:   var(--s-brand-solid);         /* 1px amber ring */
-  /* Calendar — DFL DS v0 component tokens.
-   * All knobs resolve to --s-* semantic tokens; none touch --p-* primitives
-   * directly (except rgba tints that reference the amber primitive colour).
-   *
-   * Layer layout:
-   *   Container    --c-cal-bg / --c-cal-border / --c-cal-radius / --c-cal-padding
-   *   Nav buttons  --c-cal-nav-btn-*
-   *   Caption/head --c-cal-caption-fg / --c-cal-head-fg
-   *   Day cells    --c-cal-day-{radius,fg,bg-hover,fg-outside}
-   *   Today state  --c-cal-day-today-{bg,fg,border}   ← tinted, NOT filled
-   *   Selected     --c-cal-day-selected-{bg,fg,bg-hover}  ← solid amber fill
-   *   Range mid    --c-cal-range-mid-{bg,fg}           ← amber 14% tint
-   *   Range end    --c-cal-range-end-{bg,fg}           ← same solid fill as selected
-   *   Disabled     --c-cal-day-disabled-fg
-   */
-  --c-cal-bg:                     var(--s-surface-panel);
-  --c-cal-border:                 var(--s-border-subtle);
-  --c-cal-radius:                 var(--p-radius-lg);
-  --c-cal-padding:                var(--p-space-4);
-
-  --c-cal-nav-btn-bg:             transparent;
-  --c-cal-nav-btn-bg-hover:       var(--s-surface-elevated);
-  --c-cal-nav-btn-fg:             var(--s-ink-muted);
-  --c-cal-nav-btn-fg-hover:       var(--s-ink-primary);
-  --c-cal-nav-btn-border:         var(--s-border-subtle);
-  --c-cal-nav-btn-border-hover:   var(--s-border-strong);
-  --c-cal-nav-btn-radius:         var(--p-radius-md);
-
-  --c-cal-caption-fg:             var(--s-ink-primary);
-  --c-cal-head-fg:                var(--s-ink-muted);
-
-  --c-cal-day-radius:             var(--p-radius-md);
-  --c-cal-day-fg:                 var(--s-ink-primary);
-  --c-cal-day-bg-hover:           var(--s-surface-elevated);
-  --c-cal-day-fg-outside:         var(--s-ink-disabled);
-
-  /* Today: amber 12%-opacity tinted bg + 30%-opacity amber border.
-   * Intentionally LIGHTER than the selected fill so the two states are visually
-   * distinct even when both land on the same day. */
-  --c-cal-day-today-bg:           rgba(224, 122, 74, 0.12);
-  --c-cal-day-today-fg:           var(--s-brand-fg);
-  --c-cal-day-today-border:       rgba(224, 122, 74, 0.30);
-
-  /* Selected: solid amber fill (same brand-solid as button primary). */
-  --c-cal-day-selected-bg:        var(--s-brand-solid);
-  --c-cal-day-selected-fg:        var(--p-sand-950);
-  --c-cal-day-selected-bg-hover:  var(--s-brand-hover);
-
-  /* Range mid: amber 14% tint spanning the interior of a range selection. */
-  --c-cal-range-mid-bg:           rgba(224, 122, 74, 0.14);
-  --c-cal-range-mid-fg:           var(--s-brand-fg);
-
-  /* Range start / end caps: same solid fill as selected day. */
-  --c-cal-range-end-bg:           var(--s-brand-solid);
-  --c-cal-range-end-fg:           var(--p-sand-950);
-
-  /* Disabled: use --s-ink-disabled at 0.45 opacity via the component class. */
-  --c-cal-day-disabled-fg:        var(--s-ink-disabled);
-  /* Carousel — nav buttons + dot indicators (Layer 3 component knobs).
-   * All values resolve to existing --s-* semantic tokens (or --p-* where no
-   * semantic alias exists, e.g. amber-400 hover ink via --s-brand-hover).
-   * Consumed by CarouselPrevious, CarouselNext, CarouselDots in carousel.tsx. */
-  --c-carousel-nav-bg:           var(--s-surface-elevated);   /* default button bg */
-  --c-carousel-nav-border:       var(--s-border-subtle);      /* default button border */
-  --c-carousel-nav-fg:           var(--s-ink-secondary);      /* default arrow color */
-  --c-carousel-nav-bg-hover:     var(--s-brand-subtle);       /* hover/focus bg: amber 10% */
-  --c-carousel-nav-border-hover: var(--s-brand-border);       /* hover/focus border: amber 22% */
-  --c-carousel-nav-fg-hover:     var(--s-brand-hover);        /* hover/focus arrow: amber-400 */
-  --c-carousel-nav-fg-disabled:  var(--s-ink-disabled);       /* disabled arrow (no opacity hack) */
-  --c-carousel-dot-bg:           var(--s-border-strong);      /* inactive dot */
-  --c-carousel-dot-active:       var(--s-brand-solid);        /* active dot: amber-500 */
-  --c-carousel-dot-radius:       var(--p-radius-pill);        /* dot shape */
-  --c-carousel-radius:           var(--p-radius-lg);          /* track border-radius */
-  /* Chart — tooltip + chrome component-token knobs.
-   * Series palette lives in the Compatibility aliases block as --chart-1…5.
-   * These knobs cover the tooltip surface and structural chrome only. */
-  --c-chart-tooltip-bg:         var(--s-surface-elevated);
-  --c-chart-tooltip-border:     var(--s-border-strong);
-  --c-chart-tooltip-fg:         var(--s-ink-primary);
-  --c-chart-tooltip-muted-fg:   var(--s-ink-muted);
-  --c-chart-tooltip-radius:     var(--p-radius-md);
-  --c-chart-tooltip-shadow:     var(--p-shadow-lg);
-  --c-chart-grid:               var(--s-border-subtle);
-  --c-chart-axis-fg:            var(--s-ink-muted);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -768,6 +543,83 @@
   --c-button-focus-brand:   var(--s-brand-solid);
   --c-button-focus-danger:  var(--s-danger-solid);
   --c-button-focus-success: var(--s-success-solid);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — ButtonLab playground (DesignPlayground experiment)
+ *
+ *   Consumed ONLY by src/design-playground/ButtonLab.stories.tsx.
+ *   NOT distributed via registry / npm. Delete this block once the
+ *   recording experiment graduates (or is retired) via the playground
+ *   → Components/Atoms/Button promotion flow.
+ *
+ *   All values resolve to existing --s-* semantic tokens.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Recording experiment — Active (pulsing amber dot, "Gravando…")
+   * Amber-brand treatment: signal ≠ error. NOT destructive/danger tokens. */
+  --c-buttonlab-recording-bg:           var(--s-brand-subtle);      /* rgba(224,122,74,.10) */
+  --c-buttonlab-recording-fg:           var(--s-brand-fg);           /* var(--p-amber-300)   */
+  --c-buttonlab-recording-border:       var(--s-brand-border);       /* rgba(224,122,74,.22) */
+
+  /* Recording experiment — Idle (static dimmed dot, "Parado")
+   * Neutral treatment — same layout, subdued palette. */
+  --c-buttonlab-recording-idle-bg:      var(--s-surface-page);       /* transparent on page  */
+  --c-buttonlab-recording-idle-fg:      var(--s-ink-muted);          /* var(--p-sand-400)    */
+  --c-buttonlab-recording-idle-border:  var(--s-border-subtle);      /* var(--p-sand-700)    */
+}
+
+  /* Toggle — Layer 3 component knobs.
+   * On-state uses brand-subtle (10 % tint) + brand-fg (amber-300) to signal
+   * "selected", NOT the solid-amber CTA fill that bg-accent would produce.
+   * Outline-hover steps up the surface (raised) without bleeding solid amber. */
+  --c-toggle-radius:           var(--p-radius-md);
+  --c-toggle-bg:               transparent;
+  --c-toggle-fg:               var(--s-ink-secondary);
+  --c-toggle-bg-hover:         var(--s-surface-raised);
+  --c-toggle-fg-hover:         var(--s-ink-primary);
+  --c-toggle-bg-on:            var(--s-brand-subtle);
+  --c-toggle-fg-on:            var(--s-brand-fg);
+  --c-toggle-border-on:        var(--s-brand-border);
+  --c-toggle-outline-border:   var(--s-border-subtle);
+  --c-toggle-outline-bg-hover: var(--s-surface-raised);
+  --c-toggle-fg-disabled:      var(--s-ink-disabled);
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Component (--c-toggle-group-*)
+ *   ToggleGroup / Toggle component-token knobs.
+ *   Resolves to existing --s-* semantic tokens; no --p-* or --s-* are added.
+ *   Consumers can override any --c-toggle-* to retheme without touching the
+ *   semantic layer.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Item backgrounds */
+  --c-toggle-bg:                    transparent;
+  --c-toggle-bg-hover:              var(--s-surface-raised);
+  --c-toggle-bg-active:             var(--s-brand-subtle);         /* amber wash */
+  --c-toggle-bg-active-hover:       rgba(224, 122, 74, 0.16);     /* stronger wash on hover */
+
+  /* Item foreground (icon / text) */
+  --c-toggle-fg:                    var(--s-ink-muted);
+  --c-toggle-fg-hover:              var(--s-ink-secondary);
+  --c-toggle-fg-active:             var(--s-brand-fg);             /* amber-300 */
+
+  /* Border — used by outline variant items and inter-item dividers */
+  --c-toggle-border:                var(--s-border-subtle);
+
+  /* Group container radius */
+  --c-toggle-group-radius:          var(--p-radius-md);            /* 6px */
+
+  /* Focus ring — THE uniform 2px-gap + 1px-amber spec (ch.5.2) */
+  --c-toggle-focus-ring:            0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A;
+
+  /* Outline variant: inset top-highlight on active items */
+  --c-toggle-outline-active-shadow: inset 0 1px 0 rgba(224, 122, 74, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Component (--c-alert-dialog-*)
  *
  *   AlertDialog organism: scrim overlay + dialog card surface + typography.
@@ -791,16 +643,71 @@
   --c-alert-dialog-scrim:    var(--c-dialog-scrim);    /* backdrop rgba scrim   */
   --c-alert-dialog-title-fg: var(--s-ink-primary);     /* title text color      */
   --c-alert-dialog-desc-fg:  var(--s-ink-muted);       /* description text      */
+}
+  /* Checkbox — DFL Design System v0
+   * Two-layer amber focus ring: 0 0 0 2px page-bg gap + 0 0 0 3px amber ring.
+   * Error state keyed off aria-invalid (mirrors Input/Textarea pattern).
+   * Indeterminate state uses the Radix `checked="indeterminate"` prop + Minus icon. */
+  --c-checkbox-size:              16px;
+  --c-checkbox-radius:            var(--p-radius-sm);
+  --c-checkbox-border-width:      1.5px;
+  --c-checkbox-bg:                var(--s-surface-raised);
+  --c-checkbox-border:            var(--s-border-subtle);
+  --c-checkbox-border-hover:      var(--s-border-strong);
+  --c-checkbox-checked-bg:        var(--s-brand-solid);
+  --c-checkbox-checked-border:    var(--s-brand-solid);
+  --c-checkbox-checked-fg:        var(--s-ink-inverse);
+  --c-checkbox-focus-ring:        var(--s-border-focus);   /* amber #E07A4A */
+  --c-checkbox-disabled-opacity:  0.40;
+  --c-checkbox-danger-border:     var(--s-danger-solid);
+  --c-checkbox-danger-bg:         rgba(224, 122, 122, 0.06);  /* very subtle red tint */
+  --c-checkbox-danger-checked-bg: var(--s-danger-solid);
+
+  /* Kbd — single-key chip with physical-key depth shadow.
+   * Resolves: --c-kbd-* → --s-* → --p-* (3-layer contract).
+   * Override --c-kbd-* in isolation to retheme Kbd without touching shared semantics. */
+  --c-kbd-bg:        var(--s-surface-raised);      /* resting key surface #1a1714 */
+  --c-kbd-bg-depth:  var(--s-surface-panel);       /* bottom shadow ridge #141210 */
+  --c-kbd-border:    var(--s-border-subtle);       /* key border #2a2622 */
+  --c-kbd-fg:        var(--s-ink-primary);         /* label ink #f6f1e7 (↑ from ink-secondary for legibility) */
+  --c-kbd-shine:     rgba(255, 255, 255, 0.055);   /* top inset highlight — literal (no semantic equivalent) */
+  --c-kbd-radius:    var(--p-radius-sm);           /* 4px */
+
+  /* Label
+   * Layer 3 knobs that resolve into Layer 2 semantic tokens.
+   * Component code reaches for --c-label-* first; consuming apps may override
+   * just these vars without touching the shared --s-* semantic palette.
+   *
+   * Token chain:
+   *   --c-label-fg             → --s-ink-secondary   (default variant color)
+   *   --c-label-fg-muted       → --s-ink-muted        (mono variant color)
+   *   --c-label-fg-error       → --s-danger-fg        (error state color)
+   *   --c-label-fg-disabled    → --s-ink-disabled     (disabled state color)
+   *   --c-label-required-color → --s-brand-solid      (required asterisk)
+   *   --c-label-font-size      → --p-text-12          (default: 12px)
+   *   --c-label-mono-font-size → 10.5px               (mono: no exact primitive)
+   *   --c-label-mono-tracking  → 0.06em               (mono letter-spacing)
+   */
+  --c-label-font:           var(--p-font-sans);
+  --c-label-font-size:      var(--p-text-12);
+  --c-label-line-height:    var(--p-leading-snug);
+  --c-label-weight:         var(--p-weight-500);
+  --c-label-fg:             var(--s-ink-secondary);
+  --c-label-fg-muted:       var(--s-ink-muted);
+  --c-label-fg-error:       var(--s-danger-fg);
+  --c-label-fg-disabled:    var(--s-ink-disabled);
+  --c-label-required-color: var(--s-brand-solid);
+  --c-label-mono-font:      var(--p-font-mono);
+  --c-label-mono-font-size: 10.5px;   /* no --p-text-10-5 primitive exists */
+  --c-label-mono-tracking:  0.06em;
+
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Component (--c-progress-*)
  *   Track background lifted to --s-surface-elevated so the empty bar is
  *   legible against the page (#0a0908). Fill is brand amber by default;
  *   semantic variants map to their --s-{intent}-solid tokens.
  *   Height sizes: sm=4px / md=8px (default, replaces hardcoded h-4=16px) / lg=12px.
- * LAYER 3 — Slider component tokens (--c-slider-*)
- *
- * Resolves to existing --s-* semantic tokens. Track height reduced from
- * h-4 (16px) to 4px (sleek DS-aligned line with protruding thumb).
- * Focus ring uses DS uniform double-shadow spec (ch.5.2).
  * ─────────────────────────────────────────────────────────────────────── */
 
 :root {
@@ -823,17 +730,13 @@
   --c-progress-fill-danger:   var(--s-danger-solid);         /* red   #e07a7a */
   --c-progress-fill-warning:  var(--s-warning-solid);        /* yellow #e0b04a */
   --c-progress-fill-info:     var(--s-info-solid);           /* blue  #7aa2e0 */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — RadioGroup (--c-radio-*)
  *
  *   Resolves exclusively to existing --s-* semantic tokens (Layer 2).
  *   Never modify --s-* or --p-* here — append --c-* only.
- * InputOTP — component tokens (--c-otp-*)
- *
- * Layer 3 block. All values resolve through existing --s-* / --p-* tokens.
- * Consumers can override any knob to retheme the OTP widget in isolation.
- *
- * Active focus ring: box-shadow 0 0 0 2px var(--background), 0 0 0 3px #E07A4A
- * (the ONE uniform DFL ring — 2px page-bg gap + 1px amber outline; see §Focus Ring above).
  * ─────────────────────────────────────────────────────────────────────── */
 
 :root {
@@ -857,6 +760,9 @@
   /* Spacing */
   --c-radio-item-gap:          var(--p-space-3);            /* 12px between items */
   --c-radio-label-gap:         var(--p-space-2);            /* 8px between circle + label */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — ScrollArea component tokens (--c-scroll-area-*)
  *
  *   Thumb state hierarchy + track reveal + sizing for the dark-warm palette.
@@ -882,6 +788,9 @@
   /* Sizing */
   --c-scroll-area-width:        8px;                         /* scrollbar rail + thumb width            */
   --c-scroll-area-radius:       var(--p-radius-pill);        /* 999px pill thumb                        */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Separator component tokens (--c-separator-*)
  *
  *   Resolves exclusively to existing --s-* semantic tokens. Gives consumers
@@ -905,6 +814,9 @@
   /* WithLabel composite — centered label typography */
   --c-separator-label-fg:      var(--s-ink-muted);
   --c-separator-label-size:    var(--p-text-11);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * Skeleton component (--c-skeleton-*)
  *   Warm directional shimmer (sand-800 base → sand-700 sweep → sand-800).
  *   All colour tokens resolve to existing --s-* semantic tokens so the whole
@@ -954,6 +866,18 @@
     animation: none;
     background: var(--c-skeleton-bg);
   }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Slider component tokens (--c-slider-*)
+ *
+ * Resolves to existing --s-* semantic tokens. Track height reduced from
+ * h-4 (16px) to 4px (sleek DS-aligned line with protruding thumb).
+ * Focus ring uses DS uniform double-shadow spec (ch.5.2).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Track */
   --c-slider-track-h:            4px;
   --c-slider-track-bg:           var(--s-border-subtle);      /* #2a2622 — subtle track line */
 
@@ -970,6 +894,9 @@
   --c-slider-thumb-hover-shadow: 0 0 0 7px rgba(224, 122, 74, 0.18), 0 1px 4px rgba(0, 0, 0, 0.55);
   /* DS uniform focus ring: 2px bg gap + 3px amber ring + base shadow */
   --c-slider-thumb-focus-shadow: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid), 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Sonner / Toast (--c-toast-*)
  *   Thin adapter over the sonner library. Maps DFL semantic tokens onto
  *   Sonner's CSS-variable API and defines per-type semantic surfaces.
@@ -1012,6 +939,9 @@
   --c-toast-warning-bg:     rgba(74, 59, 18, 0.45);    /* yellow-900 @ 45% */
   --c-toast-warning-border: rgba(224, 176, 74, 0.25);  /* yellow-500 @ 25% */
   --c-toast-warning-fg:     var(--s-warning-fg);        /* #f0c875 */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * Component: Switch (--c-switch-*)
  *   Layer 3 knobs. All values resolve to existing --s-* semantic tokens
  *   except --c-switch-thumb-bg which maps to --p-sand-50 (warm off-white
@@ -1037,6 +967,16 @@
   --c-switch-thumb-bg:            var(--p-sand-50);           /* #f6f1e7 — warm off-white (no s-* alias) */
   --c-switch-focus-ring:          0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
   --c-switch-disabled-opacity:    0.40;
+}
+
+  /* Textarea — uniform focus rings (DS v0 ch.5.2)
+   * Structure: 2px page-bg gap + 1px solid outer ring.
+   * Kept separate from the shared --c-input-ring-focus (single translucent spread)
+   * to avoid cross-PR conflicts with Input/Select refactors. */
+  --c-textarea-ring-focus:       0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
+  --c-textarea-ring-focus-error: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-danger-solid);
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Toast component tokens (--c-toast-*)
  *   Appended per token-scope rule: only this block is added; existing --s-* /
  *   --p-* and other component blocks are untouched.
@@ -1075,6 +1015,9 @@
   /* Info variant */
   --c-toast-info-bg:         var(--s-info-subtle);
   --c-toast-info-border:     var(--s-info-border);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * Accordion component tokens (Layer 3 — appended, do not edit blocks above)
  * All values resolve to existing --s-* / --p-* tokens; no raw colour literals.
  * ─────────────────────────────────────────────────────────────────────── */
@@ -1105,6 +1048,9 @@
   /* Spacing */
   --c-accordion-padding-x:             var(--p-space-4);          /* 16px */
   --c-accordion-padding-y:             14px;                      /* intentional: between --p-space-3 (12) and --p-space-4 (16) */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Breadcrumb (--c-breadcrumb-*)
  *
  * Resolves exclusively to Layer-2 semantic tokens (--s-*) and safe literal
@@ -1137,6 +1083,25 @@
 
   /* Shape */
   --c-breadcrumb-radius:          4px;                      /* radius-sm — for focus ring clipping */
+}
+
+  /* Collapsible (Molecules) — panel with animated reveal + amber trigger affordance.
+   * Resolves to existing --s-* semantic tokens; never touches --p-* primitives.
+   * Ring: double-layer box-shadow — 2px page-bg gap + 1px amber outer ring. */
+  --c-collapsible-bg:               var(--s-surface-panel);
+  --c-collapsible-bg-hover:         var(--s-surface-raised);
+  --c-collapsible-border:           var(--s-border-subtle);
+  --c-collapsible-border-hover:     var(--s-border-strong);
+  --c-collapsible-radius:           var(--p-radius-md);
+  --c-collapsible-header-fg:        var(--s-ink-primary);
+  --c-collapsible-content-bg:       var(--s-surface-raised);
+  --c-collapsible-content-border:   var(--s-border-subtle);
+  --c-collapsible-item-fg:          var(--s-ink-secondary);
+  --c-collapsible-trigger-fg:       var(--s-ink-muted);
+  --c-collapsible-trigger-fg-hover: var(--s-brand-solid);
+  --c-collapsible-trigger-ring:     0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A;
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — HoverCard component tokens (--c-hovercard-*)
  *
  * Panel uses the card/overlay radius tier (--p-radius-lg = 10px), NOT the
@@ -1153,6 +1118,20 @@
   --c-hovercard-width:      288px;
   /* DS uniform focus ring: inner gap in page-bg colour + outer amber ring */
   --c-hovercard-focus-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * InputOTP — component tokens (--c-otp-*)
+ *
+ * Layer 3 block. All values resolve through existing --s-* / --p-* tokens.
+ * Consumers can override any knob to retheme the OTP widget in isolation.
+ *
+ * Active focus ring: box-shadow 0 0 0 2px var(--background), 0 0 0 3px #E07A4A
+ * (the ONE uniform DFL ring — 2px page-bg gap + 1px amber outline; see §Focus Ring above).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Geometry */
   --c-otp-slot-w:              48px;                   /* was 36px (shadcn baseline) */
   --c-otp-slot-h:              56px;                   /* was 36px — enlarged for touch + legibility */
   --c-otp-slot-radius:         var(--p-radius-md);     /* 6px */
@@ -1173,6 +1152,29 @@
   --c-otp-font:                var(--p-font-mono);     /* JetBrains Mono */
   --c-otp-font-size:           20px;
   --c-otp-font-weight:         600;
+}
+  /* Pagination — compound nav (DS v0 amber active tile + DS focus ring).
+   * All values resolve to existing --s-* or --p-* tokens — never raw hex. */
+  --c-pagination-item-size:          34px;
+  --c-pagination-item-radius:        var(--p-radius-sm);       /* 4px  — square-ish tiles */
+  --c-pagination-nav-radius:         var(--p-radius-md);       /* 6px  — nav controls */
+  --c-pagination-item-font:          var(--p-text-13);         /* 13px */
+  --c-pagination-item-weight:        var(--p-weight-500);
+  --c-pagination-item-fg:            var(--s-ink-muted);       /* inactive tile label */
+  --c-pagination-item-fg-hover:      var(--s-ink-primary);
+  --c-pagination-item-bg-hover:      var(--s-surface-raised);
+  --c-pagination-active-bg:          var(--s-brand-solid);     /* #E07A4A amber solid fill */
+  --c-pagination-active-fg:          var(--p-sand-950);        /* #0a0908 dark on amber */
+  --c-pagination-active-weight:      var(--p-weight-600);
+  --c-pagination-nav-fg:             var(--s-ink-secondary);
+  --c-pagination-nav-fg-hover:       var(--s-ink-primary);
+  --c-pagination-nav-bg-hover:       var(--s-surface-raised);
+  --c-pagination-ellipsis-fg:        var(--s-ink-muted);
+  --c-pagination-disabled-opacity:   0.35;
+  --c-pagination-gap:                var(--p-space-1);         /* 4px between tiles */
+
+
+/* ─────────────────────────────────────────────────────────────────────────
  * COMPONENT — PasswordInput (--c-passwordinput-*)
  *
  *   Layer 3 knobs for the PasswordInput molecule (Input atom + reveal toggle).
@@ -1186,6 +1188,9 @@
   /* Toggle button ink */
   --c-passwordinput-toggle-fg:       var(--s-ink-muted);    /* idle — was text-muted-foreground */
   --c-passwordinput-toggle-fg-hover: var(--s-ink-primary);  /* hover — was hover:text-foreground */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Component: Popover (--c-popover-*)
  *
  *   Floating content surface anchored to a trigger.
@@ -1209,6 +1214,9 @@
   --c-popover-shadow:  var(--p-shadow);               /* 0 4px 12px rgba(0,0,0,.45) */
   /* Padding knob */
   --c-popover-padding: var(--p-space-4);              /* 16px */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — Component: Select (--c-select-*)
  *
  *   12 knobs covering trigger surface, dropdown menu, items and states.
@@ -1260,6 +1268,9 @@
   /* Group label + separator */
   --c-select-label-fg:          var(--s-ink-muted);            /* sand-400 */
   --c-select-separator-color:   var(--s-border-subtle);        /* sand-700 */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * AppNavbar component tokens (--c-navbar-*)
  *
  *   Resolves to existing --s-* semantic tokens — do NOT hardcode hex here.
@@ -1282,6 +1293,128 @@
 
   /* Actions slot gap (between last crumb and injected CTA) */
   --c-navbar-action-gap:            var(--p-space-2);
+}
+
+  /* AppSidebar organism — Layer 3 component tokens.
+   * All values resolve to existing --s-* semantic tokens.
+   * Override these to retheme the AppSidebar without touching semantics. */
+  --c-appsidebar-bg:                 var(--s-surface-panel);       /* #141210 — panel depth, NOT page bg */
+  --c-appsidebar-item-active-bg:     var(--s-brand-subtle);        /* rgba(224,122,74,0.10) — brand tint */
+  --c-appsidebar-item-active-fg:     var(--s-brand-fg);            /* #f0a872 — amber-300 text */
+  --c-appsidebar-item-active-border: var(--s-brand-solid);         /* #E07A4A — 3px left indicator */
+  --c-appsidebar-focus-ring-gap:     var(--s-surface-panel);       /* 2px gap matches sidebar panel bg */
+  --c-appsidebar-focus-ring-color:   var(--s-brand-solid);         /* 1px amber ring */
+
+  /* Calendar — DFL DS v0 component tokens.
+   * All knobs resolve to --s-* semantic tokens; none touch --p-* primitives
+   * directly (except rgba tints that reference the amber primitive colour).
+   *
+   * Layer layout:
+   *   Container    --c-cal-bg / --c-cal-border / --c-cal-radius / --c-cal-padding
+   *   Nav buttons  --c-cal-nav-btn-*
+   *   Caption/head --c-cal-caption-fg / --c-cal-head-fg
+   *   Day cells    --c-cal-day-{radius,fg,bg-hover,fg-outside}
+   *   Today state  --c-cal-day-today-{bg,fg,border}   ← tinted, NOT filled
+   *   Selected     --c-cal-day-selected-{bg,fg,bg-hover}  ← solid amber fill
+   *   Range mid    --c-cal-range-mid-{bg,fg}           ← amber 14% tint
+   *   Range end    --c-cal-range-end-{bg,fg}           ← same solid fill as selected
+   *   Disabled     --c-cal-day-disabled-fg
+   */
+  --c-cal-bg:                     var(--s-surface-panel);
+  --c-cal-border:                 var(--s-border-subtle);
+  --c-cal-radius:                 var(--p-radius-lg);
+  --c-cal-padding:                var(--p-space-4);
+
+  --c-cal-nav-btn-bg:             transparent;
+  --c-cal-nav-btn-bg-hover:       var(--s-surface-elevated);
+  --c-cal-nav-btn-fg:             var(--s-ink-muted);
+  --c-cal-nav-btn-fg-hover:       var(--s-ink-primary);
+  --c-cal-nav-btn-border:         var(--s-border-subtle);
+  --c-cal-nav-btn-border-hover:   var(--s-border-strong);
+  --c-cal-nav-btn-radius:         var(--p-radius-md);
+
+  --c-cal-caption-fg:             var(--s-ink-primary);
+  --c-cal-head-fg:                var(--s-ink-muted);
+
+  --c-cal-day-radius:             var(--p-radius-md);
+  --c-cal-day-fg:                 var(--s-ink-primary);
+  --c-cal-day-bg-hover:           var(--s-surface-elevated);
+  --c-cal-day-fg-outside:         var(--s-ink-disabled);
+
+  /* Today: amber 12%-opacity tinted bg + 30%-opacity amber border.
+   * Intentionally LIGHTER than the selected fill so the two states are visually
+   * distinct even when both land on the same day. */
+  --c-cal-day-today-bg:           rgba(224, 122, 74, 0.12);
+  --c-cal-day-today-fg:           var(--s-brand-fg);
+  --c-cal-day-today-border:       rgba(224, 122, 74, 0.30);
+
+  /* Selected: solid amber fill (same brand-solid as button primary). */
+  --c-cal-day-selected-bg:        var(--s-brand-solid);
+  --c-cal-day-selected-fg:        var(--p-sand-950);
+  --c-cal-day-selected-bg-hover:  var(--s-brand-hover);
+
+  /* Range mid: amber 14% tint spanning the interior of a range selection. */
+  --c-cal-range-mid-bg:           rgba(224, 122, 74, 0.14);
+  --c-cal-range-mid-fg:           var(--s-brand-fg);
+
+  /* Range start / end caps: same solid fill as selected day. */
+  --c-cal-range-end-bg:           var(--s-brand-solid);
+  --c-cal-range-end-fg:           var(--p-sand-950);
+
+  /* Disabled: use --s-ink-disabled at 0.45 opacity via the component class. */
+  --c-cal-day-disabled-fg:        var(--s-ink-disabled);
+
+  /* Carousel — nav buttons + dot indicators (Layer 3 component knobs).
+   * All values resolve to existing --s-* semantic tokens (or --p-* where no
+   * semantic alias exists, e.g. amber-400 hover ink via --s-brand-hover).
+   * Consumed by CarouselPrevious, CarouselNext, CarouselDots in carousel.tsx. */
+  --c-carousel-nav-bg:           var(--s-surface-elevated);   /* default button bg */
+  --c-carousel-nav-border:       var(--s-border-subtle);      /* default button border */
+  --c-carousel-nav-fg:           var(--s-ink-secondary);      /* default arrow color */
+  --c-carousel-nav-bg-hover:     var(--s-brand-subtle);       /* hover/focus bg: amber 10% */
+  --c-carousel-nav-border-hover: var(--s-brand-border);       /* hover/focus border: amber 22% */
+  --c-carousel-nav-fg-hover:     var(--s-brand-hover);        /* hover/focus arrow: amber-400 */
+  --c-carousel-nav-fg-disabled:  var(--s-ink-disabled);       /* disabled arrow (no opacity hack) */
+  --c-carousel-dot-bg:           var(--s-border-strong);      /* inactive dot */
+  --c-carousel-dot-active:       var(--s-brand-solid);        /* active dot: amber-500 */
+  --c-carousel-dot-radius:       var(--p-radius-pill);        /* dot shape */
+  --c-carousel-radius:           var(--p-radius-lg);          /* track border-radius */
+
+  /* Chart — tooltip + chrome component-token knobs.
+   * Series palette lives in the Compatibility aliases block as --chart-1…5.
+   * These knobs cover the tooltip surface and structural chrome only. */
+  --c-chart-tooltip-bg:         var(--s-surface-elevated);
+  --c-chart-tooltip-border:     var(--s-border-strong);
+  --c-chart-tooltip-fg:         var(--s-ink-primary);
+  --c-chart-tooltip-muted-fg:   var(--s-ink-muted);
+  --c-chart-tooltip-radius:     var(--p-radius-md);
+  --c-chart-tooltip-shadow:     var(--p-shadow-lg);
+  --c-chart-grid:               var(--s-border-subtle);
+  --c-chart-axis-fg:            var(--s-ink-muted);
+  /* Command palette — --c-command-*
+   * Layer 3 additions for Organisms/Command. All values resolve to existing
+   * --s-* semantic tokens (no new primitives added).
+   * Fix: bg-accent (#E07A4A) as item hover → surface-elevated + amber left-bar.
+   * Fix: outline-hidden on input → uniform DFL focus ring via box-shadow.
+   * Fix: shortcut font → --s-font-mono (JetBrains Mono). */
+  --c-command-bg:               var(--s-surface-raised);     /* #1a1714 */
+  --c-command-border:           var(--s-border-subtle);      /* #2a2622 */
+  --c-command-radius:           var(--p-radius-lg);          /* 10px */
+  --c-command-shadow:           var(--p-shadow);             /* 0 4px 12px … */
+  --c-command-input-sep:        var(--s-border-subtle);      /* separator below input */
+  --c-command-group-fg:         var(--s-ink-muted);          /* headings + icons default */
+  --c-command-item-fg:          var(--s-ink-secondary);      /* item text default */
+  --c-command-item-hover-bg:    var(--s-surface-elevated);   /* #1f1c18 — replaces bg-accent */
+  --c-command-item-hover-fg:    var(--s-ink-primary);        /* #f6f1e7 on hover/selected */
+  --c-command-item-icon-hover-fg: var(--s-ink-secondary);    /* #c9c0b4 icon on hover */
+  --c-command-item-sel-bar:     var(--s-brand-solid);        /* amber 2px left indicator */
+  --c-command-shortcut-fg:      var(--s-ink-muted);          /* shortcut text */
+  --c-command-sep:              var(--s-border-subtle);      /* CommandSeparator line */
+  --c-command-empty-fg:         var(--s-ink-muted);          /* empty state text */
+  --c-command-focus-color:      var(--s-border-focus);       /* amber #E07A4A for focus ring */
+
+
+/* ─────────────────────────────────────────────────────────────────────────
  * LAYER 3 — ContextMenu component tokens (--c-contextmenu-*)
  *
  * Resolves DS token hierarchy for right-click / context menus.
@@ -1316,56 +1449,38 @@
 
   /* Trigger focus ring (outer off-element DS spec ring) */
   --c-contextmenu-trigger-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
- * LAYER 3 — ButtonLab playground (DesignPlayground experiment)
- *
- *   Consumed ONLY by src/design-playground/ButtonLab.stories.tsx.
- *   NOT distributed via registry / npm. Delete this block once the
- *   recording experiment graduates (or is retired) via the playground
- *   → Components/Atoms/Button promotion flow.
- *
- *   All values resolve to existing --s-* semantic tokens.
- * ─────────────────────────────────────────────────────────────────────── */
-
-:root {
-  /* Recording experiment — Active (pulsing amber dot, "Gravando…")
-   * Amber-brand treatment: signal ≠ error. NOT destructive/danger tokens. */
-  --c-buttonlab-recording-bg:           var(--s-brand-subtle);      /* rgba(224,122,74,.10) */
-  --c-buttonlab-recording-fg:           var(--s-brand-fg);           /* var(--p-amber-300)   */
-  --c-buttonlab-recording-border:       var(--s-brand-border);       /* rgba(224,122,74,.22) */
-
-  /* Recording experiment — Idle (static dimmed dot, "Parado")
-   * Neutral treatment — same layout, subdued palette. */
-  --c-buttonlab-recording-idle-bg:      var(--s-surface-page);       /* transparent on page  */
-  --c-buttonlab-recording-idle-fg:      var(--s-ink-muted);          /* var(--p-sand-400)    */
-  --c-buttonlab-recording-idle-border:  var(--s-border-subtle);      /* var(--p-sand-700)    */
- * LAYER 3 — Component (--c-toggle-group-*)
- *   ToggleGroup / Toggle component-token knobs.
- *   Resolves to existing --s-* semantic tokens; no --p-* or --s-* are added.
- *   Consumers can override any --c-toggle-* to retheme without touching the
- *   semantic layer.
- * ─────────────────────────────────────────────────────────────────────── */
-
-:root {
-  /* Item backgrounds */
-  --c-toggle-bg:                    transparent;
-  --c-toggle-bg-hover:              var(--s-surface-raised);
-  --c-toggle-bg-active:             var(--s-brand-subtle);         /* amber wash */
-  --c-toggle-bg-active-hover:       rgba(224, 122, 74, 0.16);     /* stronger wash on hover */
-
-  /* Item foreground (icon / text) */
-  --c-toggle-fg:                    var(--s-ink-muted);
-  --c-toggle-fg-hover:              var(--s-ink-secondary);
-  --c-toggle-fg-active:             var(--s-brand-fg);             /* amber-300 */
-
-  /* Border — used by outline variant items and inter-item dividers */
-  --c-toggle-border:                var(--s-border-subtle);
-
-  /* Group container radius */
-  --c-toggle-group-radius:          var(--p-radius-md);            /* 6px */
-
-  /* Focus ring — THE uniform 2px-gap + 1px-amber spec (ch.5.2) */
-  --c-toggle-focus-ring:            0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A;
-
-  /* Outline variant: inset top-highlight on active items */
-  --c-toggle-outline-active-shadow: inset 0 1px 0 rgba(224, 122, 74, 0.3);
 }
+  /* DropdownMenu — Organisms layer (DS v0 brand fixes)
+   *
+   * Fixes four critical brand failures vs vanilla shadcn:
+   *   1. Focus ring: 2px bg-gap + 1px amber ring (box-shadow), NOT amber bg-flood
+   *   2. Separator: --s-border-subtle (#2a2622) > popover bg (#1a1714) — now visible
+   *   3. Label: --s-ink-muted (#7d7568) + uppercase + tight tracking — visual hierarchy
+   *   4. Shortcut: --p-font-mono (JetBrains Mono) — brand-spec font for ⌘ keys
+   */
+  --c-dropdownmenu-bg:                var(--s-surface-raised);
+  --c-dropdownmenu-border:            var(--s-border-subtle);
+  --c-dropdownmenu-radius:            var(--p-radius-md);
+  --c-dropdownmenu-item-radius:       var(--p-radius-sm);
+  --c-dropdownmenu-shadow:            0 4px 12px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
+  --c-dropdownmenu-item-fg:           var(--s-ink-secondary);
+  --c-dropdownmenu-item-bg-hover:     var(--s-surface-elevated);
+  --c-dropdownmenu-item-fg-hover:     var(--s-ink-primary);
+  --c-dropdownmenu-label-fg:          var(--s-ink-muted);
+  --c-dropdownmenu-separator:         var(--s-border-subtle);
+  --c-dropdownmenu-shortcut-fg:       var(--s-ink-muted);
+  --c-dropdownmenu-check-color:       var(--s-brand-solid);
+  --c-dropdownmenu-destructive-fg:    var(--s-danger-fg);
+  --c-dropdownmenu-destructive-bghov: var(--s-danger-subtle);
+  /* Focus ring: 2px gap (popover bg) + 1px amber — uniform DS ring spec.
+   * The gap colour matches the popover bg so the ring "floats" above the item. */
+  --c-dropdownmenu-focus-ring:        0 0 0 2px var(--s-surface-raised), 0 0 0 3px var(--s-brand-solid);
+
+
+  /* Form — component knobs for the React Hook Form wrapper */
+  --c-form-gap:              var(--p-space-2);        /* 8px — gap between label / control / hint / message */
+  --c-form-section-gap:      var(--p-space-5);        /* 20px — gap between FormItems */
+  --c-form-label-fg:         var(--s-ink-secondary);
+  --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
+  --c-form-description-fg:   var(--s-ink-muted);
+  --c-form-message-error-fg: var(--s-danger-fg);

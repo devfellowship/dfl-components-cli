@@ -97,7 +97,6 @@ export const TriggerFocused: Story = {
         {/* autoFocus triggers :focus-visible so Storybook renders the ring */}
         <Button
           variant="outline"
-          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
           className={TRIGGER_FOCUS_RING}
         >
@@ -242,7 +241,6 @@ export const WithMenu: Story = {
         <button
           className={MENU_ITEM_BASE}
           type="button"
-          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
         >
           <Copy size={13} aria-hidden="true" className="opacity-60" />

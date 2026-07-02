@@ -133,7 +133,6 @@ export const TriggerFocus: Story = {
       <AccordionItem value="item-2">
         {/* Force-paint the focus ring for the static Storybook snapshot */}
         <AccordionTrigger
-          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
           className="shadow-[0_0_0_2px_var(--background),0_0_0_3px_var(--s-border-focus)]"
         >
