@@ -88,7 +88,7 @@ const fallbackTextVariants = cva("", {
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 export interface UserAvatarProps
-  extends React.ComponentPropsWithoutRef<typeof Avatar>,
+  extends Omit<React.ComponentPropsWithoutRef<typeof Avatar>, "size">,
     VariantProps<typeof avatarSizeVariants> {
   /** Display name — drives the initials and (by default) the hue. */
   name: string;

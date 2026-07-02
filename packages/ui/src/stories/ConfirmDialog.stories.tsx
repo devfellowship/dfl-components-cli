@@ -10,7 +10,7 @@
  * 2px gap + 1px amber ring is rendered.
  */
 import type { Meta, StoryObj } from "@storybook/react";
-import { within, userEvent } from "@storybook/test";
+import { within, userEvent } from "storybook/test";
 import { ConfirmDialog } from "../components/organisms/ConfirmDialog";
 
 const meta: Meta<typeof ConfirmDialog> = {

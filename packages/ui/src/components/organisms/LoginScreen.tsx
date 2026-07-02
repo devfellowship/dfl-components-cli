@@ -16,7 +16,7 @@ import { cn } from "../../lib/utils";
 import { Button } from "../button";
 import { Input } from "../input";
 import { Label } from "../label";
-import { PasswordInput } from "./PasswordInput";
+import { PasswordInput } from "../molecules/PasswordInput";
 
 const DEFAULT_LOGO =
   "https://devfellowship.s3.sa-east-1.amazonaws.com/media/1755889468274-DevFelloShip%2B1%2BSi%CC%81mbolo.png";

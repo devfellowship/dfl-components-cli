@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { within } from "@storybook/test";
+import { within } from "storybook/test";
 import { Search, Trash2, Plus } from "lucide-react";
 import { IconButton } from "../components/icon-button";
 
