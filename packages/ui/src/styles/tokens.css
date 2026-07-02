@@ -1072,4 +1072,27 @@
   /* Toggle button ink */
   --c-passwordinput-toggle-fg:       var(--s-ink-muted);    /* idle — was text-muted-foreground */
   --c-passwordinput-toggle-fg-hover: var(--s-ink-primary);  /* hover — was hover:text-foreground */
+ * LAYER 3 — Component: Popover (--c-popover-*)
+ *
+ *   Floating content surface anchored to a trigger.
+ *   Built on @radix-ui/react-popover.
+ *
+ *   All values resolve to existing --s-* semantic or --p-* primitive tokens.
+ *   Never edit --s-* / --p-* here; only --c-popover-* additions allowed.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Surface — one step above raised for strong float contrast */
+  --c-popover-bg:      var(--s-surface-elevated);   /* #1f1c18 */
+  /* Foreground */
+  --c-popover-fg:      var(--s-ink-primary);
+  --c-popover-fg-muted: var(--s-ink-muted);
+  /* Border */
+  --c-popover-border:  var(--s-border-subtle);       /* #2a2622 */
+  /* Radius — overlays use lg (10px), not md (6px) which reads as input-level */
+  --c-popover-radius:  var(--p-radius-lg);            /* 10px */
+  /* Shadow — DS token, not Tailwind shadow-md */
+  --c-popover-shadow:  var(--p-shadow);               /* 0 4px 12px rgba(0,0,0,.45) */
+  /* Padding knob */
+  --c-popover-padding: var(--p-space-4);              /* 16px */
 }
