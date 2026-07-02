@@ -664,4 +664,31 @@
   --c-progress-fill-danger:   var(--s-danger-solid);         /* red   #e07a7a */
   --c-progress-fill-warning:  var(--s-warning-solid);        /* yellow #e0b04a */
   --c-progress-fill-info:     var(--s-info-solid);           /* blue  #7aa2e0 */
+ * LAYER 3 — RadioGroup (--c-radio-*)
+ *
+ *   Resolves exclusively to existing --s-* semantic tokens (Layer 2).
+ *   Never modify --s-* or --p-* here — append --c-* only.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Geometry */
+  --c-radio-size:              16px;
+  --c-radio-indicator-size:    8px;
+  --c-radio-border-width:      1.5px;
+  --c-radio-radius:            var(--p-radius-pill);
+
+  /* Colors — unselected (neutral), hover, checked */
+  --c-radio-bg:                var(--s-surface-elevated);
+  --c-radio-border:            var(--s-border-strong);      /* neutral: #3a3530, NOT amber */
+  --c-radio-border-hover:      var(--s-ink-muted);          /* unchecked hover: #7d7568 */
+  --c-radio-border-checked:    var(--s-brand-solid);        /* checked / focus: #E07A4A */
+  --c-radio-indicator-color:   var(--s-brand-solid);        /* filled dot when checked */
+
+  /* Label */
+  --c-radio-label-fg:          var(--s-ink-secondary);
+  --c-radio-label-fg-disabled: var(--s-ink-disabled);
+
+  /* Spacing */
+  --c-radio-item-gap:          var(--p-space-3);            /* 12px between items */
+  --c-radio-label-gap:         var(--p-space-2);            /* 8px between circle + label */
 }
