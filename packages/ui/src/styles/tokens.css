@@ -739,4 +739,53 @@
   /* WithLabel composite — centered label typography */
   --c-separator-label-fg:      var(--s-ink-muted);
   --c-separator-label-size:    var(--p-text-11);
+ * Skeleton component (--c-skeleton-*)
+ *   Warm directional shimmer (sand-800 base → sand-700 sweep → sand-800).
+ *   All colour tokens resolve to existing --s-* semantic tokens so the whole
+ *   skeleton can be re-themed by overriding a single --c-skeleton-bg /
+ *   --c-skeleton-shimmer pair in a scoped selector.
+ *   Radius tiers follow the DS --p-radius-* scale (no --s-radius-* exists).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Base fill = deepest surface tier (sand-800 = --s-surface-elevated) */
+  --c-skeleton-bg:            var(--s-surface-elevated);
+  /* Shimmer highlight = one level warmer (sand-700 = --s-border-subtle) */
+  --c-skeleton-shimmer:       var(--s-border-subtle);
+  /* Radius tiers — map directly to DS primitive radius scale */
+  --c-skeleton-radius-sm:     var(--p-radius-sm);   /* 4px  — text lines, table cells */
+  --c-skeleton-radius-md:     var(--p-radius-md);   /* 6px  — title blocks           */
+  --c-skeleton-radius-lg:     var(--p-radius-lg);   /* 10px — hero / media blocks     */
+  --c-skeleton-radius-circle: 50%;                  /* avatars                        */
+  /* Animation */
+  --c-skeleton-duration:      1.8s;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.dfl-skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--c-skeleton-bg)      0%,
+    var(--c-skeleton-bg)      30%,
+    var(--c-skeleton-shimmer) 50%,
+    var(--c-skeleton-bg)      70%,
+    var(--c-skeleton-bg)      100%
+  );
+  background-size: 1200px 100%;
+  animation: skeleton-shimmer var(--c-skeleton-duration) ease-in-out infinite;
+  border-radius: var(--c-skeleton-radius-sm);
+}
+
+/* WCAG 2.3.3 — stop animation for users who prefer reduced motion;
+ * keep the sand-800 static fill visible so placeholders remain legible. */
+@media (prefers-reduced-motion: reduce) {
+  .dfl-skeleton {
+    animation: none;
+    background: var(--c-skeleton-bg);
+  }
 }
