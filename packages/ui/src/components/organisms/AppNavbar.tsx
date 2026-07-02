@@ -2,6 +2,21 @@
  * AppNavbar organism
  * Top navigation bar with breadcrumb, user menu, and theme toggle.
  * Works standalone — no router dependency.
+ *
+ * DS v0 tokens consumed (Layer 3 → Layer 2):
+ *   --c-navbar-bg        → --s-surface-page   (always dark, page flush)
+ *   --c-navbar-border    → --s-border-subtle
+ *   --c-navbar-h         → 56px               (same as --c-header-h)
+ *   --c-navbar-px        → --p-space-4
+ *   --c-navbar-breadcrumb-fg         → --s-ink-muted
+ *   --c-navbar-breadcrumb-fg-current → --s-ink-primary
+ *
+ * Focus ring: all interactive elements carry `.ds-focus-ring` which applies
+ * the uniform amber outline (1px solid #E07A4A, 3px offset) via tokens.css.
+ * The button's built-in `focus-visible:ring-*` is zeroed so only the DS ring shows.
+ *
+ * Sign-out item: uses --s-danger-fg / --s-danger-subtle directly — never
+ * the raw `text-destructive` shadcn alias which breaks if compat mapping drifts.
  */
 import React, { ReactNode } from "react";
 import { Sun, Moon, ChevronDown, LogOut, User, Settings } from "lucide-react";
@@ -24,6 +39,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../breadcrumb";
+import { cn } from "../../lib/utils";
 
 export interface BreadcrumbEntry {
   label: string;
@@ -42,7 +58,12 @@ export interface AppNavbarProps {
   breadcrumbs?: BreadcrumbEntry[];
   /** User info for the avatar menu. */
   userInfo?: NavbarUserInfo;
-  /** Current theme. Toggles between "light" and "dark". */
+  /**
+   * Current theme — controls the toggle icon only (Moon ↔ Sun).
+   * The navbar surface is ALWAYS --c-navbar-bg (--s-surface-page, #0a0908),
+   * dark-first regardless of this prop. "light" mode is editorial-only in DFL DS v0.
+   * Default is "dark" (dark-first per DFL DS v0).
+   */
   theme?: "light" | "dark";
   /** Called when user clicks the theme toggle button. */
   onThemeToggle?: () => void;
@@ -52,7 +73,7 @@ export interface AppNavbarProps {
   onSettingsClick?: () => void;
   /** Called when user clicks Sign Out menu item. */
   onSignOut?: () => void;
-  /** Extra action buttons rendered to the right of breadcrumbs. */
+  /** Extra action elements rendered to the right of breadcrumbs (8px gap). */
   actions?: ReactNode;
   /** Custom CSS class for the navbar wrapper. */
   className?: string;
@@ -70,7 +91,7 @@ function getInitials(name: string) {
 export function AppNavbar({
   breadcrumbs = [],
   userInfo,
-  theme = "light",
+  theme = "dark",
   onThemeToggle,
   onProfileClick,
   onSettingsClick,
@@ -82,15 +103,16 @@ export function AppNavbar({
 
   return (
     <header
-      className={[
-        "h-14 flex items-center justify-between px-4 border-b border-border bg-background shrink-0",
+      className={cn(
+        // Component tokens (Layer 3) — change appearance here by overriding --c-navbar-* vars
+        "h-[var(--c-navbar-h)] flex items-center justify-between",
+        "px-[var(--c-navbar-px)] border-b border-[var(--c-navbar-border)]",
+        "bg-[var(--c-navbar-bg)] shrink-0",
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
     >
-      {/* Left: Breadcrumbs */}
-      <div className="flex items-center gap-2 min-w-0">
+      {/* Left: Breadcrumbs + actions slot */}
+      <div className="flex items-center gap-2 min-w-0 flex-1">
         {breadcrumbs.length > 0 && (
           <Breadcrumb>
             <BreadcrumbList>
@@ -100,11 +122,21 @@ export function AppNavbar({
                   <React.Fragment key={idx}>
                     <BreadcrumbItem>
                       {isLast ? (
-                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                        <BreadcrumbPage
+                          className="text-[var(--c-navbar-breadcrumb-fg-current)] font-medium"
+                        >
+                          {crumb.label}
+                        </BreadcrumbPage>
                       ) : (
                         <BreadcrumbLink
                           href={crumb.href ?? "#"}
-                          className="hover:text-foreground transition-colors"
+                          className={cn(
+                            // breadcrumb ink from component tokens
+                            "text-[var(--c-navbar-breadcrumb-fg)]",
+                            "hover:text-[var(--c-navbar-breadcrumb-fg-current)] transition-colors",
+                            // uniform DS focus ring — overrides any default outline
+                            "ds-focus-ring rounded-sm",
+                          )}
                         >
                           {crumb.label}
                         </BreadcrumbLink>
@@ -117,18 +149,28 @@ export function AppNavbar({
             </BreadcrumbList>
           </Breadcrumb>
         )}
-        {actions && <div className="flex items-center gap-2 ml-2">{actions}</div>}
+        {/* actions slot — 8px gap after breadcrumbs per DS spec */}
+        {actions && (
+          <div className="flex items-center gap-[var(--c-navbar-action-gap)] ml-2 flex-shrink-0">
+            {actions}
+          </div>
+        )}
       </div>
 
       {/* Right: Theme toggle + User menu */}
-      <div className="flex items-center gap-2 shrink-0">
-        {/* Theme toggle */}
+      <div className="flex items-center gap-1 shrink-0">
+        {/* Theme toggle — icon-sm ghost button with DS uniform focus ring */}
         <Button
           variant="ghost"
-          size="icon"
+          size="icon-sm"
           onClick={onThemeToggle}
           aria-label="Toggle theme"
-          className="h-8 w-8"
+          className={cn(
+            "text-[var(--s-ink-secondary)] hover:text-[var(--s-ink-primary)]",
+            // zero out the Button's built-in brand-ring; ds-focus-ring provides the uniform amber ring
+            "focus-visible:ring-0",
+            "ds-focus-ring",
+          )}
         >
           {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
@@ -137,27 +179,40 @@ export function AppNavbar({
         {userInfo && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-2 h-8 px-2">
-                <Avatar className="h-7 w-7">
+              <Button
+                variant="ghost"
+                className={cn(
+                  "flex items-center gap-2 h-8 px-2",
+                  // zero out the Button's built-in brand-ring; ds-focus-ring provides the uniform amber ring
+                  "focus-visible:ring-0",
+                  "ds-focus-ring",
+                )}
+              >
+                <Avatar className="h-7 w-7 bg-[var(--s-surface-elevated)]">
                   {userInfo.avatarUrl && (
                     <AvatarImage src={userInfo.avatarUrl} alt={userInfo.name} />
                   )}
-                  <AvatarFallback className="text-xs">
+                  <AvatarFallback className="text-xs text-[var(--s-ink-secondary)]">
                     {getInitials(userInfo.name)}
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-sm font-medium hidden sm:inline-block max-w-[120px] truncate">
                   {userInfo.name}
                 </span>
-                <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                <ChevronDown className="h-3 w-3 text-[var(--s-ink-muted)]" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+
+            {/* Dropdown panel — raised surface, strong border per DS spec */}
+            <DropdownMenuContent
+              align="end"
+              className="w-48 bg-[var(--s-surface-raised)] border-[var(--s-border-strong)]"
+            >
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium">{userInfo.name}</p>
+                  <p className="text-sm font-medium text-[var(--s-ink-primary)]">{userInfo.name}</p>
                   {userInfo.email && (
-                    <p className="text-xs text-muted-foreground truncate">{userInfo.email}</p>
+                    <p className="text-xs text-[var(--s-ink-muted)] truncate">{userInfo.email}</p>
                   )}
                 </div>
               </DropdownMenuLabel>
@@ -176,7 +231,14 @@ export function AppNavbar({
               )}
               {(onProfileClick || onSettingsClick) && onSignOut && <DropdownMenuSeparator />}
               {onSignOut && (
-                <DropdownMenuItem onClick={onSignOut} className="text-destructive focus:text-destructive">
+                /* Sign-out: semantic danger tokens, never raw text-destructive alias */
+                <DropdownMenuItem
+                  onClick={onSignOut}
+                  className={cn(
+                    "text-[var(--s-danger-fg)]",
+                    "focus:bg-[var(--s-danger-subtle)] focus:text-[var(--s-danger-fg)]",
+                  )}
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign out
                 </DropdownMenuItem>

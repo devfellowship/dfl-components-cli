@@ -525,3 +525,28 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * AppNavbar component tokens (--c-navbar-*)
+ *
+ *   Resolves to existing --s-* semantic tokens — do NOT hardcode hex here.
+ *   The navbar surface is ALWAYS --s-surface-page (dark-first per DFL DS v0).
+ *   The `theme` prop on AppNavbar controls only the toggle icon (Moon ↔ Sun),
+ *   not the background. Per-component overrides: set --c-navbar-* on a parent.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Structure */
+  --c-navbar-bg:                    var(--s-surface-page);
+  --c-navbar-border:                var(--s-border-subtle);
+  --c-navbar-h:                     56px;   /* matches --c-header-h */
+  --c-navbar-px:                    var(--p-space-4);
+
+  /* Breadcrumb ink */
+  --c-navbar-breadcrumb-fg:         var(--s-ink-muted);
+  --c-navbar-breadcrumb-fg-current: var(--s-ink-primary);
+  --c-navbar-breadcrumb-sep:        var(--s-ink-muted);
+
+  /* Actions slot gap (between last crumb and injected CTA) */
+  --c-navbar-action-gap:            var(--p-space-2);
+}
