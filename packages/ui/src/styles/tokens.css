@@ -405,6 +405,31 @@
   --c-header-h:            56px;
   --c-statusbar-h:         24px;
   --c-content-max:         1280px;
+
+  /* Menubar — application-level horizontal menu strip + dropdown panels.
+   * Pilot: brand amber (#E07A4A) focus ring, brand-subtle item hover, JetBrains Mono shortcuts.
+   * All values resolve through existing --s-* semantic tokens (never raw primitives). */
+  --c-menubar-bar-bg:           var(--s-surface-panel);     /* #141210 — distinct from page bg */
+  --c-menubar-bar-border:       var(--s-border-subtle);     /* #2a2622 */
+  --c-menubar-bar-radius:       var(--p-radius-md);         /* 6px */
+  --c-menubar-trigger-fg:       var(--s-ink-secondary);     /* #c9c0b4 — idle */
+  --c-menubar-trigger-bg-hover: var(--s-surface-raised);    /* #1a1714 */
+  --c-menubar-trigger-bg-open:  var(--s-surface-elevated);  /* #1f1c18 */
+  --c-menubar-trigger-radius:   var(--p-radius-sm);         /* 4px */
+  --c-menubar-content-bg:       var(--s-surface-raised);    /* #1a1714 — dropdown panel */
+  --c-menubar-item-fg:          var(--s-ink-primary);       /* #f6f1e7 */
+  --c-menubar-item-bg-hover:    var(--s-brand-subtle);      /* rgba(224,122,74,0.10) — NOT solid amber */
+  --c-menubar-item-radius:      var(--p-radius-sm);         /* 4px */
+  --c-menubar-shortcut-font:    var(--p-font-mono);         /* JetBrains Mono — DS kbd rule */
+  --c-menubar-shortcut-fg:      var(--s-ink-muted);         /* #7d7568 */
+  --c-menubar-indicator-color:  var(--s-brand-solid);       /* #E07A4A — checkbox/radio checked mark */
+  --c-menubar-dest-fg:          var(--s-danger-fg);         /* #e89898 */
+  --c-menubar-dest-bg-hover:    var(--s-danger-subtle);     /* rgba(224,122,122,0.12) */
+  /* Focus rings — 2-layer box-shadow: inner matches surface behind the element,
+   * outer is DS amber. Stored as full values so Tailwind [box-shadow:var(...)]
+   * can consume them without inline commas tripping the parser. */
+  --c-menubar-ring-trigger:     0 0 0 2px var(--c-menubar-bar-bg), 0 0 0 3px var(--s-border-focus);
+  --c-menubar-ring-item:        0 0 0 2px var(--c-menubar-content-bg), 0 0 0 3px var(--s-border-focus);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
