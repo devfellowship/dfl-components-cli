@@ -316,7 +316,7 @@
   --c-input-border:        var(--s-border-subtle);
   --c-input-border-hover:  var(--s-border-strong);
   --c-input-border-focus:  var(--s-border-focus);
-  --c-input-ring-focus:    var(--s-brand-ring);
+  --c-input-ring-focus:    var(--s-border-focus);  /* solid amber — was --s-brand-ring (semi-transparent) */
   --c-input-border-error:  var(--s-danger-solid);
   --c-input-radius:        var(--p-radius-md);
 
