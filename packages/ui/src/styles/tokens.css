@@ -399,6 +399,32 @@
   --c-alert-danger-icon:     var(--s-danger-fg);
   --c-alert-danger-accent:   var(--s-danger-solid);
 
+  /* DropdownMenu — Organisms layer (DS v0 brand fixes)
+   *
+   * Fixes four critical brand failures vs vanilla shadcn:
+   *   1. Focus ring: 2px bg-gap + 1px amber ring (box-shadow), NOT amber bg-flood
+   *   2. Separator: --s-border-subtle (#2a2622) > popover bg (#1a1714) — now visible
+   *   3. Label: --s-ink-muted (#7d7568) + uppercase + tight tracking — visual hierarchy
+   *   4. Shortcut: --p-font-mono (JetBrains Mono) — brand-spec font for ⌘ keys
+   */
+  --c-dropdownmenu-bg:                var(--s-surface-raised);
+  --c-dropdownmenu-border:            var(--s-border-subtle);
+  --c-dropdownmenu-radius:            var(--p-radius-md);
+  --c-dropdownmenu-item-radius:       var(--p-radius-sm);
+  --c-dropdownmenu-shadow:            0 4px 12px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
+  --c-dropdownmenu-item-fg:           var(--s-ink-secondary);
+  --c-dropdownmenu-item-bg-hover:     var(--s-surface-elevated);
+  --c-dropdownmenu-item-fg-hover:     var(--s-ink-primary);
+  --c-dropdownmenu-label-fg:          var(--s-ink-muted);
+  --c-dropdownmenu-separator:         var(--s-border-subtle);
+  --c-dropdownmenu-shortcut-fg:       var(--s-ink-muted);
+  --c-dropdownmenu-check-color:       var(--s-brand-solid);
+  --c-dropdownmenu-destructive-fg:    var(--s-danger-fg);
+  --c-dropdownmenu-destructive-bghov: var(--s-danger-subtle);
+  /* Focus ring: 2px gap (popover bg) + 1px amber — uniform DS ring spec.
+   * The gap colour matches the popover bg so the ring "floats" above the item. */
+  --c-dropdownmenu-focus-ring:        0 0 0 2px var(--s-surface-raised), 0 0 0 3px var(--s-brand-solid);
+
   /* Layout chrome */
   --c-sidebar-w:           224px;
   --c-sidebar-w-collapsed: 56px;
