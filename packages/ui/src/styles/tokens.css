@@ -997,4 +997,20 @@
 
   /* Shape */
   --c-breadcrumb-radius:          4px;                      /* radius-sm — for focus ring clipping */
+ * LAYER 3 — HoverCard component tokens (--c-hovercard-*)
+ *
+ * Panel uses the card/overlay radius tier (--p-radius-lg = 10px), NOT the
+ * input/button tier (--p-radius-md = 6px). Focus ring is the DS uniform
+ * double box-shadow: 2px page-bg gap + 3px amber outline.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --c-hovercard-bg:         var(--s-surface-raised);    /* #1a1714 raised overlay */
+  --c-hovercard-border:     var(--s-border-subtle);     /* #2a2622 */
+  --c-hovercard-radius:     var(--p-radius-lg);         /* 10px — overlay/card tier */
+  --c-hovercard-padding:    var(--p-space-4);           /* 16px */
+  --c-hovercard-shadow:     var(--p-shadow);            /* 0 4px 12px rgba(0,0,0,0.45) */
+  --c-hovercard-width:      288px;
+  /* DS uniform focus ring: inner gap in page-bg colour + outer amber ring */
+  --c-hovercard-focus-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid);
 }
