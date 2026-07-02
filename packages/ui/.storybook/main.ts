@@ -9,13 +9,16 @@ const config: StorybookConfig = {
   // amplified a single 404 into an infinite fetch loop (see public/_redirects
   // and src/styles/fonts.css for the full incident write-up).
   staticDirs: ["../public"],
+  // 🚫 NO Docs pages. storybook.devfellowship.com must have ZERO Docs entries.
   // Storybook 9 consolidated the old "essentials" bundle (controls, actions,
   // viewport, backgrounds, toolbars, measure, outline, highlight) into the
-  // core — so `@storybook/addon-essentials` no longer exists and is dropped.
-  // `docs` was split back out into its own `@storybook/addon-docs` package,
-  // which we add explicitly to keep autodocs working.
+  // core, and split the docs surface into a separate docs addon. We
+  // deliberately DO NOT install or register that docs addon, and no story
+  // carries a docs tag, so the "Docs" pages never render. Do NOT re-add the
+  // Storybook docs addon, do NOT add a `docs: {}` config block, and do NOT tag
+  // any story for docs. Enforced by scripts/check-no-storybook-docs.mjs in CI
+  // (see repo CLAUDE.md).
   addons: [
-    "@storybook/addon-docs",
     "@storybook/addon-a11y",
     "@storybook/addon-themes",
   ],

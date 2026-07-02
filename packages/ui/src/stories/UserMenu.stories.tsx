@@ -5,7 +5,6 @@ import { UserMenu } from "../components/organisms/UserMenu";
 const meta: Meta<typeof UserMenu> = {
   title: "Components/Organisms/UserMenu",
   component: UserMenu,
-  tags: ["autodocs"],
   parameters: { layout: "centered" },
   argTypes: {
     name: { control: "text" },

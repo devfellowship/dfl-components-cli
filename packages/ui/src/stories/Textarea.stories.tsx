@@ -8,7 +8,6 @@ import { Textarea } from "../components/textarea";
 const meta: Meta<typeof Textarea> = {
   title: "Components/Atoms/Textarea",
   component: Textarea,
-  tags: ["autodocs"],
   argTypes: {
     placeholder: { control: "text" },
     disabled: { control: "boolean" },

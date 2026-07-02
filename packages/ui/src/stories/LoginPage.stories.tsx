@@ -4,7 +4,6 @@ import { LoginPage } from "../components/organisms/LoginPage";
 const meta: Meta<typeof LoginPage> = {
   title: "Components/Organisms/LoginPage",
   component: LoginPage,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

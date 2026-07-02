@@ -8,7 +8,6 @@ import { Separator } from "../components/separator";
 const meta: Meta<typeof Separator> = {
   title: "Components/Atoms/Separator",
   component: Separator,
-  tags: ["autodocs"],
   argTypes: {
     orientation: {
       control: "select",

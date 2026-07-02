@@ -16,7 +16,6 @@ import { Label } from "../components/label";
 const meta: Meta<typeof Sheet> = {
   title: "Components/Organisms/Sheet",
   component: Sheet,
-  tags: ["autodocs"],
   argTypes: {
     // Sheet is the Radix Root; the visible side is controlled on SheetContent.
     defaultOpen: { control: "boolean", description: "Open on mount (uncontrolled)." },

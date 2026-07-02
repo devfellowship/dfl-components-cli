@@ -4,7 +4,6 @@ import { PasswordInput } from "../components/organisms/PasswordInput";
 const meta: Meta<typeof PasswordInput> = {
   title: "Components/Molecules/PasswordInput",
   component: PasswordInput,
-  tags: ["autodocs"],
   parameters: { layout: "centered" },
   argTypes: {
     label: { control: "text" },

@@ -11,7 +11,6 @@ import { ChevronsUpDown } from "lucide-react";
 const meta: Meta<typeof Collapsible> = {
   title: "Components/Molecules/Collapsible",
   component: Collapsible,
-  tags: ["autodocs"],
 };
 
 export default meta;

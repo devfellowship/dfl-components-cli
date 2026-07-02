@@ -5,7 +5,6 @@ import { Label } from "../components/label";
 const meta: Meta<typeof Checkbox> = {
   title: "Components/Atoms/Checkbox",
   component: Checkbox,
-  tags: ["autodocs"],
   argTypes: {
     disabled: { control: "boolean" },
     checked: { control: "boolean" },

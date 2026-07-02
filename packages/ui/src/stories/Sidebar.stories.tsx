@@ -18,7 +18,6 @@ import {
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Organisms/Sidebar",
   component: Sidebar,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

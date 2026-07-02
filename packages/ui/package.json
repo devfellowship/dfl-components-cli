@@ -50,7 +50,8 @@
     "test": "vitest run",
     "prepublishOnly": "npm run build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lint:no-docs": "node scripts/check-no-storybook-docs.mjs"
   },
   "peerDependencies": {
     "@supabase/supabase-js": ">=2.0.0",
@@ -68,7 +69,6 @@
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^9.1.20",
-    "@storybook/addon-docs": "^9.1.20",
     "@storybook/addon-themes": "^9.1.20",
     "@storybook/react": "^9.1.20",
     "@storybook/react-vite": "^9.1.20",

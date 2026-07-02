@@ -16,7 +16,6 @@ import { Button } from "../components/button";
 const meta: Meta<typeof DropdownMenu> = {
   title: "Components/Organisms/DropdownMenu",
   component: DropdownMenu,
-  tags: ["autodocs"],
   argTypes: {
     defaultOpen: { control: "boolean", description: "Open on mount (uncontrolled)." },
   },

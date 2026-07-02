@@ -5,7 +5,6 @@ import { AppSidebar } from "../components/organisms/AppSidebar";
 const meta: Meta<typeof AppSidebar> = {
   title: "Components/Organisms/AppSidebar",
   component: AppSidebar,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

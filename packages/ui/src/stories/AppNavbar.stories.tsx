@@ -6,7 +6,6 @@ import { Button } from "../components/button";
 const meta: Meta<typeof AppNavbar> = {
   title: "Components/Organisms/AppNavbar",
   component: AppNavbar,
-  tags: ["autodocs"],
   argTypes: {
     theme: {
       control: "select",

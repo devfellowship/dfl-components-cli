@@ -4,7 +4,6 @@ import { UserAvatar } from "../components/organisms/UserAvatar";
 const meta: Meta<typeof UserAvatar> = {
   title: "Components/Molecules/UserAvatar",
   component: UserAvatar,
-  tags: ["autodocs"],
   argTypes: {
     name: { control: "text" },
     src: { control: "text" },

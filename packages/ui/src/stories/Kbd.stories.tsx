@@ -9,7 +9,6 @@ import { Kbd } from "../components/kbd";
 const meta: Meta<typeof Kbd> = {
   title: "Components/Atoms/Kbd",
   component: Kbd,
-  tags: ["autodocs"],
   argTypes: {
     size: {
       control: "select",

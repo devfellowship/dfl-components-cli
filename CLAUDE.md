@@ -76,6 +76,26 @@ When adding a new component or hook to @dfl/components:
 5. **Verify after deploy** — confirm it appears on components.devfellowship.com
 6. **If it doesn't appear** — check that the individual JSON file, the registry.json entry, AND the designSystemData.json all include the component
 
+## Storybook — NO Docs pages (autodocs disabled)
+
+The Storybook at **storybook.devfellowship.com must have ZERO Docs pages.**
+Tainan directive — Docs pages were removed and must **never** come back.
+
+**Never:**
+- add `tags: ["autodocs"]` (or any `autodocs` tag) to a story — meta OR per-story,
+- add `.mdx` docs files under `packages/ui/src/`,
+- install/register the Storybook **docs addon** (`@storybook/addon-docs`, or the
+  legacy `@storybook/addon-essentials` bundle that includes docs) in
+  `packages/ui/.storybook/main.ts` or `packages/ui/package.json`,
+- add a `docs: { autodocs: ... }` (or any `docs: {}`) config block in
+  `.storybook/main.ts` or `.storybook/preview.ts`.
+
+The `.storybook/main.ts` `addons` array is limited to `@storybook/addon-a11y`
+and `@storybook/addon-themes` — no docs addon. **CI enforces this** via
+`packages/ui/scripts/check-no-storybook-docs.mjs` (npm script
+`lint:no-docs`, wired as a hard gate in `.github/workflows/ci.yml`). If the
+guard fails, you re-introduced a Docs surface — remove it.
+
 ## Storybook: atomic hierarchy + one-state-per-story
 
 The Storybook stories in `packages/ui/src/stories/*.tsx` are organized into an

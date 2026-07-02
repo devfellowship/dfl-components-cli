@@ -5,7 +5,6 @@ const meta: Meta<typeof Gantt> = {
   title: "Components/Organisms/Gantt",
   component: Gantt,
   parameters: { layout: "padded" },
-  tags: ["autodocs"],
 };
 
 export default meta;

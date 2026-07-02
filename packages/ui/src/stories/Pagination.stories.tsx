@@ -12,7 +12,6 @@ import {
 const meta: Meta<typeof Pagination> = {
   title: "Components/Molecules/Pagination",
   component: Pagination,
-  tags: ["autodocs"],
 };
 
 export default meta;

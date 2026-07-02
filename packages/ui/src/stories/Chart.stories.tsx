@@ -26,7 +26,6 @@ const chartConfig = {
 const meta: Meta<typeof ChartContainer> = {
   title: "Components/Organisms/Chart",
   component: ChartContainer,
-  tags: ["autodocs"],
 };
 
 export default meta;

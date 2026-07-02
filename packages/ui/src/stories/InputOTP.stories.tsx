@@ -9,7 +9,6 @@ import {
 const meta: Meta<typeof InputOTP> = {
   title: "Components/Molecules/InputOTP",
   component: InputOTP,
-  tags: ["autodocs"],
 };
 
 export default meta;

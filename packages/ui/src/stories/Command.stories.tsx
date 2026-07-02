@@ -13,7 +13,6 @@ import {
 const meta: Meta<typeof Command> = {
   title: "Components/Organisms/Command",
   component: Command,
-  tags: ["autodocs"],
 };
 
 export default meta;
