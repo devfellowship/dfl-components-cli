@@ -920,4 +920,34 @@
   /* Info variant */
   --c-toast-info-bg:         var(--s-info-subtle);
   --c-toast-info-border:     var(--s-info-border);
+ * Accordion component tokens (Layer 3 — appended, do not edit blocks above)
+ * All values resolve to existing --s-* / --p-* tokens; no raw colour literals.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Divider between items */
+  --c-accordion-border:                var(--s-border-subtle);
+
+  /* Trigger text */
+  --c-accordion-trigger-fg:            var(--s-ink-primary);
+  --c-accordion-trigger-weight:        var(--p-weight-500);
+
+  /* Trigger backgrounds (rest = transparent, applied inline) */
+  --c-accordion-trigger-bg-hover:      var(--s-surface-raised);   /* #1a1714 — bg lift, not underline */
+  --c-accordion-trigger-bg-active:     var(--s-surface-elevated); /* #1f1c18 — press */
+
+  /* Content area */
+  --c-accordion-content-fg:            var(--s-ink-secondary);    /* #c9c0b4 */
+  --c-accordion-content-size:          var(--p-text-14);          /* 14px */
+
+  /* Chevron indicator */
+  --c-accordion-indicator-color:       var(--s-ink-muted);        /* #7d7568 — muted at rest */
+  --c-accordion-indicator-color-open:  var(--s-brand-solid);      /* #E07A4A — amber when open */
+
+  /* Shape */
+  --c-accordion-item-radius:           var(--p-radius-sm);        /* 4px */
+
+  /* Spacing */
+  --c-accordion-padding-x:             var(--p-space-4);          /* 16px */
+  --c-accordion-padding-y:             14px;                      /* intentional: between --p-space-3 (12) and --p-space-4 (16) */
 }
