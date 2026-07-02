@@ -10,7 +10,6 @@ import {
 const meta: Meta<typeof Select> = {
   title: "Components/Molecules/Select",
   component: Select,
-  tags: ["autodocs"],
 };
 
 export default meta;

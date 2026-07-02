@@ -6,7 +6,6 @@ import { Button } from "../components/button";
 const meta: Meta<typeof SonnerToaster> = {
   title: "Components/Atoms/Sonner",
   component: SonnerToaster,
-  tags: ["autodocs"],
 };
 
 export default meta;

@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 const meta: Meta<typeof Tabs> = {
   title: "Components/Molecules/Tabs",
   component: Tabs,
-  tags: ["autodocs"],
 };
 
 export default meta;

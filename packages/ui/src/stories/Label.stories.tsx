@@ -9,7 +9,6 @@ import { Input } from "../components/input";
 const meta: Meta<typeof Label> = {
   title: "Components/Atoms/Label",
   component: Label,
-  tags: ["autodocs"],
   argTypes: {
     variant: {
       control: "select",

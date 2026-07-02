@@ -17,7 +17,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
  */
 const meta: Meta = {
   title: "Templates/AppShell",
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

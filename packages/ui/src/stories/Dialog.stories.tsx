@@ -15,7 +15,6 @@ import { Label } from "../components/label";
 const meta: Meta<typeof Dialog> = {
   title: "Components/Organisms/Dialog",
   component: Dialog,
-  tags: ["autodocs"],
 };
 
 export default meta;

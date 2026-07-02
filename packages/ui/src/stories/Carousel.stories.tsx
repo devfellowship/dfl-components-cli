@@ -11,7 +11,6 @@ import { Card, CardContent } from "../components/card";
 const meta: Meta<typeof Carousel> = {
   title: "Components/Organisms/Carousel",
   component: Carousel,
-  tags: ["autodocs"],
 };
 
 export default meta;

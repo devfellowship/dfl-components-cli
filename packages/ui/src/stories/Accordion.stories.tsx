@@ -9,7 +9,6 @@ import {
 const meta: Meta<typeof Accordion> = {
   title: "Components/Molecules/Accordion",
   component: Accordion,
-  tags: ["autodocs"],
 };
 
 export default meta;

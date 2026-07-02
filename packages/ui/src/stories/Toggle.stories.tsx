@@ -6,7 +6,6 @@ import { ToggleGroup, ToggleGroupItem } from "../components/toggle-group";
 const meta: Meta<typeof Toggle> = {
   title: "Components/Atoms/Toggle",
   component: Toggle,
-  tags: ["autodocs"],
 };
 
 export default meta;

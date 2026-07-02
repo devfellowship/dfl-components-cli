@@ -18,7 +18,6 @@ import { Button } from "../components/button";
 const meta: Meta<typeof Tooltip> = {
   title: "Components/Molecules/Tooltip",
   component: Tooltip,
-  tags: ["autodocs"],
   argTypes: {
     delayDuration: { control: "number" },
     defaultOpen: { control: "boolean" },

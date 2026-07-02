@@ -11,7 +11,6 @@ import { Alert, AlertTitle, AlertDescription } from "../components/alert";
 const meta: Meta<typeof Alert> = {
   title: "Components/Atoms/Alert",
   component: Alert,
-  tags: ["autodocs"],
   argTypes: {
     variant: {
       control: "select",

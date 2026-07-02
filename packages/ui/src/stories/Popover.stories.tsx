@@ -18,7 +18,6 @@ import { Label } from "../components/label";
 const meta: Meta<typeof Popover> = {
   title: "Components/Molecules/Popover",
   component: Popover,
-  tags: ["autodocs"],
   argTypes: {
     defaultOpen: { control: "boolean" },
     modal: { control: "boolean" },

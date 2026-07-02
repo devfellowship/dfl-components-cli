@@ -16,7 +16,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/card"
  */
 const meta: Meta = {
   title: "Templates/Kanban",
-  tags: ["autodocs"],
   parameters: {
     layout: "padded",
   },

@@ -23,7 +23,6 @@ import {
  */
 const meta: Meta = {
   title: "Templates/Dashboard",
-  tags: ["autodocs"],
   parameters: {
     layout: "padded",
   },

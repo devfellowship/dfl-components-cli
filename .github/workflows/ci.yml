@@ -14,6 +14,7 @@ concurrency:
 
 jobs:
   ci:
+    # Public repo: self-hosted dfl-runner blocked (allows_public=false). ubuntu-latest per CLAUDE.md carve-out.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,6 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      # Storybook must have ZERO Docs pages (autodocs / mdx / docs addon banned).
+      # Hard gate — no dependencies needed (Node built-ins only). See CLAUDE.md.
+      - name: Guard — no Storybook Docs pages
+        run: node packages/ui/scripts/check-no-storybook-docs.mjs
 
       - name: Install dependencies
         run: |

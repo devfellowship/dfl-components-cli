@@ -9,7 +9,6 @@ import { Skeleton } from "../components/skeleton";
 const meta: Meta<typeof Skeleton> = {
   title: "Components/Atoms/Skeleton",
   component: Skeleton,
-  tags: ["autodocs"],
 };
 
 export default meta;

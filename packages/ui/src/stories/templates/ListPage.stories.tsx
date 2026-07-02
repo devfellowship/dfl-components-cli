@@ -39,7 +39,6 @@ import {
  */
 const meta: Meta = {
   title: "Templates/ListPage",
-  tags: ["autodocs"],
   parameters: {
     layout: "padded",
   },

@@ -9,7 +9,6 @@ import { Button } from "../components/button";
 const meta: Meta<typeof Card> = {
   title: "Components/Molecules/Card",
   component: Card,
-  tags: ["autodocs"],
 };
 
 export default meta;

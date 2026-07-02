@@ -13,7 +13,6 @@ import { useToast } from "../hooks/use-toast";
 const meta: Meta<typeof Toaster> = {
   title: "Components/Atoms/Toaster",
   component: Toaster,
-  tags: ["autodocs"],
 };
 
 export default meta;

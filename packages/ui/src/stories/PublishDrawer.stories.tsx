@@ -45,7 +45,6 @@ const mockSupabase: PublishDrawerSupabase = {
 const meta: Meta<typeof PublishDrawer> = {
   title: "Components/Organisms/PublishDrawer",
   component: PublishDrawer,
-  tags: ["autodocs"],
 };
 
 export default meta;

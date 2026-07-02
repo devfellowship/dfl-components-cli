@@ -26,7 +26,6 @@ function ToastDemo() {
 const meta: Meta<typeof ToastDemo> = {
   title: "Components/Organisms/Toast",
   component: ToastDemo,
-  tags: ["autodocs"],
 };
 
 export default meta;

@@ -13,7 +13,6 @@ import { ToggleGroup, ToggleGroupItem } from "../components/toggle-group";
 const meta: Meta<typeof ToggleGroup> = {
   title: "Components/Molecules/ToggleGroup",
   component: ToggleGroup,
-  tags: ["autodocs"],
   argTypes: {
     type: { control: "inline-radio", options: ["single", "multiple"] },
     variant: { control: "inline-radio", options: ["default", "outline"] },

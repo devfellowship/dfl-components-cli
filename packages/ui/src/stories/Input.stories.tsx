@@ -4,7 +4,6 @@ import { Input } from "../components/input";
 const meta: Meta<typeof Input> = {
   title: "Components/Atoms/Input",
   component: Input,
-  tags: ["autodocs"],
   argTypes: {
     type: {
       control: "select",
