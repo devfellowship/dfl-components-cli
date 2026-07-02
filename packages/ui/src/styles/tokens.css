@@ -559,4 +559,27 @@
   --c-button-focus-brand:   var(--s-brand-solid);
   --c-button-focus-danger:  var(--s-danger-solid);
   --c-button-focus-success: var(--s-success-solid);
+ * LAYER 3 — Component (--c-alert-dialog-*)
+ *
+ *   AlertDialog organism: scrim overlay + dialog card surface + typography.
+ *   Resolves exclusively to --s-* semantic tokens and existing --c-dialog-*
+ *   knobs (reuses the Dialog overlay/surface contract — AlertDialog shares
+ *   the same visual elevation as Dialog).
+ *
+ *   Action button variants (default/destructive) are driven by existing
+ *   --c-button-* tokens via buttonVariants(). No new button knobs needed.
+ *
+ *   Focus ring: uniform 2 px page-bg gap + 1 px #E07A4A — applied inline in
+ *   the component via focus-visible: shadow override (see alert-dialog.tsx).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* AlertDialog */
+  --c-alert-dialog-bg:       var(--c-dialog-bg);       /* dialog card surface   */
+  --c-alert-dialog-border:   var(--c-dialog-border);   /* card 1 px border      */
+  --c-alert-dialog-radius:   var(--c-dialog-radius);   /* 14 px (--p-radius-xl) */
+  --c-alert-dialog-shadow:   var(--c-dialog-shadow);   /* deep overlay shadow   */
+  --c-alert-dialog-scrim:    var(--c-dialog-scrim);    /* backdrop rgba scrim   */
+  --c-alert-dialog-title-fg: var(--s-ink-primary);     /* title text color      */
+  --c-alert-dialog-desc-fg:  var(--s-ink-muted);       /* description text      */
 }
