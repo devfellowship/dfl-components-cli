@@ -950,4 +950,36 @@
   /* Spacing */
   --c-accordion-padding-x:             var(--p-space-4);          /* 16px */
   --c-accordion-padding-y:             14px;                      /* intentional: between --p-space-3 (12) and --p-space-4 (16) */
+ * LAYER 3 — Breadcrumb (--c-breadcrumb-*)
+ *
+ * Resolves exclusively to Layer-2 semantic tokens (--s-*) and safe literal
+ * values. Never reference --p-* primitives directly — use --s-* aliases so
+ * the component responds correctly to surface-level theme overrides.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Typography */
+  --c-breadcrumb-font-size:       13px;         /* slightly below body — secondary chrome */
+  --c-breadcrumb-font-weight:     400;
+  --c-breadcrumb-gap:             6px;
+
+  /* Link colors */
+  --c-breadcrumb-link-fg:         var(--s-ink-muted);       /* ancestor links — recede */
+  --c-breadcrumb-link-fg-hover:   var(--s-ink-secondary);   /* hover lift */
+  --c-breadcrumb-link-fg-active:  var(--s-brand-fg);        /* most-recent clickable crumb */
+
+  /* Current page */
+  --c-breadcrumb-page-fg:         var(--s-ink-primary);     /* highest contrast — "you are here" */
+  --c-breadcrumb-page-weight:     500;                      /* weight-500 distinguishes from links */
+
+  /* Separator */
+  --c-breadcrumb-separator-fg:    var(--s-ink-disabled);    /* lowest contrast — structural only */
+  --c-breadcrumb-separator-size:  12px;                     /* smaller than body — de-emphasised */
+
+  /* Ellipsis collapse button */
+  --c-breadcrumb-ellipsis-size:   28px;                     /* 28×28px touch target */
+  --c-breadcrumb-ellipsis-radius: 4px;                      /* radius-sm */
+
+  /* Shape */
+  --c-breadcrumb-radius:          4px;                      /* radius-sm — for focus ring clipping */
 }
