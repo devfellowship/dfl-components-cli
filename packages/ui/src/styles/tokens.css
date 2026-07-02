@@ -525,3 +525,40 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — ContextMenu component tokens (--c-contextmenu-*)
+ *
+ * Resolves DS token hierarchy for right-click / context menus.
+ * All knobs reference existing --s-* / --p-* tokens.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Panel */
+  --c-contextmenu-bg:              var(--s-surface-elevated);
+  --c-contextmenu-border:          var(--s-border-subtle);
+  --c-contextmenu-radius:          var(--p-radius-md);
+  --c-contextmenu-shadow:          var(--p-shadow-lg), 0 0 0 1px var(--s-border-subtle);
+
+  /* Items — default text */
+  --c-contextmenu-item-fg:         var(--s-ink-secondary);
+
+  /* Items — hover / keyboard-highlighted (Radix data-[highlighted]) */
+  --c-contextmenu-item-hover-bg:   var(--s-brand-subtle);
+  --c-contextmenu-item-hover-fg:   var(--s-brand-fg);
+
+  /* Items — keyboard-focus inset ring (layered on top of hover bg) */
+  --c-contextmenu-item-focus-ring: inset 0 0 0 1px rgba(224, 122, 74, 0.35);
+
+  /* Label / group heading */
+  --c-contextmenu-label-fg:        var(--s-ink-muted);
+
+  /* Separator */
+  --c-contextmenu-separator:       var(--s-border-subtle);
+
+  /* Shortcut badges — same muted hue as label */
+  --c-contextmenu-shortcut-fg:     var(--s-ink-muted);
+
+  /* Trigger focus ring (outer off-element DS spec ring) */
+  --c-contextmenu-trigger-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
+}
