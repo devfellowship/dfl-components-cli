@@ -1484,3 +1484,24 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Templates/Dashboard (--c-dashboard-*)
+ *
+ *   Page-level composition token knobs. All values resolve to existing --s-*
+ *   semantic tokens — no --p-* primitives or raw hex are added.
+ *
+ *   --c-dashboard-stat-font      JetBrains Mono for numeric / monetary stat
+ *                                values and reference codes (INV-004 etc.).
+ *                                DS typography rule: mono for all metrics.
+ *
+ *   --c-dashboard-stat-focus-ring  Uniform DS double-shadow focus ring
+ *                                  (ch.5.2): 2px page-bg gap + 1px amber.
+ *                                  Applied on stat cards when used as links
+ *                                  (tabIndex=0, role=link → drill-down view).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --c-dashboard-stat-font:       var(--s-font-mono);
+  --c-dashboard-stat-focus-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid);
+}
