@@ -525,3 +525,19 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * COMPONENT — PasswordInput (--c-passwordinput-*)
+ *
+ *   Layer 3 knobs for the PasswordInput molecule (Input atom + reveal toggle).
+ *   Resolves Tailwind-utility leaks (text-muted-foreground / hover:text-foreground)
+ *   to explicit DS semantic tokens so the toggle responds to theme overrides.
+ *
+ *   Input border / error tokens are shared with --c-input-* (no duplication).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Toggle button ink */
+  --c-passwordinput-toggle-fg:       var(--s-ink-muted);    /* idle — was text-muted-foreground */
+  --c-passwordinput-toggle-fg-hover: var(--s-ink-primary);  /* hover — was hover:text-foreground */
+}

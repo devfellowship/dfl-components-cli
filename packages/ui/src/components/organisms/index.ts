@@ -4,9 +4,6 @@ export type { LoginPageProps } from "./LoginPage";
 export { LoginScreen } from "./LoginScreen";
 export type { LoginScreenProps } from "./LoginScreen";
 
-export { PasswordInput } from "./PasswordInput";
-export type { PasswordInputProps } from "./PasswordInput";
-
 export {
   UserAvatar,
   getInitials,
