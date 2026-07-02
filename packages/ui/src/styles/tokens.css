@@ -525,3 +525,57 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Component: Select (--c-select-*)
+ *
+ *   12 knobs covering trigger surface, dropdown menu, items and states.
+ *   All values resolve to existing --s-* semantic tokens (no new primitives).
+ *   Focus ring is handled by .ds-focus-ring (above) — no separate token needed.
+ *
+ *   Trigger states:
+ *     resting  → --c-select-border (sand-700)
+ *     hover    → --c-select-border-hover (sand-600)
+ *     focus/open → --c-select-border-focus (amber-500) + 1px outline at 3px offset
+ *     disabled → opacity 0.45 (no border change)
+ *     error    → --c-select-border-error (danger-solid)
+ *
+ *   Item states:
+ *     hover/kbd-focus → --c-select-item-bg-hover (sand-850) — amber NEVER as hover bg
+ *     selected        → --c-select-item-bg-selected (amber 10% alpha) + check icon amber
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Trigger surface */
+  --c-select-bg:                var(--s-surface-raised);       /* sand-850 */
+  --c-select-fg:                var(--s-ink-primary);          /* sand-50 */
+  --c-select-placeholder:       var(--s-ink-muted);            /* sand-400 */
+  --c-select-radius:            var(--p-radius-md);            /* 6px */
+
+  /* Trigger border states */
+  --c-select-border:            var(--s-border-subtle);        /* sand-700 */
+  --c-select-border-hover:      var(--s-border-strong);        /* sand-600 */
+  --c-select-border-focus:      var(--s-border-focus);         /* amber-500 */
+  --c-select-border-error:      var(--s-danger-solid);         /* red-500 */
+
+  /* Chevron icon */
+  --c-select-icon-color:        var(--s-ink-muted);            /* sand-400 */
+  --c-select-icon-color-hover:  var(--s-ink-secondary);        /* sand-200 */
+
+  /* Dropdown menu surface */
+  --c-select-menu-bg:           var(--s-surface-elevated);     /* sand-800 */
+  --c-select-menu-border:       var(--s-border-subtle);        /* sand-700 */
+  --c-select-menu-shadow:       var(--p-shadow-lg);            /* 0 12px 30px rgba(0,0,0,.6) */
+  --c-select-menu-radius:       var(--p-radius-lg);            /* 10px */
+
+  /* Menu items */
+  --c-select-item-fg:           var(--s-ink-secondary);        /* sand-200 */
+  --c-select-item-fg-hover:     var(--s-ink-primary);          /* sand-50 */
+  --c-select-item-bg-hover:     var(--s-surface-raised);       /* sand-850 — NOT amber */
+  --c-select-item-bg-selected:  var(--s-brand-subtle);         /* amber 10% alpha */
+  --c-select-item-check-color:  var(--s-brand-solid);          /* amber-500 */
+
+  /* Group label + separator */
+  --c-select-label-fg:          var(--s-ink-muted);            /* sand-400 */
+  --c-select-separator-color:   var(--s-border-subtle);        /* sand-700 */
+}
