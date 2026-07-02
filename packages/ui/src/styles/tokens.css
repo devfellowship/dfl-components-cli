@@ -405,6 +405,22 @@
   --c-header-h:            56px;
   --c-statusbar-h:         24px;
   --c-content-max:         1280px;
+
+  /* Toggle — Layer 3 component knobs.
+   * On-state uses brand-subtle (10 % tint) + brand-fg (amber-300) to signal
+   * "selected", NOT the solid-amber CTA fill that bg-accent would produce.
+   * Outline-hover steps up the surface (raised) without bleeding solid amber. */
+  --c-toggle-radius:           var(--p-radius-md);
+  --c-toggle-bg:               transparent;
+  --c-toggle-fg:               var(--s-ink-secondary);
+  --c-toggle-bg-hover:         var(--s-surface-raised);
+  --c-toggle-fg-hover:         var(--s-ink-primary);
+  --c-toggle-bg-on:            var(--s-brand-subtle);
+  --c-toggle-fg-on:            var(--s-brand-fg);
+  --c-toggle-border-on:        var(--s-brand-border);
+  --c-toggle-outline-border:   var(--s-border-subtle);
+  --c-toggle-outline-bg-hover: var(--s-surface-raised);
+  --c-toggle-fg-disabled:      var(--s-ink-disabled);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
