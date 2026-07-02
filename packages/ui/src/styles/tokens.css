@@ -809,4 +809,46 @@
   --c-slider-thumb-hover-shadow: 0 0 0 7px rgba(224, 122, 74, 0.18), 0 1px 4px rgba(0, 0, 0, 0.55);
   /* DS uniform focus ring: 2px bg gap + 3px amber ring + base shadow */
   --c-slider-thumb-focus-shadow: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid), 0 1px 4px rgba(0, 0, 0, 0.55);
+ * LAYER 3 — Sonner / Toast (--c-toast-*)
+ *   Thin adapter over the sonner library. Maps DFL semantic tokens onto
+ *   Sonner's CSS-variable API and defines per-type semantic surfaces.
+ *   Implementation: passed as Sonner CSS vars via the SonnerToaster wrapper.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Base surface */
+  --c-toast-bg:              var(--s-surface-elevated);    /* #1f1c18 */
+  --c-toast-border:          var(--s-border-subtle);       /* #2a2622 */
+  --c-toast-radius:          var(--p-radius-lg);           /* 10px */
+  --c-toast-shadow:          var(--p-shadow-lg);           /* 0 12px 30px rgba(0,0,0,.6) */
+
+  /* Ink */
+  --c-toast-title-fg:        var(--s-ink-primary);
+  --c-toast-desc-fg:         var(--s-ink-secondary);
+  --c-toast-close-fg:        var(--s-ink-muted);
+
+  /* Action button — amber DFL brand */
+  --c-toast-action-fg:       var(--s-brand-solid);         /* #E07A4A */
+  --c-toast-action-border:   var(--s-brand-border);        /* rgba(224,122,74,0.22) */
+  --c-toast-action-bg-hover: var(--s-brand-subtle);        /* rgba(224,122,74,0.10) */
+
+  /* Uniform focus ring (ch.5.2): 2px bg gap + 1px amber ring */
+  --c-toast-focus-ring: 0 0 0 2px var(--c-toast-bg), 0 0 0 3px #E07A4A;
+
+  /* Semantic type backgrounds — semi-transparent tints over page bg */
+  --c-toast-success-bg:     rgba(20, 59, 34, 0.45);    /* green-900 @ 45% */
+  --c-toast-success-border: rgba(94, 194, 126, 0.25);  /* green-500 @ 25% */
+  --c-toast-success-fg:     var(--s-success-fg);        /* #7ad79a */
+
+  --c-toast-error-bg:       rgba(76, 26, 26, 0.45);    /* red-900 @ 45% */
+  --c-toast-error-border:   rgba(224, 122, 122, 0.25); /* red-500 @ 25% */
+  --c-toast-error-fg:       var(--s-danger-fg);         /* #e89898 */
+
+  --c-toast-info-bg:        rgba(26, 43, 76, 0.45);    /* blue-900 @ 45% */
+  --c-toast-info-border:    rgba(122, 162, 224, 0.25); /* blue-500 @ 25% */
+  --c-toast-info-fg:        var(--s-info-fg);           /* #9ab9e8 */
+
+  --c-toast-warning-bg:     rgba(74, 59, 18, 0.45);    /* yellow-900 @ 45% */
+  --c-toast-warning-border: rgba(224, 176, 74, 0.25);  /* yellow-500 @ 25% */
+  --c-toast-warning-fg:     var(--s-warning-fg);        /* #f0c875 */
 }
