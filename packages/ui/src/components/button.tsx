@@ -10,22 +10,32 @@ import { cn } from "../lib/utils";
  * Tokens consumed:
  *   --c-button-radius, --c-button-font-weight
  *   --c-button-{primary,secondary,ghost,destructive,success}-{bg,fg,border,bg-hover,border-hover,bg-active}
- *   --s-brand-ring (focus ring)
+ *
+ * Focus ring (brand spec ch.5.2):
+ *   box-shadow: 0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A
+ *   2px page-bg gap + 1px solid amber — no alpha bleed on dark bg.
+ *   (Replaces the old `--s-brand-ring: rgba(224,122,74,.45)` ring which had no
+ *   gap and alpha-diluted amber into a glow instead of a crisp indicator.)
  *
  * Variants: primary (default), secondary, outline, ghost, destructive, success, link
  * Sizes:    sm (28px), default (34px — DS v0 spec), lg (40px), icon (square 34)
+ * Shape:    rounded (default: --c-button-radius md), pill (--p-radius-pill 999px)
  *
  * Additive props (v1.0.0):
  *   loading   — disables button + shows spinner + keeps width
  *   kbd       — renders <kbd> hint at the right (e.g. ⌘K)
+ *   rounded   — "default" | "pill" shape modifier (token-driven, not raw Tailwind)
  *   asChild   — render as a child Slot (Radix pattern, kept from shadcn)
  */
 const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2 whitespace-nowrap",
-    "rounded-[var(--c-button-radius)] font-medium",
+    "font-medium",
+    // DS v0 ch.5.2 focus ring: 2px page-bg gap + 1px solid amber — no alpha.
+    // ⚠️  DO NOT revert to ring-[3px] ring-[var(--s-brand-ring)] — that form
+    // has no gap and alpha-dilutes the amber on dark backgrounds (glow ≠ ring).
     "transition-[background-color,border-color,color,box-shadow] duration-150",
-    "outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--s-brand-ring)]",
+    "outline-none focus-visible:shadow-[0_0_0_2px_var(--s-surface-page),_0_0_0_3px_#E07A4A]",
     "disabled:pointer-events-none disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     "border border-transparent",
@@ -78,10 +88,25 @@ const buttonVariants = cva(
         "icon-sm": "h-7 w-7 p-0",
         "icon-lg": "h-10 w-10 p-0",
       },
+      /**
+       * Shape modifier — token-driven, never raw Tailwind override.
+       *
+       * "default" → --c-button-radius (var(--p-radius-md) = 6px)
+       * "pill"    → --p-radius-pill   (999px)
+       *
+       * Usage: <Button rounded="pill">…</Button>
+       * ⚠️  DO NOT pass `className="rounded-full"` to achieve pill — that
+       * bypasses the token system and is not themeable. Use rounded="pill".
+       */
+      rounded: {
+        default: "rounded-[var(--c-button-radius)]",
+        pill:    "rounded-[var(--p-radius-pill)]",
+      },
     },
     defaultVariants: {
       variant: "primary",
       size: "default",
+      rounded: "default",
     },
   },
 );
@@ -126,10 +151,10 @@ const Kbd = ({ children }: { children: React.ReactNode }) => (
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, asChild = false, loading = false, disabled, kbd, children, ...props },
+    { className, variant, size, rounded, asChild = false, loading = false, disabled, kbd, children, ...props },
     ref,
   ) => {
-    const classes = cn(buttonVariants({ variant, size, className }));
+    const classes = cn(buttonVariants({ variant, size, rounded, className }));
 
     // asChild path: Radix `Slot` requires EXACTLY ONE React element child.
     // Injecting sibling adornments (spinner/kbd) here triggers
