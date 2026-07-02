@@ -17,16 +17,27 @@ import { cn } from "../lib/utils";
  *   <IconButton aria-label="Search"><SearchIcon /></IconButton>
  *
  * Tokens consumed:
- *   --c-button-radius, --s-brand-subtle, --s-brand-fg, --s-brand-ring,
+ *   --c-button-radius, --s-brand-subtle, --s-brand-fg,
+ *   --s-surface-page (focus ring bg-gap), --s-border-focus (focus ring outline),
  *   --c-button-ghost-fg, --c-button-ghost-bg-hover, --s-ink-primary,
- *   --s-surface-raised, --s-border-subtle, --s-border-strong.
+ *   --s-surface-raised, --s-border-subtle, --s-border-strong,
+ *   --c-button-primary-bg, --c-button-primary-fg, --c-button-primary-bg-hover,
+ *   --c-button-destructive-fg, --c-button-destructive-bg-hover.
+ *
+ * Focus ring: DFL uniform two-layer box-shadow — 2px page-color gap +
+ * 1px solid amber. Applied via box-shadow (not Tailwind ring utilities)
+ * to preserve border-radius on all variants.
+ * ⚠️ DO NOT revert to `focus-visible:ring-[3px] focus-visible:ring-[var(--s-brand-ring)]`
+ *    — that produces a single semi-transparent halo (rgba 0.45), not the
+ *    mandated crisp two-layer ring (brand spec: box-shadow 0 0 0 2px page, 0 0 0 3px amber).
  */
 const iconButtonVariants = cva(
   [
     "inline-flex items-center justify-center shrink-0",
     "rounded-[var(--c-button-radius)]",
     "transition-[background-color,border-color,color,box-shadow] duration-150",
-    "outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--s-brand-ring)]",
+    // DFL uniform focus ring: 2px page-color gap + 1px solid amber outline
+    "outline-none focus-visible:[box-shadow:0_0_0_2px_var(--s-surface-page),0_0_0_3px_var(--s-border-focus)]",
     "disabled:pointer-events-none disabled:opacity-50",
     "border border-transparent",
     "select-none cursor-pointer",
