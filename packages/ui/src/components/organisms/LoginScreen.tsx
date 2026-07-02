@@ -9,6 +9,13 @@
  * NOTE: this is the prop-driven login. The legacy `LoginPage` (which embeds the
  * `useAuth` hook) is kept for existing consumers; new apps should adopt
  * `LoginScreen`.
+ *
+ * DS token fixes applied (v1.5.x):
+ *   • Title: Barlow Condensed 700 via --c-loginscreen-title-font (--s-font-display)
+ *   • Outer wrapper: explicit background: var(--c-loginscreen-bg) (--s-surface-page)
+ *   • Card: border-radius via --c-card-radius (10px), not rounded-xl (12px)
+ *   • Error: color via --c-loginscreen-error-fg (--s-danger-fg), no raw hex fallback
+ *   • Focus ring: DS uniform 2px gap + 1px amber ring on all focusable elements
  */
 import * as React from "react";
 
@@ -20,6 +27,18 @@ import { PasswordInput } from "./PasswordInput";
 
 const DEFAULT_LOGO =
   "https://devfellowship.s3.sa-east-1.amazonaws.com/media/1755889468274-DevFelloShip%2B1%2BSi%CC%81mbolo.png";
+
+/**
+ * DS uniform focus ring className.
+ * ring-offset-2 creates the 2px "gap" filled with the page background colour
+ * (--c-loginscreen-focus-gap = --s-surface-page = #0a0908).
+ * ring-1 draws the 1px amber ring on top of the gap
+ * (--c-loginscreen-focus-color = --s-border-focus = #E07A4A).
+ * Applied to every focusable element inside the card so the visual matches
+ * the DS spec: box-shadow 0 0 0 2px #0a0908, 0 0 0 3px #E07A4A.
+ */
+const DS_FOCUS_RING =
+  "focus-visible:ring-1 focus-visible:ring-[var(--c-loginscreen-focus-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--c-loginscreen-focus-gap)]";
 
 export interface LoginScreenProps {
   /** Logo element or image src. Defaults to the DFL logomark. */
@@ -78,19 +97,38 @@ export function LoginScreen({
     );
 
   return (
+    /* Explicit background so the warm near-black page color (#0a0908) shows even
+     * in consumer apps without a global body reset. */
     <div
       className={cn(
         "min-h-screen flex flex-col items-center justify-center px-4",
         className,
       )}
+      style={{ background: "var(--c-loginscreen-bg)" }}
     >
       <div className="w-full max-w-md">
-        <div className="bg-card rounded-xl p-8 shadow-xl border border-border text-center">
+        {/* Card radius via --c-card-radius (10px) — not rounded-xl which is 12px. */}
+        <div
+          className="bg-card p-8 shadow-xl border border-border text-center"
+          style={{ borderRadius: "var(--c-card-radius)" }}
+        >
           <div className="mx-auto w-20 h-20 flex items-center justify-center">
             {logoEl}
           </div>
 
-          <h2 className="text-2xl font-bold text-foreground mb-1 mt-4">{title}</h2>
+          {/* Title: Barlow Condensed 700 via --c-loginscreen-title-font (--s-font-display).
+           * Previously incorrectly rendered as Inter via text-2xl font-bold. */}
+          <h2
+            className="text-foreground mb-1 mt-4"
+            style={{
+              fontFamily: "var(--c-loginscreen-title-font)",
+              fontWeight: 700,
+              fontSize: "var(--c-loginscreen-title-size)",
+              lineHeight: 1.2,
+            }}
+          >
+            {title}
+          </h2>
           {subtitle && (
             <p className="text-sm text-muted-foreground mb-4">{subtitle}</p>
           )}
@@ -107,6 +145,8 @@ export function LoginScreen({
                 placeholder="your@email.com"
                 disabled={loading}
                 required
+                aria-invalid={error ? true : undefined}
+                className={DS_FOCUS_RING}
               />
             </div>
 
@@ -120,13 +160,19 @@ export function LoginScreen({
                 placeholder="••••••••"
                 disabled={loading}
                 required
+                aria-invalid={error ? true : undefined}
+                className={DS_FOCUS_RING}
               />
             </div>
 
             {error && (
+              /* Error color via --c-loginscreen-error-fg (--s-danger-fg = #e89898).
+               * Removed the raw-hex fallback `#e89898` that previously leaked
+               * when the semantic token wasn't loaded. */
               <p
                 role="alert"
-                className="text-sm text-[var(--s-danger-fg,#e89898)] text-left"
+                className="text-sm text-left"
+                style={{ color: "var(--c-loginscreen-error-fg)" }}
               >
                 {error}
               </p>
@@ -134,11 +180,15 @@ export function LoginScreen({
 
             <Button
               type="submit"
-              className="w-full"
+              className={cn("w-full", DS_FOCUS_RING)}
               disabled={loading}
+              aria-busy={loading ? "true" : undefined}
             >
               {loading ? (
-                <span className="h-5 w-5 border-2 border-current/20 border-t-current rounded-full animate-spin" />
+                <span
+                  className="h-5 w-5 border-2 border-current/20 border-t-current rounded-full animate-spin"
+                  aria-hidden="true"
+                />
               ) : (
                 submitLabel
               )}

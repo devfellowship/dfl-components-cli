@@ -525,3 +525,33 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LoginScreen (--c-loginscreen-*)
+ *   Component-level knobs for the LoginScreen organism. All values resolve
+ *   through existing --s-* semantic tokens — no raw hex leaks here.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Outer wrapper background — explicit so the page is warm near-black even
+   * without a consumer body reset. */
+  --c-loginscreen-bg:           var(--s-surface-page);
+
+  /* Title typography — Barlow Condensed 700 per --s-font-display brand spec.
+   * Replaces the former Inter bold (text-2xl font-bold regression). */
+  --c-loginscreen-title-font:   var(--s-font-display);
+  --c-loginscreen-title-size:   var(--p-text-24);
+
+  /* Error message — semantic token only, no raw hex fallback. */
+  --c-loginscreen-error-fg:     var(--s-danger-fg);
+
+  /* Footer link color — amber brand foreground. */
+  --c-loginscreen-footer-fg:    var(--s-brand-fg);
+
+  /* DS uniform focus ring — two-layer box-shadow technique:
+   *   inner 2px layer = page bg (the visible "gap")
+   *   outer 3px layer = amber border-focus (the visible ring)
+   * Applied via ring-offset-2 + ring-1 in Tailwind className overrides. */
+  --c-loginscreen-focus-gap:    var(--s-surface-page);
+  --c-loginscreen-focus-color:  var(--s-border-focus);
+}
