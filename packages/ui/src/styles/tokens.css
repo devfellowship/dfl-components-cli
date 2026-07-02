@@ -527,6 +527,55 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+ * AppNavbar component tokens (--c-navbar-*)
+ *   Defines the 56px topbar surface. bg uses --s-surface-panel (NOT page)
+ *   so the topbar is visually elevated above the page background.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --c-navbar-bg:                    var(--s-surface-panel);   /* #141210 — elevated, NOT page flush */
+  --c-navbar-border:                var(--s-border-subtle);   /* #2a2622 */
+  --c-navbar-h:                     var(--c-header-h);        /* 56px */
+  --c-navbar-px:                    var(--p-space-4);         /* 16px */
+  --c-navbar-breadcrumb-fg:         var(--s-ink-muted);       /* #7d7568 */
+  --c-navbar-breadcrumb-fg-current: var(--s-ink-primary);     /* #f6f1e7 */
+  --c-navbar-action-gap:            var(--p-space-2);         /* 8px */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * AppSidebar component tokens (--c-appsidebar-*)
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --c-appsidebar-bg:  var(--s-surface-page);    /* #0a0908 — sidebar flush with page */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * AppShell (Templates) — nav-item & focus-ring tokens (--c-appshell-*)
+ *   Consumed by the AppShell template layer: active-state amber trio for
+ *   SidebarMenuButton, plus the DS uniform focus ring (box-shadow form,
+ *   safe inside overflow:hidden sidebar rail).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --c-appshell-nav-active-bg:     var(--s-brand-subtle);    /* amber 10% fill on active item */
+  --c-appshell-nav-active-fg:     var(--s-brand-solid);     /* #E07A4A text on active item */
+  --c-appshell-nav-active-border: var(--s-brand-border);    /* amber 22% border on active item */
+  --c-appshell-nav-hover-bg:      var(--s-surface-raised);  /* #1a1714 hover surface */
+  --c-appshell-nav-hover-fg:      var(--s-ink-primary);     /* #f6f1e7 hover text */
+  /* box-shadow form: 2px bg gap + 1px amber ring — safe inside overflow:hidden */
+  --c-appshell-focus-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid);
+}
+
+/* DS uniform focus ring for AppShell interactive elements (nav items, topbar buttons).
+ * Uses box-shadow instead of outline so it isn't clipped by the sidebar rail overflow. */
+.c-appshell-focus:focus-visible {
+  outline: none;
+  box-shadow: var(--c-appshell-focus-ring);
+  transition: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * Button — semantic focus-ring knobs (atoms-button refactor, 2026-07-02)
  *
  *   Brand spec: double box-shadow — 2px bg-color gap + 1px solid accent.

@@ -1,20 +1,37 @@
+/**
+ * Templates/AppShell — page-level composition, NOT a new component.
+ *
+ * Assembles the exported organisms `AppSidebar` (left rail, collapsible) +
+ * `AppNavbar` (top breadcrumb/user bar) around a `<main>` content slot.
+ * The SidebarTrigger lives in the AppNavbar `leftSlot` — one unified 56px topbar
+ * per the DS `--c-header-h` token (no separate 48px trigger strip stacked above).
+ *
+ * DS fixes reflected here:
+ *   1. Unified 56px topbar — SidebarTrigger in AppNavbar leftSlot, h-12 strip removed.
+ *   2. Navbar bg = --c-navbar-bg → --s-surface-panel (#141210), visibly elevated.
+ *   3. Active nav = DS amber trio (--c-appshell-nav-active-bg/fg/border).
+ *   4. theme="dark" — dark-first; Sun icon renders correctly (switch to light).
+ *   5. DS uniform focus ring (box-shadow 0 0 0 2px #0a0908, 0 0 0 3px #E07A4A).
+ *
+ * One story per state (CLAUDE.md non-negotiable rule).
+ */
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { BookOpen, CreditCard, FileText, Home, Settings, Users } from "lucide-react";
 import { AppNavbar } from "../../components/organisms/AppNavbar";
 import { AppSidebar } from "../../components/organisms/AppSidebar";
 import { Button } from "../../components/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/card";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "../../components/sidebar";
 
-/**
- * Templates/AppShell — page-level composition, NOT a new component.
- *
- * Assembles the exported organisms `AppSidebar` (left rail, collapsible via its
- * built-in trigger) + `AppNavbar` (top breadcrumb/user bar) around a `<main>`
- * content slot. This is the shell ~every DFL app wraps its pages in
- * (lesson-studio AppShell, reviews app-layout, task-assigner Layout,
- * learn AppLayout). Nothing here is a new export — it only COMPOSES existing
- * `@devfellowship/components` primitives.
- */
 const meta: Meta = {
   title: "Templates/AppShell",
   parameters: {
@@ -24,6 +41,8 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+// ── Shared fixtures ────────────────────────────────────────────────────────────
 
 const navGroups = [
   {
@@ -56,7 +75,8 @@ const breadcrumbs = [
   { label: "React Avançado" },
 ];
 
-/** Realistic page body that fills the AppShell content slot. */
+// ── Shared page body ───────────────────────────────────────────────────────────
+
 function PageBody() {
   return (
     <main
@@ -102,9 +122,15 @@ function PageBody() {
   );
 }
 
+// ── Story 1 — Default (expanded, amber active, unified 56px topbar, theme=dark) ──
+
 /**
- * Default AppShell — sidebar expanded. The `AppSidebar` `children` slot holds
- * an `AppNavbar` topbar plus the page body, so the whole app chrome is visible.
+ * Default — sidebar expanded.
+ *
+ * - SidebarTrigger in AppNavbar leftSlot: single unified 56px topbar (no stacked strip).
+ * - Active nav item (Cursos) uses DS amber trio: brand-subtle bg + brand-solid text + brand-border.
+ * - theme="dark" (dark-first default): Sun icon renders, implying "switch to light".
+ * - DS uniform focus ring (box-shadow, clip-safe) on all interactive elements.
  */
 export const Default: Story = {
   render: () => (
@@ -116,15 +142,25 @@ export const Default: Story = {
       activeUrl="/courses"
       defaultOpen
     >
-      <AppNavbar breadcrumbs={breadcrumbs} userInfo={userInfo} theme="light" />
+      <AppNavbar
+        breadcrumbs={breadcrumbs}
+        userInfo={userInfo}
+        theme="dark"
+        leftSlot={<SidebarTrigger />}
+      />
       <PageBody />
     </AppSidebar>
   ),
 };
 
+// ── Story 2 — Collapsed (56px icon rail, same unified topbar, active icon amber) ──
+
 /**
- * Collapsed AppShell — same composition with the sidebar rail collapsed to
- * icons (`defaultOpen={false}`). Content column keeps full width.
+ * Collapsed — sidebar icon rail (56px).
+ *
+ * - Same unified topbar with SidebarTrigger in leftSlot.
+ * - Active icon (Cursos) shows amber trio even in collapsed state.
+ * - Tooltip on hover of non-active items (built-in SidebarMenuButton behavior).
  */
 export const Collapsed: Story = {
   render: () => (
@@ -136,8 +172,153 @@ export const Collapsed: Story = {
       activeUrl="/courses"
       defaultOpen={false}
     >
-      <AppNavbar breadcrumbs={breadcrumbs} userInfo={userInfo} theme="light" />
+      <AppNavbar
+        breadcrumbs={breadcrumbs}
+        userInfo={userInfo}
+        theme="dark"
+        leftSlot={<SidebarTrigger />}
+      />
       <PageBody />
     </AppSidebar>
+  ),
+};
+
+// ── Isolated NavItem stories (wrap in SidebarProvider + Sidebar for context) ──
+
+/**
+ * Small wrapper that provides sidebar context for isolated SidebarMenuButton stories.
+ * Renders as a minimal panel without the full AppShell chrome.
+ */
+function NavItemFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider defaultOpen style={{ minHeight: "auto" }}>
+      <Sidebar
+        collapsible="none"
+        style={{
+          width: 220,
+          minHeight: "auto",
+          height: "auto",
+          background: "var(--s-surface-page)",
+          border: "1px solid var(--s-border-subtle)",
+          borderRadius: 10,
+          padding: "8px",
+        }}
+      >
+        <SidebarContent>
+          <SidebarMenu>{children}</SidebarMenu>
+        </SidebarContent>
+      </Sidebar>
+    </SidebarProvider>
+  );
+}
+
+// ── Story 3 — NavItem/Default ────────────────────────────────────────────────
+
+/**
+ * NavItem/Default — SidebarMenuButton at rest.
+ * Muted text, transparent background, no border. The DS baseline state.
+ */
+export const NavItemDefault: Story = {
+  name: "NavItem/Default",
+  parameters: { layout: "centered" },
+  render: () => (
+    <NavItemFrame>
+      <SidebarMenuItem>
+        <SidebarMenuButton isActive={false}>
+          <Home className="h-4 w-4 shrink-0" />
+          <span>Dashboard</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </NavItemFrame>
+  ),
+};
+
+// ── Story 4 — NavItem/Hover ──────────────────────────────────────────────────
+
+/**
+ * NavItem/Hover — SidebarMenuButton hover state.
+ * Surface raised (#1a1714) background + primary ink text (--s-ink-primary).
+ * Simulated with inline style since pseudo-states addon is not installed.
+ */
+export const NavItemHover: Story = {
+  name: "NavItem/Hover",
+  parameters: { layout: "centered" },
+  render: () => (
+    <NavItemFrame>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          isActive={false}
+          style={{
+            background: "var(--c-appshell-nav-hover-bg)",
+            color: "var(--c-appshell-nav-hover-fg)",
+          }}
+        >
+          <Home className="h-4 w-4 shrink-0" />
+          <span>Dashboard</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </NavItemFrame>
+  ),
+};
+
+// ── Story 5 — NavItem/Active ─────────────────────────────────────────────────
+
+/**
+ * NavItem/Active — SidebarMenuButton active (current page) state.
+ * DS amber trio: --c-appshell-nav-active-bg (10% amber) + --c-appshell-nav-active-fg
+ * (#E07A4A text) + --c-appshell-nav-active-border (22% amber border).
+ * Overrides the shadcn default (bg-sidebar-accent = raised surface = visually
+ * identical to hover).
+ */
+export const NavItemActive: Story = {
+  name: "NavItem/Active",
+  parameters: { layout: "centered" },
+  render: () => (
+    <NavItemFrame>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          isActive
+          style={{
+            background: "var(--c-appshell-nav-active-bg)",
+            color: "var(--c-appshell-nav-active-fg)",
+            border: "1px solid var(--c-appshell-nav-active-border)",
+          }}
+        >
+          <BookOpen className="h-4 w-4 shrink-0" />
+          <span>Cursos</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </NavItemFrame>
+  ),
+};
+
+// ── Story 6 — NavItem/Focus ──────────────────────────────────────────────────
+
+/**
+ * NavItem/Focus — SidebarMenuButton focus-visible state.
+ * DS uniform focus ring: box-shadow 0 0 0 2px #0a0908 (bg gap) + 0 0 0 3px #E07A4A
+ * (amber ring). Uses box-shadow so it isn't clipped by sidebar overflow:hidden.
+ * No outline — the `.c-appshell-focus` class zeroes the default outline.
+ * Simulated with inline style since pseudo-states addon is not installed.
+ */
+export const NavItemFocus: Story = {
+  name: "NavItem/Focus",
+  parameters: { layout: "centered" },
+  render: () => (
+    <NavItemFrame>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          isActive={false}
+          className="c-appshell-focus"
+          style={{
+            outline: "none",
+            boxShadow: "var(--c-appshell-focus-ring)",
+          }}
+        >
+          <Home className="h-4 w-4 shrink-0" />
+          <span>Dashboard</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </NavItemFrame>
   ),
 };
