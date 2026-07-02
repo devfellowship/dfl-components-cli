@@ -453,6 +453,25 @@
   --c-label-mono-font:      var(--p-font-mono);
   --c-label-mono-font-size: 10.5px;   /* no --p-text-10-5 primitive exists */
   --c-label-mono-tracking:  0.06em;
+  /* Pagination — compound nav (DS v0 amber active tile + DS focus ring).
+   * All values resolve to existing --s-* or --p-* tokens — never raw hex. */
+  --c-pagination-item-size:          34px;
+  --c-pagination-item-radius:        var(--p-radius-sm);       /* 4px  — square-ish tiles */
+  --c-pagination-nav-radius:         var(--p-radius-md);       /* 6px  — nav controls */
+  --c-pagination-item-font:          var(--p-text-13);         /* 13px */
+  --c-pagination-item-weight:        var(--p-weight-500);
+  --c-pagination-item-fg:            var(--s-ink-muted);       /* inactive tile label */
+  --c-pagination-item-fg-hover:      var(--s-ink-primary);
+  --c-pagination-item-bg-hover:      var(--s-surface-raised);
+  --c-pagination-active-bg:          var(--s-brand-solid);     /* #E07A4A amber solid fill */
+  --c-pagination-active-fg:          var(--p-sand-950);        /* #0a0908 dark on amber */
+  --c-pagination-active-weight:      var(--p-weight-600);
+  --c-pagination-nav-fg:             var(--s-ink-secondary);
+  --c-pagination-nav-fg-hover:       var(--s-ink-primary);
+  --c-pagination-nav-bg-hover:       var(--s-surface-raised);
+  --c-pagination-ellipsis-fg:        var(--s-ink-muted);
+  --c-pagination-disabled-opacity:   0.35;
+  --c-pagination-gap:                var(--p-space-1);         /* 4px between tiles */
 
   /* Layout chrome */
   --c-sidebar-w:           224px;
