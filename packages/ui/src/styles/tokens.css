@@ -1484,3 +1484,37 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Component (--c-sheet-*)
+ *
+ *   Sheet organism: slide-out panel (4 sides) — right, left, top, bottom.
+ *   Shares the dialog-tier visual contract; all values resolve through
+ *   --c-dialog-* → --s-* → --p-* so Sheet, Dialog, and Drawer stay in sync
+ *   by default. Consumers can override --c-sheet-* to retheme Sheet in
+ *   isolation without touching Dialog or Drawer.
+ *
+ *   Close-button focus ring: gap colour = panel bg (--c-sheet-bg, #1a1714),
+ *   NOT the page bg (#0a0908). The gap must match the PANEL surface so the
+ *   amber ring is unambiguously visible against the sheet background.
+ *
+ *   Resolves exclusively to existing --c-dialog-* and --p-* tokens; no new
+ *   --s-* or --p-* primitives are introduced.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Panel surface */
+  --c-sheet-bg:            var(--c-dialog-bg);      /* --s-surface-raised = #1a1714  */
+  /* Edge border (direction handled by border-{l,r,t,b} Tailwind utilities) */
+  --c-sheet-border:        var(--c-dialog-border);  /* --s-border-subtle  = #2a2622  */
+  /* Depth shadow */
+  --c-sheet-shadow:        var(--c-dialog-shadow);  /* 0 24px 60px rgba(0,0,0,0.7)  */
+  /* Backdrop overlay — warm near-black; replaces raw bg-black/80 */
+  --c-sheet-scrim:         var(--c-dialog-scrim);   /* rgba(10,9,8,0.76) — token-native */
+  /* Top-corner radius for bottom variant (mobile action-sheet pill feel) */
+  --c-sheet-radius-bottom: var(--p-radius-xl);      /* 14px                           */
+  /* DS uniform focus ring for the close button:
+   *   inner 2px = panel-bg gap  (same as --c-sheet-bg — visible on the panel)
+   *   outer 1px = #E07A4A amber (DS brand focus accent) */
+  --c-sheet-close-ring:    0 0 0 2px var(--c-sheet-bg), 0 0 0 3px #E07A4A;
+}
