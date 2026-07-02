@@ -598,6 +598,17 @@
   --c-carousel-dot-active:       var(--s-brand-solid);        /* active dot: amber-500 */
   --c-carousel-dot-radius:       var(--p-radius-pill);        /* dot shape */
   --c-carousel-radius:           var(--p-radius-lg);          /* track border-radius */
+  /* Chart — tooltip + chrome component-token knobs.
+   * Series palette lives in the Compatibility aliases block as --chart-1…5.
+   * These knobs cover the tooltip surface and structural chrome only. */
+  --c-chart-tooltip-bg:         var(--s-surface-elevated);
+  --c-chart-tooltip-border:     var(--s-border-strong);
+  --c-chart-tooltip-fg:         var(--s-ink-primary);
+  --c-chart-tooltip-muted-fg:   var(--s-ink-muted);
+  --c-chart-tooltip-radius:     var(--p-radius-md);
+  --c-chart-tooltip-shadow:     var(--p-shadow-lg);
+  --c-chart-grid:               var(--s-border-subtle);
+  --c-chart-axis-fg:            var(--s-ink-muted);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
