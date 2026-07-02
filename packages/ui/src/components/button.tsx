@@ -10,7 +10,14 @@ import { cn } from "../lib/utils";
  * Tokens consumed:
  *   --c-button-radius, --c-button-font-weight
  *   --c-button-{primary,secondary,ghost,destructive,success}-{bg,fg,border,bg-hover,border-hover,bg-active}
- *   --s-brand-ring (focus ring)
+ *   --c-button-focus-gap     — 2px bg-color gap for the brand-spec double ring
+ *   --c-button-focus-brand   — amber focus ring (primary/secondary/outline/ghost/link)
+ *   --c-button-focus-danger  — red focus ring (destructive)
+ *   --c-button-focus-success — green focus ring (success)
+ *
+ * Focus ring (brand spec): box-shadow 0 0 0 2px <gap> , 0 0 0 3px <accent>
+ *   Crisp 2px bg-color gap + 1px solid accent — no blur, no rgba transparency.
+ *   Each variant carries its own semantic accent colour instead of defaulting to amber.
  *
  * Variants: primary (default), secondary, outline, ghost, destructive, success, link
  * Sizes:    sm (28px), default (34px — DS v0 spec), lg (40px), icon (square 34)
@@ -20,12 +27,19 @@ import { cn } from "../lib/utils";
  *   kbd       — renders <kbd> hint at the right (e.g. ⌘K)
  *   asChild   — render as a child Slot (Radix pattern, kept from shadcn)
  */
+
+// Brand-spec compound focus rings — 2px bg gap + 1px solid accent.
+// Defined as constants so each variant opts in explicitly; no base-class override needed.
+const FOCUS_BRAND   = "focus-visible:shadow-[0_0_0_2px_var(--c-button-focus-gap),0_0_0_3px_var(--c-button-focus-brand)]";
+const FOCUS_DANGER  = "focus-visible:shadow-[0_0_0_2px_var(--c-button-focus-gap),0_0_0_3px_var(--c-button-focus-danger)]";
+const FOCUS_SUCCESS = "focus-visible:shadow-[0_0_0_2px_var(--c-button-focus-gap),0_0_0_3px_var(--c-button-focus-success)]";
+
 const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2 whitespace-nowrap",
     "rounded-[var(--c-button-radius)] font-medium",
     "transition-[background-color,border-color,color,box-shadow] duration-150",
-    "outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--s-brand-ring)]",
+    "outline-none",
     "disabled:pointer-events-none disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     "border border-transparent",
@@ -38,37 +52,47 @@ const buttonVariants = cva(
           "bg-[var(--c-button-primary-bg)] text-[var(--c-button-primary-fg)]",
           "hover:bg-[var(--c-button-primary-bg-hover)]",
           "active:bg-[var(--c-button-primary-bg-active)]",
+          FOCUS_BRAND,
         ].join(" "),
         // legacy alias
         default: [
           "bg-[var(--c-button-primary-bg)] text-[var(--c-button-primary-fg)]",
           "hover:bg-[var(--c-button-primary-bg-hover)]",
           "active:bg-[var(--c-button-primary-bg-active)]",
+          FOCUS_BRAND,
         ].join(" "),
         secondary: [
           "bg-[var(--c-button-secondary-bg)] text-[var(--c-button-secondary-fg)]",
           "border-[var(--c-button-secondary-border)]",
           "hover:bg-[var(--c-button-secondary-bg-hover)] hover:border-[var(--c-button-secondary-border-hover)]",
+          FOCUS_BRAND,
         ].join(" "),
         outline: [
           "bg-transparent text-[var(--s-ink-secondary)]",
           "border-[var(--s-border-subtle)]",
           "hover:bg-[var(--s-surface-raised)] hover:border-[var(--s-border-strong)] hover:text-[var(--s-ink-primary)]",
+          FOCUS_BRAND,
         ].join(" "),
         ghost: [
           "bg-transparent text-[var(--c-button-ghost-fg)]",
           "hover:bg-[var(--c-button-ghost-bg-hover)] hover:text-[var(--s-ink-primary)]",
+          FOCUS_BRAND,
         ].join(" "),
         destructive: [
           "bg-transparent text-[var(--c-button-destructive-fg)]",
           "border-[var(--c-button-destructive-border)]",
           "hover:bg-[var(--c-button-destructive-bg-hover)]",
+          FOCUS_DANGER,
         ].join(" "),
         success: [
           "bg-[var(--c-button-success-bg)] text-[var(--c-button-success-fg)]",
           "hover:opacity-90",
+          FOCUS_SUCCESS,
         ].join(" "),
-        link: "text-[var(--s-brand-fg)] underline-offset-4 hover:underline bg-transparent",
+        link: [
+          "text-[var(--s-brand-fg)] underline-offset-4 hover:underline bg-transparent",
+          FOCUS_BRAND,
+        ].join(" "),
       },
       size: {
         sm: "h-7 px-3 text-[12px] [&_svg]:size-3.5",

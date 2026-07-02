@@ -14,6 +14,23 @@ const ToggleGroupContext = React.createContext<
   variant: "default",
 });
 
+/**
+ * ToggleGroup — DFL DS v0
+ *
+ * Tokens consumed (via toggleVariants in toggle.tsx):
+ *   --c-toggle-{bg,bg-hover,bg-active,bg-active-hover,fg,fg-hover,fg-active}
+ *   --c-toggle-{border,focus-ring,outline-active-shadow}
+ *   --c-toggle-group-radius
+ *
+ * Variant "outline":
+ *   • Group container gets --p-shadow-sm depth shadow
+ *   • Each item's border is `border-[var(--c-toggle-border)]` (--s-border-subtle)
+ *   • Non-first items have `border-l-0` (left removed) so only item-1's right
+ *     border acts as the internal divider — no double lines
+ *   • Active item gets an inset top-highlight shadow (--c-toggle-outline-active-shadow)
+ *
+ * Focus ring: see toggle.tsx — z-10 ensures ring renders above siblings.
+ */
 function ToggleGroup({
   className,
   variant,
@@ -28,7 +45,9 @@ function ToggleGroup({
       data-variant={variant}
       data-size={size}
       className={cn(
-        "group/toggle-group flex w-fit items-center rounded-md data-[variant=outline]:shadow-xs",
+        "group/toggle-group flex w-fit items-center rounded-[var(--c-toggle-group-radius)]",
+        // Outline variant: elevated shadow on the group container
+        "data-[variant=outline]:shadow-[var(--p-shadow-sm)]",
         className,
       )}
       {...props}
@@ -60,7 +79,15 @@ function ToggleGroupItem({
           variant: context.variant || variant,
           size: context.size || size,
         }),
-        "min-w-0 flex-1 shrink-0 rounded-none shadow-none first:rounded-l-md last:rounded-r-md focus:z-10 focus-visible:z-10 data-[variant=outline]:border-l-0 data-[variant=outline]:first:border-l",
+        // Group geometry: zero radius on middle items; first/last get end radii
+        "min-w-0 flex-1 shrink-0 rounded-none shadow-none",
+        "first:rounded-l-[var(--c-toggle-group-radius)] last:rounded-r-[var(--c-toggle-group-radius)]",
+        // Outline divider: all items remove their left border; first child adds it back
+        // so item-N's right border acts as the divider (no double lines)
+        "data-[variant=outline]:border-l-0 data-[variant=outline]:first:border-l",
+        // Outline active: inset top-highlight (brand amber glow inside the border)
+        "data-[variant=outline]:data-[state=on]:shadow-[var(--c-toggle-outline-active-shadow)]",
+        // focus-visible:z-10 already set in toggleVariants — ensures ring not clipped
         className,
       )}
       {...props}

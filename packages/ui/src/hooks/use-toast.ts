@@ -7,7 +7,14 @@ import * as React from "react";
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
 
-export type ToastVariant = "default" | "destructive";
+export type ToastVariant =
+  | "default"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info"
+  /** @deprecated use "danger" — kept for backward compat */
+  | "destructive";
 
 export interface ToastProps {
   id: string;

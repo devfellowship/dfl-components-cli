@@ -39,12 +39,21 @@ function ChartContainer({
   className,
   children,
   config,
+  isEmpty,
+  emptyState,
   ...props
 }: React.ComponentProps<"div"> & {
   config: ChartConfig;
   children: React.ComponentProps<
     typeof RechartsPrimitive.ResponsiveContainer
   >["children"];
+  /**
+   * When true, renders `emptyState` instead of the Recharts ResponsiveContainer.
+   * Use this when `data.length === 0` to show the muted no-data UI.
+   */
+  isEmpty?: boolean;
+  /** Node to render in place of the chart when `isEmpty` is true. */
+  emptyState?: React.ReactNode;
 }) {
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
@@ -61,9 +70,15 @@ function ChartContainer({
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer>
-          {children}
-        </RechartsPrimitive.ResponsiveContainer>
+        {isEmpty && emptyState ? (
+          <div className="flex flex-1 items-center justify-center">
+            {emptyState}
+          </div>
+        ) : (
+          <RechartsPrimitive.ResponsiveContainer>
+            {children}
+          </RechartsPrimitive.ResponsiveContainer>
+        )}
       </div>
     </ChartContext.Provider>
   );
@@ -172,8 +187,15 @@ function ChartTooltipContent({
 
   return (
     <div
+      style={{
+        background: "var(--c-chart-tooltip-bg)",
+        border: "1px solid var(--c-chart-tooltip-border)",
+        borderRadius: "var(--c-chart-tooltip-radius)",
+        boxShadow: "var(--c-chart-tooltip-shadow)",
+        color: "var(--c-chart-tooltip-fg)",
+      }}
       className={cn(
-        "border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
+        "grid min-w-[8rem] items-start gap-1.5 px-2.5 py-1.5 text-xs",
         className,
       )}
     >

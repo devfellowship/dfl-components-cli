@@ -54,5 +54,8 @@ export * from "./protected-route";
 // ─── Iframe primitives ───────────────────────────────────────────────────────
 export * from "./iframe";
 
+// ─── Molecules ───────────────────────────────────────────────────────────────
+export * from "./molecules";
+
 // ─── Organisms ────────────────────────────────────────────────────────────────
 export * from "./organisms";

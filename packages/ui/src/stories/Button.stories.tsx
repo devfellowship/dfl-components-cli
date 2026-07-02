@@ -51,6 +51,39 @@ export const Destructive: Story = {
   args: { children: "Deletar", variant: "destructive" },
 };
 
+/** success variant — solid green CTA (e.g. "lesson completed", "saved"). */
+export const Success: Story = {
+  args: { children: "Concluído", variant: "success" },
+};
+
+/**
+ * link variant — text-only button styled as a branded inline link.
+ * Uses --s-brand-fg (amber-300) and underlines on hover.
+ */
+export const LinkVariant: Story = {
+  name: "Link",
+  args: { children: "Ver detalhes", variant: "link" },
+};
+
+/** sm size — 28 px height tier; exercises the compact button footprint. */
+export const SizeSm: Story = {
+  args: { children: "Avançar", variant: "primary", size: "sm" },
+};
+
+/** lg size — 40 px height tier; exercises the large button footprint. */
+export const SizeLg: Story = {
+  args: { children: "Avançar", variant: "primary", size: "lg" },
+};
+
+/**
+ * WithKbd — exercises the `kbd` additive prop.
+ * The <Kbd> sub-component renders in JetBrains Mono at 10.5 px,
+ * matching the DS keyboard-hint spec.
+ */
+export const WithKbd: Story = {
+  args: { children: "Buscar", variant: "primary", kbd: "⌘K" },
+};
+
 export const WithIcon: Story = {
   render: () => (
     <Button variant="primary">
