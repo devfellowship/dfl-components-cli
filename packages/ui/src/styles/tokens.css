@@ -525,3 +525,44 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Toast component tokens (--c-toast-*)
+ *   Appended per token-scope rule: only this block is added; existing --s-* /
+ *   --p-* and other component blocks are untouched.
+ *
+ *   Variants:  default (amber accent) | success | warning | danger | info
+ *   A11y:      ToastClose always visible at opacity 0.6; focus ring is the
+ *              uniform DFL box-shadow ring (2px surface-page gap + 3px amber).
+ *   Left stripe: 3px ::before per variant, colour = --s-{intent}-solid.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Base */
+  --c-toast-bg:              var(--s-surface-elevated);  /* #1f1c18 */
+  --c-toast-border:          var(--s-border-subtle);
+  --c-toast-fg:              var(--s-ink-primary);
+  --c-toast-fg-desc:         var(--s-ink-secondary);
+  --c-toast-radius:          var(--p-radius-lg);
+  --c-toast-shadow:          0 8px 24px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.35);
+  --c-toast-close-fg:        var(--s-ink-muted);
+  --c-toast-close-fg-hover:  var(--s-ink-primary);
+  --c-toast-accent-w:        3px;   /* left accent stripe width */
+  --c-toast-action-border:   var(--s-border-subtle);
+
+  /* Success variant */
+  --c-toast-success-bg:      var(--s-success-subtle);
+  --c-toast-success-border:  var(--s-success-border);
+
+  /* Warning variant */
+  --c-toast-warning-bg:      var(--s-warning-subtle);
+  --c-toast-warning-border:  var(--s-warning-border);
+
+  /* Danger variant (also used by destructive alias) */
+  --c-toast-danger-bg:       var(--s-danger-subtle);
+  --c-toast-danger-border:   var(--s-danger-border);
+
+  /* Info variant */
+  --c-toast-info-bg:         var(--s-info-subtle);
+  --c-toast-info-border:     var(--s-info-border);
+}
