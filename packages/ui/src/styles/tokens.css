@@ -1484,3 +1484,48 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — UserMenu organism tokens (--c-usermenu-*)
+ *
+ *   Trigger ghost surfaces, dropdown panel, menu items, destructive colour,
+ *   and per-item focus rings. All knobs resolve to existing --s-* semantic
+ *   tokens (no raw hex in component code). Focus ring: DS uniform double
+ *   box-shadow spec (ch.5.2 — 2px bg-gap + 1px solid accent).
+ *
+ *   Trigger focus ring is NOT listed here — it is inherited from
+ *   Button variant="ghost" via --c-button-focus-gap + --c-button-focus-brand
+ *   (atoms-button refactor, 2026-07-02). No UserMenu-level override needed.
+ *
+ *   Appended 2026-07-02 per atoms-organisms-usermenu refactor.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Trigger ghost surfaces — ink-primary (--p-sand-50 = #f6f1e7) alpha tints.
+   * No --s-* alias exists for these specific alpha composites; expressed as
+   * rgba literals. Gap between hover (0.06) and open (0.08) gives a subtle
+   * "pressed-in" affordance when the dropdown is open. */
+  --c-usermenu-trigger-hover-bg:           rgba(246, 241, 231, 0.06);
+  --c-usermenu-trigger-open-bg:            rgba(246, 241, 231, 0.08);
+
+  /* Dropdown panel — one surface level above bg-popover default (#1a1714) */
+  --c-usermenu-panel-bg:                   var(--s-surface-elevated);   /* #1f1c18 */
+  --c-usermenu-panel-width:                208px;    /* replaces hardcoded w-52 */
+
+  /* Menu item hover / keyboard-highlighted surface.
+   * --s-border-subtle (#2a2622 = --p-sand-700) sits one step lighter than the
+   * panel bg (#1f1c18), creating legible pointer feedback without amber flood. */
+  --c-usermenu-item-hover-bg:              var(--s-border-subtle);
+
+  /* Destructive item foreground — NO inline fallback; fallback lives here only */
+  --c-usermenu-danger-fg:                  var(--s-danger-fg);          /* #e89898 */
+
+  /* Destructive item hover / highlighted background */
+  --c-usermenu-danger-hover-bg:            var(--s-danger-subtle);      /* rgba(224,122,122,0.12) */
+
+  /* Item focus rings — DS double box-shadow: 2px panel-bg gap + 1px accent */
+  /* Regular items: panel-bg gap + amber ring */
+  --c-usermenu-item-focus-ring:            0 0 0 2px var(--s-surface-elevated), 0 0 0 3px var(--s-border-focus);
+  /* Destructive items: panel-bg gap + danger-fg ring (red, not amber) */
+  --c-usermenu-item-danger-focus-ring:     0 0 0 2px var(--s-surface-elevated), 0 0 0 3px var(--s-danger-fg);
+}
