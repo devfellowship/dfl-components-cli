@@ -417,6 +417,15 @@
   --c-checkbox-danger-border:     var(--s-danger-solid);
   --c-checkbox-danger-bg:         rgba(224, 122, 122, 0.06);  /* very subtle red tint */
   --c-checkbox-danger-checked-bg: var(--s-danger-solid);
+  /* Kbd — single-key chip with physical-key depth shadow.
+   * Resolves: --c-kbd-* → --s-* → --p-* (3-layer contract).
+   * Override --c-kbd-* in isolation to retheme Kbd without touching shared semantics. */
+  --c-kbd-bg:        var(--s-surface-raised);      /* resting key surface #1a1714 */
+  --c-kbd-bg-depth:  var(--s-surface-panel);       /* bottom shadow ridge #141210 */
+  --c-kbd-border:    var(--s-border-subtle);       /* key border #2a2622 */
+  --c-kbd-fg:        var(--s-ink-primary);         /* label ink #f6f1e7 (↑ from ink-secondary for legibility) */
+  --c-kbd-shine:     rgba(255, 255, 255, 0.055);   /* top inset highlight — literal (no semantic equivalent) */
+  --c-kbd-radius:    var(--p-radius-sm);           /* 4px */
 
   /* Layout chrome */
   --c-sidebar-w:           224px;
