@@ -164,13 +164,15 @@ function SidebarInner({
           <div className="px-2 py-3 flex items-center gap-2">
             <Avatar className="h-7 w-7 shrink-0">
               {userInfo.avatarUrl && <AvatarImage src={userInfo.avatarUrl} alt={userInfo.name} />}
-              <AvatarFallback className="text-xs">{getInitials(userInfo.name)}</AvatarFallback>
+              <AvatarFallback className="text-[10px] font-bold text-[var(--s-brand-fg)]">
+                {getInitials(userInfo.name)}
+              </AvatarFallback>
             </Avatar>
             {!isCollapsed && (
               <div className="flex flex-col overflow-hidden">
-                <span className="text-xs font-medium truncate">{userInfo.name}</span>
+                <span className="text-[12px] font-medium truncate">{userInfo.name}</span>
                 {userInfo.email && (
-                  <span className="text-xs text-muted-foreground truncate">{userInfo.email}</span>
+                  <span className="text-[11px] font-mono text-muted-foreground truncate">{userInfo.email}</span>
                 )}
               </div>
             )}
@@ -178,7 +180,8 @@ function SidebarInner({
         ) : (
           !isCollapsed && (
             <div className="px-2 py-3">
-              <p className="text-xs text-muted-foreground">{copyright}</p>
+              {/* 11px ink-muted per DS spec for the copyright fallback line */}
+              <p className="text-[11px] text-muted-foreground">{copyright}</p>
             </div>
           )
         )}
@@ -198,7 +201,12 @@ export function AppSidebar({
   ...props
 }: AppSidebarProps) {
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    // Override --sidebar-background so bg-sidebar resolves to --s-surface-panel (#141210)
+    // instead of the default --s-surface-page (#0a0908), which was invisible against the page.
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      style={{ "--sidebar-background": "var(--c-appsidebar-bg)" } as React.CSSProperties}
+    >
       <div className="flex min-h-screen w-full">
         <SidebarInner {...props} />
         <div className="flex flex-col flex-1 min-w-0">

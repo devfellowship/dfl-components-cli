@@ -14,9 +14,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = "16rem";
+// Consume DS layout tokens so that overriding --c-sidebar-w / --c-sidebar-w-collapsed
+// at the app level actually affects the sidebar dimensions (fix: hardcoded rem values
+// bypassed the token layer entirely).
+const SIDEBAR_WIDTH = "var(--c-sidebar-w, 14rem)";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
-const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_WIDTH_ICON = "var(--c-sidebar-w-collapsed, 3.5rem)";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContext = {
@@ -226,7 +229,12 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
         data-sidebar="trigger"
         variant="ghost"
         size="icon"
-        className={cn("h-7 w-7", className)}
+        className={cn(
+          "h-7 w-7",
+          // DS uniform focus ring: 2px panel-bg gap + 1px amber (overrides Button default ring).
+          "focus-visible:outline-none focus-visible:[box-shadow:0_0_0_2px_var(--c-appsidebar-focus-ring-gap),0_0_0_3px_var(--c-appsidebar-focus-ring-color)]",
+          className,
+        )}
         onClick={(event) => {
           onClick?.(event);
           toggleSidebar();
@@ -412,7 +420,10 @@ const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li
 SidebarMenuItem.displayName = "SidebarMenuItem";
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  // DS-aligned base: active state uses brand-subtle bg + brand-fg text + 3px amber left border
+  // (previously used sidebar-accent for both hover and active — indistinguishable).
+  // Focus ring: DS uniform ring = 2px panel gap + 1px amber (replaces shadcn ring-2 which had no gap).
+  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:[box-shadow:0_0_0_2px_var(--c-appsidebar-focus-ring-gap),0_0_0_3px_var(--c-appsidebar-focus-ring-color)] active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-[var(--c-appsidebar-item-active-bg)] data-[active=true]:font-medium data-[active=true]:text-[var(--c-appsidebar-item-active-fg)] data-[active=true]:[border-left:3px_solid_var(--c-appsidebar-item-active-border)] data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
