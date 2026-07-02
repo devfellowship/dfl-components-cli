@@ -32,8 +32,8 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-[13px] file:font-medium file:text-[var(--s-ink-primary)]",
           // selection
           "selection:bg-[var(--s-brand-solid)] selection:text-[var(--p-sand-950)]",
-          // states
-          "aria-invalid:border-[var(--c-input-border-error)] aria-invalid:focus-visible:ring-[var(--s-danger-subtle)]",
+          // states — error: danger-solid ring (replaces the near-invisible danger-subtle)
+          "aria-invalid:border-[var(--c-input-border-error)] aria-invalid:focus-visible:ring-[var(--s-danger-solid)]",
           "disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}

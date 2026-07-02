@@ -405,6 +405,14 @@
   --c-header-h:            56px;
   --c-statusbar-h:         24px;
   --c-content-max:         1280px;
+
+  /* Form — component knobs for the React Hook Form wrapper */
+  --c-form-gap:              var(--p-space-2);        /* 8px — gap between label / control / hint / message */
+  --c-form-section-gap:      var(--p-space-5);        /* 20px — gap between FormItems */
+  --c-form-label-fg:         var(--s-ink-secondary);
+  --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
+  --c-form-description-fg:   var(--s-ink-muted);
+  --c-form-message-error-fg: var(--s-danger-fg);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
