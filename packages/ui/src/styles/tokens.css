@@ -527,6 +527,29 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Component: PublishDrawer  (--c-publish-drawer-*)
+ *   Resolves exclusively to existing --s-* semantic tokens.
+ *   Never alter --s-* or --p-* entries above.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Platform icon (YouTube play-button fill) — danger palette */
+  --c-publish-drawer-platform-fg: var(--s-danger-solid);
+
+  /* Success check icon in the done pane — success palette */
+  --c-publish-drawer-success-fg:  var(--s-success-solid);
+
+  /* Footer bar background */
+  --c-publish-drawer-footer-bg:   var(--s-surface-raised);
+
+  /* Header / footer separator */
+  --c-publish-drawer-header-sep:  var(--s-border-subtle);
+
+  /* Zernio post-ID chip — JetBrains Mono for identifiers/codes */
+  --c-publish-drawer-postid-font: var(--p-font-mono);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * Button — semantic focus-ring knobs (atoms-button refactor, 2026-07-02)
  *
  *   Brand spec: double box-shadow — 2px bg-color gap + 1px solid accent.

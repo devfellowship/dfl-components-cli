@@ -20,6 +20,15 @@
  *   - render-design-template        POST → { output_url }            (Thumbify)
  *   - dfl-publisher-create-post     POST → { ok, zernio_post_id, post_url, status, log_id }
  *   - dfl-publisher-register-lesson POST → { ok, lesson_id, ... }
+ *
+ * DS token corrections (v1.1.0):
+ *   - Youtube icon:  text-red-600   → color: var(--c-publish-drawer-platform-fg)
+ *   - CheckCircle2:  text-green-600 → color: var(--c-publish-drawer-success-fg)
+ *   - Error message: bare text-destructive <p> → styled box via --s-danger-* tokens
+ *   - Zernio post ID: bare text → JetBrains Mono chip via --c-publish-drawer-postid-font
+ *   - SelectTrigger: shadcn legacy focus:ring-2 → DS focus ring via --c-input-ring-focus
+ *   - RenderingThumb: added indeterminate progress bar + brand status note
+ *   - Publishing:    added inline brand status note
  */
 import * as React from "react";
 import { Loader2, Youtube, Image as ImageIcon, CheckCircle2, AlertCircle } from "lucide-react";
@@ -107,6 +116,15 @@ export interface PublishDrawerProps {
   /** Called on error. */
   onError?: (error: Error) => void;
   className?: string;
+  /**
+   * @internal Storybook-only props — bypass async effects to pin a specific
+   * visual state without needing mock supabase timing tricks.
+   * Never pass these in production code.
+   */
+  _storyStatus?: PublishStatus;
+  _storyResult?: PublishResult | null;
+  _storyAccounts?: PublisherAccount[];
+  _storyErrorMsg?: string | null;
 }
 
 // ─── Pure helpers (unit-tested in isolation) ─────────────────────────────────
@@ -162,19 +180,33 @@ export function PublishDrawer({
   onPublished,
   onError,
   className,
+  _storyStatus,
+  _storyResult = null,
+  _storyAccounts,
+  _storyErrorMsg = null,
 }: PublishDrawerProps) {
+  // When a story injects a status, skip all async effects so the component
+  // starts (and stays) in the requested visual state.
+  const isStoryOverride = _storyStatus !== undefined;
+
   const [title, setTitle] = React.useState(suggestedTitle);
   const [description, setDescription] = React.useState(suggestedDescription);
   const [tagsRaw, setTagsRaw] = React.useState("");
   const [thumbnailUrl, setThumbnailUrl] = React.useState(suggestedThumbnailUrl);
-  const [accounts, setAccounts] = React.useState<PublisherAccount[]>([]);
-  const [accountId, setAccountId] = React.useState<string | null>(null);
-  const [status, setStatus] = React.useState<PublishStatus>("idle");
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
-  const [result, setResult] = React.useState<PublishResult | null>(null);
+  const [accounts, setAccounts] = React.useState<PublisherAccount[]>(_storyAccounts ?? []);
+  // Auto-select the first account when story injects a single account (mirrors
+  // the single-account auto-selection that happens after a real list-accounts call).
+  const [accountId, setAccountId] = React.useState<string | null>(
+    _storyAccounts?.length === 1 ? _storyAccounts[0].account_id : null,
+  );
+  const [status, setStatus] = React.useState<PublishStatus>(_storyStatus ?? "idle");
+  const [errorMsg, setErrorMsg] = React.useState<string | null>(_storyErrorMsg ?? null);
+  const [result, setResult] = React.useState<PublishResult | null>(_storyResult);
 
   // Re-sync props → state when the drawer opens with fresh content.
+  // Skipped when a story overrides state directly.
   React.useEffect(() => {
+    if (isStoryOverride) return;
     if (open) {
       setTitle(suggestedTitle);
       setDescription(suggestedDescription);
@@ -184,10 +216,12 @@ export function PublishDrawer({
       setResult(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, isStoryOverride]);
 
   // Load connected accounts when the drawer opens.
+  // Skipped when a story overrides state directly.
   React.useEffect(() => {
+    if (isStoryOverride) return;
     if (!open) return;
     let cancelled = false;
     (async () => {
@@ -210,7 +244,7 @@ export function PublishDrawer({
     return () => {
       cancelled = true;
     };
-  }, [open, supabase]);
+  }, [open, supabase, isStoryOverride]);
 
   const fail = React.useCallback(
     (msg: string) => {
@@ -281,7 +315,14 @@ export function PublishDrawer({
       fail(`Publicação falhou: ${postErr.message}`);
       return;
     }
-    const post = (postData ?? {}) as { ok?: boolean; zernio_post_id?: string; post_url?: string; status?: string; log_id?: string; error?: string };
+    const post = (postData ?? {}) as {
+      ok?: boolean;
+      zernio_post_id?: string;
+      post_url?: string;
+      status?: string;
+      log_id?: string;
+      error?: string;
+    };
     if (!post.ok || !post.zernio_post_id) {
       fail(`Publicação falhou: ${post.error ?? "resposta inesperada"}`);
       return;
@@ -329,10 +370,20 @@ export function PublishDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className={cn("flex w-full flex-col gap-4 overflow-y-auto sm:max-w-md", className)}>
+      <SheetContent
+        side="right"
+        className={cn("flex w-full flex-col gap-4 overflow-y-auto sm:max-w-md", className)}
+      >
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <Youtube className="h-5 w-5 text-red-600" />
+            {/*
+             * Platform icon: DS danger token via --c-publish-drawer-platform-fg
+             * Replaces raw Tailwind palette leak `text-red-600`.
+             */}
+            <Youtube
+              className="h-5 w-5 shrink-0"
+              style={{ color: "var(--c-publish-drawer-platform-fg)" }}
+            />
             Publicar no YouTube
           </SheetTitle>
           <SheetDescription>
@@ -341,26 +392,68 @@ export function PublishDrawer({
           </SheetDescription>
         </SheetHeader>
 
+        {/* ─── Done pane ─────────────────────────────────────────────────────── */}
         {status === "done" && result ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
-            <CheckCircle2 className="h-10 w-10 text-green-600" />
-            <p className="font-medium">Vídeo publicado!</p>
+          <div className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
+            {/* Success icon wrapped in success-subtle circle */}
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-full border"
+              style={{
+                background: "var(--s-success-subtle)",
+                borderColor: "var(--s-success-border)",
+              }}
+            >
+              {/*
+               * CheckCircle2: DS success token via --c-publish-drawer-success-fg
+               * Replaces raw Tailwind palette leak `text-green-600`.
+               */}
+              <CheckCircle2
+                className="h-6 w-6"
+                style={{ color: "var(--c-publish-drawer-success-fg)" }}
+              />
+            </div>
+
+            <p
+              className="text-[15px] font-semibold"
+              style={{ color: "var(--s-ink-primary)" }}
+            >
+              Vídeo publicado!
+            </p>
+
             {result.post_url && (
               <a
                 href={result.post_url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm text-primary underline"
+                className="text-sm underline underline-offset-2 ds-focus-ring rounded-sm"
+                style={{ color: "var(--s-brand-fg)" }}
               >
-                Abrir no YouTube
+                Abrir no YouTube ↗
               </a>
             )}
-            <p className="text-xs text-muted-foreground">Zernio post id: {result.zernio_post_id}</p>
+
+            {/*
+             * Zernio post ID: JetBrains Mono chip via --c-publish-drawer-postid-font.
+             * Replaces bare inline text in body font.
+             */}
+            <code
+              className="rounded border px-2 py-0.5 text-[11px] tracking-[0.3px]"
+              style={{
+                fontFamily: "var(--c-publish-drawer-postid-font)",
+                color: "var(--s-ink-muted)",
+                background: "var(--s-surface-elevated)",
+                borderColor: "var(--s-border-subtle)",
+              }}
+            >
+              {result.zernio_post_id}
+            </code>
+
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>
           </div>
         ) : (
+          /* ─── Form pane ──────────────────────────────────────────────────── */
           <div className="flex flex-1 flex-col gap-4">
             <div className="grid gap-2">
               <Label htmlFor="pd-title">Título</Label>
@@ -394,7 +487,9 @@ export function PublishDrawer({
                 placeholder="ex: alavancagem, produtividade, IA"
                 disabled={busy}
               />
-              <p className="text-xs text-muted-foreground">Separadas por vírgula. A primeira vira a keyword.</p>
+              <p className="text-xs" style={{ color: "var(--s-ink-muted)" }}>
+                Separadas por vírgula. A primeira vira a keyword.
+              </p>
             </div>
 
             <div className="grid gap-2">
@@ -403,7 +498,9 @@ export function PublishDrawer({
                 id="pd-thumb"
                 value={thumbnailUrl}
                 onChange={(e) => setThumbnailUrl(e.target.value)}
-                placeholder="URL da thumbnail"
+                placeholder={
+                  status === "rendering-thumb" ? "Gerando via Thumbify…" : "URL da thumbnail"
+                }
                 disabled={busy}
               />
               {thumbnailTemplateId && (
@@ -416,35 +513,74 @@ export function PublishDrawer({
                   className="w-fit"
                 >
                   {status === "rendering-thumb" ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2
+                      className="h-3.5 w-3.5 animate-spin"
+                      style={{ color: "var(--s-ink-muted)" }}
+                    />
                   ) : (
-                    <ImageIcon className="mr-2 h-4 w-4" />
+                    <ImageIcon className="h-3.5 w-3.5" />
                   )}
-                  Gerar via Thumbify
+                  {status === "rendering-thumb" ? "Gerando…" : "Gerar via Thumbify"}
                 </Button>
               )}
-              {thumbnailUrl && (
+              {/* Indeterminate progress bar — visible only during thumbnail rendering */}
+              {status === "rendering-thumb" && (
+                <div
+                  className="h-0.5 w-full overflow-hidden rounded-full"
+                  style={{ background: "var(--s-border-subtle)" }}
+                  role="progressbar"
+                  aria-label="Renderizando thumbnail…"
+                >
+                  <div
+                    className="h-full w-2/5 animate-pulse rounded-full"
+                    style={{ background: "var(--s-brand-solid)" }}
+                  />
+                </div>
+              )}
+              {thumbnailUrl && status !== "rendering-thumb" && (
                 <img
                   src={thumbnailUrl}
                   alt="Preview da thumbnail"
-                  className="mt-1 max-h-32 rounded border object-contain"
+                  className="mt-1 max-h-32 rounded object-contain"
+                  style={{ border: "1px solid var(--s-border-subtle)" }}
                 />
               )}
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="pd-account">Canal do YouTube</Label>
-              <Select value={accountId ?? undefined} onValueChange={setAccountId} disabled={busy || accounts.length === 0}>
-                <SelectTrigger id="pd-account">
-                  <SelectValue
-                    placeholder={
-                      status === "loading-accounts"
-                        ? "Carregando canais…"
-                        : accounts.length === 0
+              <Select
+                value={accountId ?? undefined}
+                onValueChange={setAccountId}
+                disabled={busy || (accounts.length === 0 && status !== "loading-accounts")}
+              >
+                {/*
+                 * SelectTrigger: override the shadcn default `focus:ring-2 focus:ring-ring`
+                 * (which uses a different ring spec) with the DS uniform amber focus ring
+                 * via --c-input-ring-focus (brand-ring at 45% opacity).
+                 */}
+                <SelectTrigger
+                  id="pd-account"
+                  className="h-9 text-[13px] focus:ring-0 focus-visible:border-[var(--c-input-border-focus)] focus-visible:ring-[3px] focus-visible:ring-[var(--c-input-ring-focus)]"
+                >
+                  {status === "loading-accounts" ? (
+                    /* Loading spinner + label replaces the SelectValue placeholder */
+                    <span
+                      className="flex items-center gap-2"
+                      style={{ color: "var(--s-ink-muted)" }}
+                    >
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Carregando canais…
+                    </span>
+                  ) : (
+                    <SelectValue
+                      placeholder={
+                        accounts.length === 0
                           ? "Nenhum canal conectado"
                           : "Selecione um canal"
-                    }
-                  />
+                      }
+                    />
+                  )}
                 </SelectTrigger>
                 <SelectContent>
                   {accounts.map((a) => (
@@ -456,11 +592,45 @@ export function PublishDrawer({
               </Select>
             </div>
 
+            {/*
+             * Brand status note — inline contextual feedback during async ops.
+             * Uses --s-brand-fg text + --s-brand-subtle bg + --s-brand-border border.
+             */}
+            {(status === "rendering-thumb" || status === "publishing") && (
+              <div
+                className="flex items-center gap-2 rounded-md border px-3 py-2 text-xs"
+                style={{
+                  color: "var(--s-brand-fg)",
+                  background: "var(--s-brand-subtle)",
+                  borderColor: "var(--s-brand-border)",
+                }}
+                role="status"
+              >
+                <Loader2 className="h-3 w-3 animate-spin" />
+                {status === "rendering-thumb"
+                  ? "Renderizando via Thumbify…"
+                  : "Publicando via Zernio → YouTube…"}
+              </div>
+            )}
+
+            {/*
+             * Error box: styled panel with --s-danger-* tokens.
+             * Replaces the previous bare `<p className="text-destructive">` which
+             * had no background and was invisible against the panel surface.
+             */}
             {errorMsg && (
-              <p className="flex items-center gap-2 text-sm text-destructive">
-                <AlertCircle className="h-4 w-4" />
+              <div
+                role="alert"
+                className="flex items-start gap-2 rounded-md border px-3 py-2 text-xs"
+                style={{
+                  color: "var(--s-danger-fg)",
+                  background: "var(--s-danger-subtle)",
+                  borderColor: "var(--s-danger-border)",
+                }}
+              >
+                <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 {errorMsg}
-              </p>
+              </div>
             )}
 
             <SheetFooter className="mt-auto">
@@ -468,7 +638,7 @@ export function PublishDrawer({
                 Cancelar
               </Button>
               <Button onClick={handlePublish} disabled={busy}>
-                {status === "publishing" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {status === "publishing" && <Loader2 className="h-4 w-4 animate-spin" />}
                 Publicar
               </Button>
             </SheetFooter>
