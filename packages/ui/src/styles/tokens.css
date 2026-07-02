@@ -691,4 +691,29 @@
   /* Spacing */
   --c-radio-item-gap:          var(--p-space-3);            /* 12px between items */
   --c-radio-label-gap:         var(--p-space-2);            /* 8px between circle + label */
+ * LAYER 3 — ScrollArea component tokens (--c-scroll-area-*)
+ *
+ *   Thumb state hierarchy + track reveal + sizing for the dark-warm palette.
+ *   Resolves entirely through --s-* semantic tokens; no raw primitives
+ *   are referenced directly.
+ *
+ *   Thumb:  ink-muted at rest → brand-solid on hover → brand-pressed active.
+ *   Track:  transparent at rest; sand-700@50% reveals the rail on hover.
+ *   Width:  8px (down from shadcn default 10px; slimmer = more content area).
+ *   Radius: pill (999px) matching existing thumb treatment.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Thumb state hierarchy */
+  --c-scroll-area-thumb:        var(--s-ink-muted);          /* #7d7568 — visible but recessive at rest */
+  --c-scroll-area-thumb-hover:  var(--s-brand-solid);        /* #E07A4A — amber brand accent on hover   */
+  --c-scroll-area-thumb-active: var(--s-brand-pressed);      /* #c2663b — pressed / dragging            */
+
+  /* Track */
+  --c-scroll-area-track:        transparent;                 /* track at rest: invisible                */
+  --c-scroll-area-track-hover:  rgba(42, 38, 34, 0.50);      /* sand-700 @ 50% — reveals rail on hover  */
+
+  /* Sizing */
+  --c-scroll-area-width:        8px;                         /* scrollbar rail + thumb width            */
+  --c-scroll-area-radius:       var(--p-radius-pill);        /* 999px pill thumb                        */
 }
