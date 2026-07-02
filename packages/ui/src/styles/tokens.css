@@ -525,3 +525,37 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * InputOTP — component tokens (--c-otp-*)
+ *
+ * Layer 3 block. All values resolve through existing --s-* / --p-* tokens.
+ * Consumers can override any knob to retheme the OTP widget in isolation.
+ *
+ * Active focus ring: box-shadow 0 0 0 2px var(--background), 0 0 0 3px #E07A4A
+ * (the ONE uniform DFL ring — 2px page-bg gap + 1px amber outline; see §Focus Ring above).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Geometry */
+  --c-otp-slot-w:              48px;                   /* was 36px (shadcn baseline) */
+  --c-otp-slot-h:              56px;                   /* was 36px — enlarged for touch + legibility */
+  --c-otp-slot-radius:         var(--p-radius-md);     /* 6px */
+  --c-otp-group-gap:           14px;                   /* gap between groups (not within) */
+
+  /* Backgrounds */
+  --c-otp-slot-bg:             var(--s-surface-raised);    /* empty slot */
+  --c-otp-slot-bg-filled:      var(--s-surface-elevated);  /* slot with digit / active */
+
+  /* Borders */
+  --c-otp-slot-border:         var(--s-border-subtle);     /* idle */
+  --c-otp-slot-border-active:  var(--s-border-focus);      /* amber #E07A4A — active slot */
+  --c-otp-slot-border-error:   var(--s-danger-solid);      /* invalid code */
+  --c-otp-slot-border-success: var(--s-success-solid);     /* verified code */
+
+  /* Typography — JetBrains Mono for unambiguous digit rendering (0/O, 1/l) */
+  --c-otp-slot-fg:             var(--s-ink-primary);
+  --c-otp-font:                var(--p-font-mono);     /* JetBrains Mono */
+  --c-otp-font-size:           20px;
+  --c-otp-font-weight:         600;
+}
