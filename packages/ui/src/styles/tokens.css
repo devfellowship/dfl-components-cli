@@ -525,3 +525,29 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Separator component tokens (--c-separator-*)
+ *
+ *   Resolves exclusively to existing --s-* semantic tokens. Gives consumers
+ *   a single override knob (--c-separator-color) instead of reaching into
+ *   the semantic layer directly.
+ *
+ *   Usage: override per-instance via inline style —
+ *     style={{ "--c-separator-color": "var(--s-border-strong)" } as React.CSSProperties}
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Line fill — subtle border for inline dividers (default) */
+  --c-separator-color:         var(--s-border-subtle);
+  /* Line fill — strong border for major section boundaries */
+  --c-separator-color-strong:  var(--s-border-strong);
+  /* Line fill — brand-border tint for accent/featured separators */
+  --c-separator-color-brand:   var(--s-brand-border);
+  /* Line weight (height for horizontal, width for vertical) */
+  --c-separator-thickness:     1px;
+
+  /* WithLabel composite — centered label typography */
+  --c-separator-label-fg:      var(--s-ink-muted);
+  --c-separator-label-size:    var(--p-text-11);
+}
