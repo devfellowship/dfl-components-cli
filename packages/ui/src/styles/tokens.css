@@ -363,6 +363,42 @@
   --c-badge-radius: var(--p-radius-sm);
   --c-pill-radius:  var(--p-radius-pill);
 
+  /* Alert — neutral panel base + per-variant semantic skins.
+   * Default is a VISIBLE elevated panel (surface-panel), never page bg.
+   * Each variant maps to its --s-{intent}-{subtle,border,fg,solid} tokens. */
+  --c-alert-bg:              var(--s-surface-panel);
+  --c-alert-radius:          var(--p-radius-lg);
+  --c-alert-padding-y:       var(--p-space-4);
+  --c-alert-padding-x:       var(--p-space-4);
+  --c-alert-border:          var(--s-border-subtle);
+  --c-alert-fg:              var(--s-ink-primary);
+  --c-alert-desc-fg:         var(--s-ink-secondary);
+  --c-alert-icon-size:       18px;
+  --c-alert-accent-w:        3px;   /* left accent stripe */
+
+  --c-alert-default-icon:    var(--s-ink-muted);
+  --c-alert-default-accent:  var(--s-border-subtle);
+
+  --c-alert-info-bg:         var(--s-info-subtle);
+  --c-alert-info-border:     var(--s-info-border);
+  --c-alert-info-icon:       var(--s-info-fg);
+  --c-alert-info-accent:     var(--s-info-solid);
+
+  --c-alert-success-bg:      var(--s-success-subtle);
+  --c-alert-success-border:  var(--s-success-border);
+  --c-alert-success-icon:    var(--s-success-fg);
+  --c-alert-success-accent:  var(--s-success-solid);
+
+  --c-alert-warning-bg:      var(--s-warning-subtle);
+  --c-alert-warning-border:  var(--s-warning-border);
+  --c-alert-warning-icon:    var(--s-warning-fg);
+  --c-alert-warning-accent:  var(--s-warning-solid);
+
+  --c-alert-danger-bg:       var(--s-danger-subtle);
+  --c-alert-danger-border:   var(--s-danger-border);
+  --c-alert-danger-icon:     var(--s-danger-fg);
+  --c-alert-danger-accent:   var(--s-danger-solid);
+
   /* Layout chrome */
   --c-sidebar-w:           224px;
   --c-sidebar-w-collapsed: 56px;
