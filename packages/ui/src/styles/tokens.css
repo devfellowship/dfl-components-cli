@@ -1484,3 +1484,36 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+}
+
+/* ── LAYER 3 — Resizable component tokens (--c-resizable-*) ─────────────────
+ *
+ * Split-pane primitive (react-resizable-panels) — DS v0 brand alignment.
+ * All values resolve to existing --s-* semantic tokens.
+ * Override --c-resizable-* to retheme without touching shared semantics.
+ *
+ * Track = the 1px divider line between panels.
+ * Grip  = the optional pill-shaped drag widget centred on the track.
+ *
+ * State hierarchy: idle → hover → focus → drag (drag wins when concurrent).
+ * Focus ring on grip: 2px --s-surface-page gap + 1px --s-brand-solid amber.
+ * Drag state driven by data-resize-handle-active attribute from the library.
+ * ────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* ── Track (1px divider) ──────────────────────────────────────────────── */
+  --c-resizable-handle-track:           var(--s-border-subtle);   /* idle         */
+  --c-resizable-handle-track-hover:     var(--s-border-strong);   /* pointer-over */
+  --c-resizable-handle-track-focus:     var(--s-brand-solid);     /* :focus-visible */
+  --c-resizable-handle-track-drag:      var(--s-brand-solid);     /* dragging     */
+
+  /* ── Grip widget (optional pill, withHandle=true) ─────────────────────── */
+  --c-resizable-grip-bg:                var(--s-surface-elevated); /* idle bg      */
+  --c-resizable-grip-border:            var(--s-border-subtle);    /* idle border  */
+  --c-resizable-grip-border-hover:      var(--s-border-strong);    /* hover border */
+  --c-resizable-grip-border-focus:      var(--s-brand-solid);      /* focus border */
+  --c-resizable-grip-border-drag:       var(--s-brand-solid);      /* drag border  */
+
+  /* ── Grip icon / dots ────────────────────────────────────────────────── */
+  --c-resizable-grip-icon:              var(--s-ink-muted);        /* idle dots    */
+  --c-resizable-grip-icon-drag:         var(--s-brand-solid);      /* drag dots    */
+}
