@@ -583,6 +583,21 @@
 
   /* Disabled: use --s-ink-disabled at 0.45 opacity via the component class. */
   --c-cal-day-disabled-fg:        var(--s-ink-disabled);
+  /* Carousel — nav buttons + dot indicators (Layer 3 component knobs).
+   * All values resolve to existing --s-* semantic tokens (or --p-* where no
+   * semantic alias exists, e.g. amber-400 hover ink via --s-brand-hover).
+   * Consumed by CarouselPrevious, CarouselNext, CarouselDots in carousel.tsx. */
+  --c-carousel-nav-bg:           var(--s-surface-elevated);   /* default button bg */
+  --c-carousel-nav-border:       var(--s-border-subtle);      /* default button border */
+  --c-carousel-nav-fg:           var(--s-ink-secondary);      /* default arrow color */
+  --c-carousel-nav-bg-hover:     var(--s-brand-subtle);       /* hover/focus bg: amber 10% */
+  --c-carousel-nav-border-hover: var(--s-brand-border);       /* hover/focus border: amber 22% */
+  --c-carousel-nav-fg-hover:     var(--s-brand-hover);        /* hover/focus arrow: amber-400 */
+  --c-carousel-nav-fg-disabled:  var(--s-ink-disabled);       /* disabled arrow (no opacity hack) */
+  --c-carousel-dot-bg:           var(--s-border-strong);      /* inactive dot */
+  --c-carousel-dot-active:       var(--s-brand-solid);        /* active dot: amber-500 */
+  --c-carousel-dot-radius:       var(--p-radius-pill);        /* dot shape */
+  --c-carousel-radius:           var(--p-radius-lg);          /* track border-radius */
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
