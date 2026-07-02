@@ -20,7 +20,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
   useSidebar,
 } from "../sidebar";
 
@@ -134,19 +133,26 @@ function SidebarInner({
 
                   return (
                     <SidebarMenuItem key={item.title}>
+                      {/*
+                       * Active state: DS amber trio — bg = --c-appshell-nav-active-bg,
+                       * text = --c-appshell-nav-active-fg, border = amber 22%.
+                       * Inline style overrides the CVA data-[active=true]:bg-sidebar-accent
+                       * (which maps to --s-surface-raised — indistinguishable from hover).
+                       * Focus ring: c-appshell-focus (box-shadow form, clip-safe in rail).
+                       */}
                       <SidebarMenuButton
-                        asChild
                         isActive={isActive}
                         tooltip={isCollapsed ? item.title : undefined}
+                        onClick={() => onNavigate?.(item.url)}
+                        className="c-appshell-focus focus-visible:ring-0"
+                        style={isActive ? {
+                          background: "var(--c-appshell-nav-active-bg)",
+                          color: "var(--c-appshell-nav-active-fg)",
+                          border: "1px solid var(--c-appshell-nav-active-border)",
+                        } : undefined}
                       >
-                        <button
-                          type="button"
-                          onClick={() => onNavigate?.(item.url)}
-                          className="flex items-center gap-2 w-full"
-                        >
-                          {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
-                          <span className="truncate">{item.title}</span>
-                        </button>
+                        {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
+                        <span className="truncate">{item.title}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
@@ -192,8 +198,17 @@ function SidebarInner({
 
 /**
  * AppSidebar wraps the Sidebar primitive with SidebarProvider.
- * Renders an optional trigger button + the sidebar itself.
  * Pass `children` to render the main content area next to the sidebar.
+ *
+ * The SidebarTrigger (collapse toggle) MUST live inside an AppNavbar `leftSlot`
+ * that is passed as part of `children` — this keeps the unified 56px topbar as
+ * the only top chrome (no separate 48px trigger strip stacking above it).
+ *
+ * Example:
+ *   <AppSidebar navGroups={...}>
+ *     <AppNavbar leftSlot={<SidebarTrigger />} ... />
+ *     <main>...</main>
+ *   </AppSidebar>
  */
 export function AppSidebar({
   defaultOpen = true,
@@ -201,20 +216,14 @@ export function AppSidebar({
   ...props
 }: AppSidebarProps) {
   return (
-    // Override --sidebar-background so bg-sidebar resolves to --s-surface-panel (#141210)
-    // instead of the default --s-surface-page (#0a0908), which was invisible against the page.
     <SidebarProvider
       defaultOpen={defaultOpen}
       style={{ "--sidebar-background": "var(--c-appsidebar-bg)" } as React.CSSProperties}
     >
       <div className="flex min-h-screen w-full">
         <SidebarInner {...props} />
+        {/* Content column — no dedicated trigger strip; trigger lives in the AppNavbar leftSlot */}
         <div className="flex flex-col flex-1 min-w-0">
-          {/* Top bar holding the collapse trigger. Lives in the content column
-           * (NOT over the sidebar header) so it never overlaps the brand. */}
-          <div className="sticky top-0 z-20 flex h-12 shrink-0 items-center gap-2 border-b border-sidebar-border bg-background/80 px-2 backdrop-blur">
-            <SidebarTrigger />
-          </div>
           {children}
         </div>
       </div>

@@ -7,62 +7,51 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/utils";
 
 /**
- * Toggle — DFL Design System v0
+ * toggleVariants — DFL DS v0
  *
- * Tokens consumed:
- *   --c-toggle-{radius,bg,fg,bg-hover,fg-hover,bg-on,fg-on,border-on,
- *               outline-border,outline-bg-hover,fg-disabled}
- *   backed by --s-{ink-*,surface-*,brand-*,border-*}
+ * Token hierarchy consumed:
+ *   --c-toggle-{bg,bg-hover,bg-active,bg-active-hover}
+ *   --c-toggle-{fg,fg-hover,fg-active}
+ *   --c-toggle-border
+ *   --c-toggle-focus-ring  (uniform 2px-gap + 1px-amber spec, ch.5.2)
  *
- * Three brand-gate fixes vs the original shadcn scaffold:
- *   1. On-state: --c-toggle-bg-on (brand-subtle, 10% tint) + --c-toggle-fg-on
- *      (brand-fg, amber-300) — signals "selected", NOT "action".
- *      Was: bg-accent (solid amber #E07A4A) + near-black text → CTA clone.
- *   2. Focus ring: uniform DFL spec — box-shadow 2px page gap + 1px amber
- *      #E07A4A, transition:none (instant, no animation).
- *      Was: translucent ring-ring/50 ring-[3px].
- *   3. Outline hover: step-up surface (--s-surface-raised) + stronger border.
- *      Was: hover:bg-accent (solid amber) — looked pressed before clicking.
+ * Active state: amber wash (--s-brand-subtle) + amber-300 fg (--s-brand-fg),
+ * NOT the generic --accent alias. Hover on active: slightly stronger amber wash.
+ *
+ * Focus ring: box-shadow 0 0 0 2px page-bg + 0 0 0 3px #E07A4A, z-index:10
+ * so the ring is NOT clipped by siblings in a group.
+ *
+ * Disabled: 40% opacity + pointer-events:none (active state still visible at
+ * reduced opacity to preserve context).
  */
 const toggleVariants = cva(
   [
-    // layout
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap",
-    // shape — radius via --c-toggle-radius; border-transparent for default variant
-    "rounded-[var(--c-toggle-radius)] border border-transparent",
-    // typography
-    "text-[var(--p-text-13)] font-medium",
-    // base colours (DS Layer-3 tokens)
-    "bg-[var(--c-toggle-bg)] text-[var(--c-toggle-fg)]",
-    // hover — step up surface + ink-primary; applies to both variants
+    "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium",
+    // Base fg — muted until hovered/activated
+    "text-[var(--c-toggle-fg)]",
+    // Hover states
     "hover:bg-[var(--c-toggle-bg-hover)] hover:text-[var(--c-toggle-fg-hover)]",
-    // on / active — brand-subtle bg, brand-fg text, brand border (NOT solid amber)
-    "data-[state=on]:bg-[var(--c-toggle-bg-on)]",
-    "data-[state=on]:text-[var(--c-toggle-fg-on)]",
-    "data-[state=on]:border-[var(--c-toggle-border-on)]",
-    // disabled — 38 % opacity per DS spec (was 50 %)
-    "disabled:pointer-events-none disabled:opacity-[.38]",
-    // focus ring — 2px page-coloured gap + 1px amber, instant (no animation)
-    "outline-none",
-    "focus-visible:[box-shadow:0_0_0_2px_var(--background),0_0_0_3px_#E07A4A]",
-    "focus-visible:[transition:none]",
-    // SVG icon sizing
+    // Active (on) state — amber wash bg + amber-300 fg
+    "data-[state=on]:bg-[var(--c-toggle-bg-active)] data-[state=on]:text-[var(--c-toggle-fg-active)]",
+    // Active + hover — slightly stronger amber wash
+    "data-[state=on]:hover:bg-[var(--c-toggle-bg-active-hover)]",
+    // Disabled — 40% opacity (active still readable at reduced opacity)
+    "disabled:pointer-events-none disabled:opacity-40",
+    // Focus ring — uniform 2px-gap + 1px-amber; z-10 so ring shows above siblings
+    "outline-none focus-visible:z-10 focus-visible:shadow-[var(--c-toggle-focus-ring)]",
+    // SVG size normalisation
     "[&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
-    // motion — bg/colour/border only; box-shadow excluded so focus ring is instant
-    "transition-[background-color,color,border-color] duration-[120ms]",
-    // a11y — error state passthrough
-    "aria-invalid:ring-destructive/20 aria-invalid:border-destructive",
+    "whitespace-nowrap transition-[color,background-color,box-shadow]",
+    // Form validation — preserve aria-invalid feedback
+    "aria-invalid:border-destructive",
   ].join(" "),
   {
     variants: {
       variant: {
-        default: "",
-        outline: [
-          // idle: visible border
-          "border-[var(--c-toggle-outline-border)]",
-          // hover: subtle surface step-up + stronger border (NOT solid amber fill)
-          "hover:bg-[var(--c-toggle-outline-bg-hover)] hover:border-[var(--s-border-strong)]",
-        ].join(" "),
+        default: "bg-transparent",
+        outline:
+          // Border color via component token (--c-toggle-border → --s-border-subtle)
+          "border border-[var(--c-toggle-border)] bg-transparent",
       },
       size: {
         default: "h-9 px-2 min-w-9",
