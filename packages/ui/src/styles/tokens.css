@@ -405,6 +405,16 @@
   --c-header-h:            56px;
   --c-statusbar-h:         24px;
   --c-content-max:         1280px;
+
+  /* AppSidebar organism — Layer 3 component tokens.
+   * All values resolve to existing --s-* semantic tokens.
+   * Override these to retheme the AppSidebar without touching semantics. */
+  --c-appsidebar-bg:                 var(--s-surface-panel);       /* #141210 — panel depth, NOT page bg */
+  --c-appsidebar-item-active-bg:     var(--s-brand-subtle);        /* rgba(224,122,74,0.10) — brand tint */
+  --c-appsidebar-item-active-fg:     var(--s-brand-fg);            /* #f0a872 — amber-300 text */
+  --c-appsidebar-item-active-border: var(--s-brand-solid);         /* #E07A4A — 3px left indicator */
+  --c-appsidebar-focus-ring-gap:     var(--s-surface-panel);       /* 2px gap matches sidebar panel bg */
+  --c-appsidebar-focus-ring-color:   var(--s-brand-solid);         /* 1px amber ring */
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
