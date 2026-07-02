@@ -1484,3 +1484,40 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Sidebar item — per-state knobs (Layer 3 / --c-*)
+ *
+ *   Sidebar primitive (sidebar.tsx) reads these; override to retheme the
+ *   sidebar active/hover/focus surfaces without touching --s-* semantics.
+ *
+ *   Fixes:
+ *     1. active ≠ hover  →  active uses brand-subtle tint (not surface-raised)
+ *     2. uniform DS focus ring  →  2px bg gap + 1px amber box-shadow
+ *     3. group-label display font  →  Barlow Condensed uppercase via --s-font-display
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Sidebar shell background — used as the 2px focus-ring gap colour */
+  --c-sidebar-bg:                var(--s-surface-page);
+
+  /* Menu item — resting foreground */
+  --c-sidebar-item-fg:           var(--s-ink-secondary);
+
+  /* Menu item — hover (surface-raised, visually distinct from active) */
+  --c-sidebar-item-hover-bg:     var(--s-surface-raised);
+
+  /* Menu item — active  (isActive=true / current route) */
+  --c-sidebar-item-active-bg:    var(--s-brand-subtle);     /* rgba(224,122,74,.10) amber tint */
+  --c-sidebar-item-active-fg:    var(--s-brand-solid);      /* #E07A4A amber text + icon */
+  --c-sidebar-item-active-bar-w: 2px;                       /* left-edge indicator width */
+
+  /* Group section label */
+  --c-sidebar-group-label-fg:    var(--s-ink-muted);        /* #7d7568 muted, Barlow Condensed */
+
+  /* Focus ring colour (amber brand) */
+  --c-sidebar-ring:              var(--s-border-focus);     /* #E07A4A */
+
+  /* Sidebar border (vertical rule, sub-menu indent line) */
+  --c-sidebar-border:            var(--s-border-subtle);
+}
