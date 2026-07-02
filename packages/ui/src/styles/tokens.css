@@ -637,4 +637,31 @@
   --c-alert-dialog-scrim:    var(--c-dialog-scrim);    /* backdrop rgba scrim   */
   --c-alert-dialog-title-fg: var(--s-ink-primary);     /* title text color      */
   --c-alert-dialog-desc-fg:  var(--s-ink-muted);       /* description text      */
+ * LAYER 3 — Component (--c-progress-*)
+ *   Track background lifted to --s-surface-elevated so the empty bar is
+ *   legible against the page (#0a0908). Fill is brand amber by default;
+ *   semantic variants map to their --s-{intent}-solid tokens.
+ *   Height sizes: sm=4px / md=8px (default, replaces hardcoded h-4=16px) / lg=12px.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Track */
+  --c-progress-track-bg:      var(--s-surface-elevated);   /* #1f1c18 — visible on page bg */
+  --c-progress-radius:        var(--p-radius-pill);          /* 999px */
+
+  /* Heights (size variants) */
+  --c-progress-h-sm:          4px;
+  --c-progress-h-md:          8px;   /* default — replaces hardcoded h-4 (16px) */
+  --c-progress-h-lg:          12px;
+
+  /* Motion */
+  --c-progress-duration:      var(--p-duration-slow);        /* 280ms */
+  --c-progress-easing:        var(--p-ease-in-out);          /* cubic-bezier(0.4,0,0.2,1) */
+
+  /* Fill colors (variant layer) */
+  --c-progress-fill:          var(--s-brand-solid);          /* amber #E07A4A */
+  --c-progress-fill-success:  var(--s-success-solid);        /* green #5ec27e */
+  --c-progress-fill-danger:   var(--s-danger-solid);         /* red   #e07a7a */
+  --c-progress-fill-warning:  var(--s-warning-solid);        /* yellow #e0b04a */
+  --c-progress-fill-info:     var(--s-info-solid);           /* blue  #7aa2e0 */
 }
