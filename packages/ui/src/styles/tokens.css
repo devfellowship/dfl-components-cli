@@ -399,6 +399,28 @@
   --c-alert-danger-icon:     var(--s-danger-fg);
   --c-alert-danger-accent:   var(--s-danger-solid);
 
+  /* Command palette — --c-command-*
+   * Layer 3 additions for Organisms/Command. All values resolve to existing
+   * --s-* semantic tokens (no new primitives added).
+   * Fix: bg-accent (#E07A4A) as item hover → surface-elevated + amber left-bar.
+   * Fix: outline-hidden on input → uniform DFL focus ring via box-shadow.
+   * Fix: shortcut font → --s-font-mono (JetBrains Mono). */
+  --c-command-bg:               var(--s-surface-raised);     /* #1a1714 */
+  --c-command-border:           var(--s-border-subtle);      /* #2a2622 */
+  --c-command-radius:           var(--p-radius-lg);          /* 10px */
+  --c-command-shadow:           var(--p-shadow);             /* 0 4px 12px … */
+  --c-command-input-sep:        var(--s-border-subtle);      /* separator below input */
+  --c-command-group-fg:         var(--s-ink-muted);          /* headings + icons default */
+  --c-command-item-fg:          var(--s-ink-secondary);      /* item text default */
+  --c-command-item-hover-bg:    var(--s-surface-elevated);   /* #1f1c18 — replaces bg-accent */
+  --c-command-item-hover-fg:    var(--s-ink-primary);        /* #f6f1e7 on hover/selected */
+  --c-command-item-icon-hover-fg: var(--s-ink-secondary);    /* #c9c0b4 icon on hover */
+  --c-command-item-sel-bar:     var(--s-brand-solid);        /* amber 2px left indicator */
+  --c-command-shortcut-fg:      var(--s-ink-muted);          /* shortcut text */
+  --c-command-sep:              var(--s-border-subtle);      /* CommandSeparator line */
+  --c-command-empty-fg:         var(--s-ink-muted);          /* empty state text */
+  --c-command-focus-color:      var(--s-border-focus);       /* amber #E07A4A for focus ring */
+
   /* Layout chrome */
   --c-sidebar-w:           224px;
   --c-sidebar-w-collapsed: 56px;
