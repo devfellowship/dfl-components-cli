@@ -482,6 +482,21 @@
    * to avoid cross-PR conflicts with Input/Select refactors. */
   --c-textarea-ring-focus:       0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
   --c-textarea-ring-focus-error: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-danger-solid);
+  /* Collapsible (Molecules) — panel with animated reveal + amber trigger affordance.
+   * Resolves to existing --s-* semantic tokens; never touches --p-* primitives.
+   * Ring: double-layer box-shadow — 2px page-bg gap + 1px amber outer ring. */
+  --c-collapsible-bg:               var(--s-surface-panel);
+  --c-collapsible-bg-hover:         var(--s-surface-raised);
+  --c-collapsible-border:           var(--s-border-subtle);
+  --c-collapsible-border-hover:     var(--s-border-strong);
+  --c-collapsible-radius:           var(--p-radius-md);
+  --c-collapsible-header-fg:        var(--s-ink-primary);
+  --c-collapsible-content-bg:       var(--s-surface-raised);
+  --c-collapsible-content-border:   var(--s-border-subtle);
+  --c-collapsible-item-fg:          var(--s-ink-secondary);
+  --c-collapsible-trigger-fg:       var(--s-ink-muted);
+  --c-collapsible-trigger-fg-hover: var(--s-brand-solid);
+  --c-collapsible-trigger-ring:     0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
