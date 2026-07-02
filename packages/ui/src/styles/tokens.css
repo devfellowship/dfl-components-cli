@@ -525,3 +525,22 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Button — semantic focus-ring knobs (atoms-button refactor, 2026-07-02)
+ *
+ *   Brand spec: double box-shadow — 2px bg-color gap + 1px solid accent.
+ *   Three accent colours; each resolves to an existing --s-* semantic token.
+ *
+ *     --c-button-focus-gap      the 2 px background-color separator
+ *     --c-button-focus-brand    amber  — primary / secondary / outline / ghost / link
+ *     --c-button-focus-danger   red    — destructive (semantic intent)
+ *     --c-button-focus-success  green  — success (semantic intent)
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --c-button-focus-gap:     var(--s-surface-page);
+  --c-button-focus-brand:   var(--s-brand-solid);
+  --c-button-focus-danger:  var(--s-danger-solid);
+  --c-button-focus-success: var(--s-success-solid);
+}
