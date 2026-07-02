@@ -525,3 +525,29 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LoginPage component tokens (Layer 3 append — do not edit above this line)
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Card shell */
+  --c-loginpage-card-bg:      var(--c-card-bg);        /* #141210 via --s-surface-panel */
+  --c-loginpage-card-border:  var(--c-card-border);    /* #2a2622 via --s-border-subtle  */
+  --c-loginpage-card-radius:  var(--c-card-radius);    /* 10px via --p-radius-lg         */
+  --c-loginpage-card-shadow:  var(--p-shadow-lg);      /* 0 12px 30px rgba(0,0,0,0.6)   */
+
+  /* Error banner */
+  --c-loginpage-error-bg:     var(--s-danger-subtle);  /* rgba(224,122,122,0.12) */
+  --c-loginpage-error-border: var(--s-danger-border);  /* rgba(224,122,122,0.40) */
+  --c-loginpage-error-fg:     var(--s-danger-fg);      /* #e89898 via --p-red-400 */
+
+  /*
+   * Uniform DS focus ring for plain HTML elements (mode-switch <button>, terms <a>).
+   * Spec: 2px page-bg gap + 1px amber ring (brand.devfellowship.com ch.5.2).
+   * Consumed as: focus-visible:[box-shadow:var(--c-loginpage-focus-ring)]
+   */
+  --c-loginpage-focus-ring:
+    0 0 0 2px var(--s-surface-page),
+    0 0 0 3px var(--s-border-focus);
+}
