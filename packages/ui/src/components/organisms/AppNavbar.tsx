@@ -1,18 +1,22 @@
 /**
  * AppNavbar organism
- * Top navigation bar with breadcrumb, user menu, and theme toggle.
- * Works standalone — no router dependency.
+ * Top navigation bar with optional left slot (e.g. SidebarTrigger), breadcrumb,
+ * user menu, and theme toggle. Works standalone — no router dependency.
  *
  * DS v0 tokens consumed (Layer 3 → Layer 2):
- *   --c-navbar-bg        → --s-surface-page   (always dark, page flush)
+ *   --c-navbar-bg        → --s-surface-panel  (#141210 — elevated panel, NOT page flush)
  *   --c-navbar-border    → --s-border-subtle
  *   --c-navbar-h         → 56px               (same as --c-header-h)
  *   --c-navbar-px        → --p-space-4
  *   --c-navbar-breadcrumb-fg         → --s-ink-muted
  *   --c-navbar-breadcrumb-fg-current → --s-ink-primary
  *
- * Focus ring: all interactive elements carry `.ds-focus-ring` which applies
- * the uniform amber outline (1px solid #E07A4A, 3px offset) via tokens.css.
+ * leftSlot: embed a SidebarTrigger here so the sidebar toggle lives in the unified
+ * 56px topbar rather than in a separate 48px strip (which would create 104px of dead
+ * chrome). Pass <SidebarTrigger /> as leftSlot in the AppShell template.
+ *
+ * Focus ring: all interactive elements carry `.ds-focus-ring` (outline form, from
+ * tokens.css) or `.c-appshell-focus` (box-shadow form, preferred in AppShell context).
  * The button's built-in `focus-visible:ring-*` is zeroed so only the DS ring shows.
  *
  * Sign-out item: uses --s-danger-fg / --s-danger-subtle directly — never
@@ -75,6 +79,12 @@ export interface AppNavbarProps {
   onSignOut?: () => void;
   /** Extra action elements rendered to the right of breadcrumbs (8px gap). */
   actions?: ReactNode;
+  /**
+   * Optional slot rendered to the LEFT of the breadcrumb row.
+   * Embed a `<SidebarTrigger />` here so the sidebar toggle lives inside the
+   * unified 56px topbar, replacing the redundant 48px trigger strip above it.
+   */
+  leftSlot?: ReactNode;
   /** Custom CSS class for the navbar wrapper. */
   className?: string;
 }
@@ -97,6 +107,7 @@ export function AppNavbar({
   onSettingsClick,
   onSignOut,
   actions,
+  leftSlot,
   className,
 }: AppNavbarProps) {
   const isDark = theme === "dark";
@@ -111,8 +122,11 @@ export function AppNavbar({
         className,
       )}
     >
-      {/* Left: Breadcrumbs + actions slot */}
+      {/* Left: optional slot (SidebarTrigger, etc.) + Breadcrumbs + actions slot */}
       <div className="flex items-center gap-2 min-w-0 flex-1">
+        {leftSlot && (
+          <div className="flex items-center shrink-0">{leftSlot}</div>
+        )}
         {breadcrumbs.length > 0 && (
           <Breadcrumb>
             <BreadcrumbList>

@@ -231,8 +231,8 @@ const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.C
         size="icon"
         className={cn(
           "h-7 w-7",
-          // DS uniform focus ring: 2px panel-bg gap + 1px amber (overrides Button default ring).
-          "focus-visible:outline-none focus-visible:[box-shadow:0_0_0_2px_var(--c-appsidebar-focus-ring-gap),0_0_0_3px_var(--c-appsidebar-focus-ring-color)]",
+          // DS uniform focus ring: 2px sidebar-bg gap + 1px amber (overrides Button default ring).
+          "focus-visible:outline-none focus-visible:[box-shadow:0_0_0_2px_var(--c-sidebar-bg),0_0_0_3px_var(--c-sidebar-ring)]",
           className,
         )}
         onClick={(event) => {
@@ -299,7 +299,8 @@ const SidebarInput = React.forwardRef<React.ElementRef<typeof Input>, React.Comp
         ref={ref}
         data-sidebar="input"
         className={cn(
-          "h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+          // DS uniform focus ring replaces legacy ring-2 approach.
+          "h-8 w-full bg-background shadow-none focus-visible:outline-none focus-visible:[box-shadow:0_0_0_2px_var(--c-sidebar-bg),0_0_0_3px_var(--c-sidebar-ring)]",
           className,
         )}
         {...props}
@@ -369,7 +370,10 @@ const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<
         ref={ref}
         data-sidebar="group-label"
         className={cn(
-          "flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+          // DS display font: Barlow Condensed 10px uppercase letter-spacing:0.8px --c-sidebar-group-label-fg
+          // (replaces generic body-text muted style — now reads as a real section header).
+          // DS uniform focus ring replaces legacy ring-2 approach.
+          "flex h-8 shrink-0 items-center rounded-md px-2 [font-family:var(--s-font-display)] text-[10px] font-semibold uppercase tracking-[0.8px] text-[var(--c-sidebar-group-label-fg)] outline-none transition-[margin,opacity] duration-200 ease-linear focus-visible:[box-shadow:0_0_0_2px_var(--c-sidebar-bg),0_0_0_3px_var(--c-sidebar-ring)] [&>svg]:size-4 [&>svg]:shrink-0",
           "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0",
           className,
         )}
@@ -389,7 +393,7 @@ const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentPr
         ref={ref}
         data-sidebar="group-action"
         className={cn(
-          "absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+          "absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-[var(--c-sidebar-item-fg)] outline-none transition-transform hover:bg-[var(--c-sidebar-item-hover-bg)] hover:text-[var(--s-ink-primary)] focus-visible:[box-shadow:0_0_0_2px_var(--c-sidebar-bg),0_0_0_3px_var(--c-sidebar-ring)] [&>svg]:size-4 [&>svg]:shrink-0",
           // Increases the hit area of the button on mobile.
           "after:absolute after:-inset-2 after:md:hidden",
           "group-data-[collapsible=icon]:hidden",
@@ -420,16 +424,50 @@ const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<"li
 SidebarMenuItem.displayName = "SidebarMenuItem";
 
 const sidebarMenuButtonVariants = cva(
-  // DS-aligned base: active state uses brand-subtle bg + brand-fg text + 3px amber left border
-  // (previously used sidebar-accent for both hover and active — indistinguishable).
-  // Focus ring: DS uniform ring = 2px panel gap + 1px amber (replaces shadcn ring-2 which had no gap).
-  "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:[box-shadow:0_0_0_2px_var(--c-appsidebar-focus-ring-gap),0_0_0_3px_var(--c-appsidebar-focus-ring-color)] active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-[var(--c-appsidebar-item-active-bg)] data-[active=true]:font-medium data-[active=true]:text-[var(--c-appsidebar-item-active-fg)] data-[active=true]:[border-left:3px_solid_var(--c-appsidebar-item-active-border)] data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  // DS-aligned base:
+  //   hover  →  --c-sidebar-item-hover-bg (surface-raised, distinct from active)
+  //   active →  --c-sidebar-item-active-bg (brand-subtle amber tint) +
+  //             --c-sidebar-item-active-fg (amber text/icon) +
+  //             2px amber left-bar via ::before pseudo-element
+  //   focus  →  DS uniform ring: 2px bg gap + 1px amber box-shadow (no legacy ring-2)
+  //
+  // ::before creates the left-bar indicator. It starts at width:0 (invisible) and
+  // grows to --c-sidebar-item-active-bar-w (2px) when data-active=true. The element
+  // keeps overflow-hidden (for text truncation) — at left:0 the bar is inside the
+  // padding box so it is NOT clipped. Pattern borrowed from alert.tsx accent stripe.
+  [
+    "peer/menu-button relative flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm",
+    "text-[var(--c-sidebar-item-fg)] outline-none transition-[width,height,padding]",
+    // left-bar pseudo-element (inactive: width 0 = invisible)
+    "before:absolute before:top-1/2 before:left-0 before:-translate-y-1/2 before:h-[18px] before:w-0 before:rounded-[0_1px_1px_0] before:content-['']",
+    // hover
+    "hover:bg-[var(--c-sidebar-item-hover-bg)] hover:text-[var(--s-ink-primary)]",
+    // DS uniform focus ring
+    "focus-visible:[box-shadow:0_0_0_2px_var(--c-sidebar-bg),0_0_0_3px_var(--c-sidebar-ring)]",
+    // click (CSS :active pseudo-class — use hover surface for tap feedback)
+    "active:bg-[var(--c-sidebar-item-hover-bg)] active:text-[var(--s-ink-primary)]",
+    "disabled:pointer-events-none disabled:opacity-50",
+    "group-has-[[data-sidebar=menu-action]]/menu-item:pr-8",
+    "aria-disabled:pointer-events-none aria-disabled:opacity-50",
+    // active nav state — amber tint bg + amber text + 2px left-bar
+    "data-[active=true]:bg-[var(--c-sidebar-item-active-bg)]",
+    "data-[active=true]:font-medium",
+    "data-[active=true]:text-[var(--c-sidebar-item-active-fg)]",
+    "data-[active=true]:before:w-[var(--c-sidebar-item-active-bar-w)]",
+    "data-[active=true]:before:bg-[var(--c-sidebar-item-active-fg)]",
+    // open collapsible hover
+    "data-[state=open]:hover:bg-[var(--c-sidebar-item-hover-bg)] data-[state=open]:hover:text-[var(--s-ink-primary)]",
+    // icon-rail collapsed state
+    "group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2",
+    "[&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+  ].join(" "),
   {
     variants: {
       variant: {
-        default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        // hover/active are handled in the base — no duplication needed here
+        default: "",
         outline:
-          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+          "bg-background shadow-[0_0_0_1px_var(--c-sidebar-border)] hover:shadow-[0_0_0_1px_var(--c-sidebar-item-hover-bg)]",
       },
       size: {
         default: "h-8 text-sm",
@@ -499,7 +537,7 @@ const SidebarMenuAction = React.forwardRef<
       ref={ref}
       data-sidebar="menu-action"
       className={cn(
-        "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform peer-hover/menu-button:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+        "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-[var(--c-sidebar-item-fg)] outline-none transition-transform peer-hover/menu-button:text-[var(--s-ink-primary)] hover:bg-[var(--c-sidebar-item-hover-bg)] hover:text-[var(--s-ink-primary)] focus-visible:[box-shadow:0_0_0_2px_var(--c-sidebar-bg),0_0_0_3px_var(--c-sidebar-ring)] [&>svg]:size-4 [&>svg]:shrink-0",
         // Increases the hit area of the button on mobile.
         "after:absolute after:-inset-2 after:md:hidden",
         "peer-data-[size=sm]/menu-button:top-1",
@@ -607,8 +645,10 @@ const SidebarMenuSubButton = React.forwardRef<
       data-size={size}
       data-active={isActive}
       className={cn(
-        "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground",
-        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground",
+        // Sub-items: amber tint bg + amber text when active, NO left bar (per spec).
+        // Focus: DS uniform ring (2px bg gap + 1px amber).
+        "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-[var(--c-sidebar-item-fg)] outline-none aria-disabled:pointer-events-none aria-disabled:opacity-50 hover:bg-[var(--c-sidebar-item-hover-bg)] hover:text-[var(--s-ink-primary)] focus-visible:[box-shadow:0_0_0_2px_var(--c-sidebar-bg),0_0_0_3px_var(--c-sidebar-ring)] active:bg-[var(--c-sidebar-item-hover-bg)] active:text-[var(--s-ink-primary)] disabled:pointer-events-none disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+        "data-[active=true]:bg-[var(--c-sidebar-item-active-bg)] data-[active=true]:text-[var(--c-sidebar-item-active-fg)]",
         size === "sm" && "text-xs",
         size === "md" && "text-sm",
         "group-data-[collapsible=icon]:hidden",

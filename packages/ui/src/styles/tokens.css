@@ -1281,9 +1281,9 @@
 
 :root {
   /* Structure */
-  --c-navbar-bg:                    var(--s-surface-page);
+  --c-navbar-bg:                    var(--s-surface-panel);   /* batch2 appshell: elevated topbar (was surface-page) */
   --c-navbar-border:                var(--s-border-subtle);
-  --c-navbar-h:                     56px;   /* matches --c-header-h */
+  --c-navbar-h:                     var(--c-header-h);   /* batch2 appshell: indirect ref ==56px */   /* matches --c-header-h */
   --c-navbar-px:                    var(--p-space-4);
 
   /* Breadcrumb ink */
@@ -1298,7 +1298,7 @@
   /* AppSidebar organism — Layer 3 component tokens.
    * All values resolve to existing --s-* semantic tokens.
    * Override these to retheme the AppSidebar without touching semantics. */
-  --c-appsidebar-bg:                 var(--s-surface-panel);       /* #141210 — panel depth, NOT page bg */
+  --c-appsidebar-bg:                 var(--s-surface-page);   /* batch2 appshell: sidebar flush w/ page (was surface-panel) */       /* #141210 — panel depth, NOT page bg */
   --c-appsidebar-item-active-bg:     var(--s-brand-subtle);        /* rgba(224,122,74,0.10) — brand tint */
   --c-appsidebar-item-active-fg:     var(--s-brand-fg);            /* #f0a872 — amber-300 text */
   --c-appsidebar-item-active-border: var(--s-brand-solid);         /* #E07A4A — 3px left indicator */
@@ -1484,3 +1484,189 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+
+
+/* ======================================================================
+ * DS-token redesign BATCH 2 — 29-component integration (new component tokens)
+ * ====================================================================== */
+:root {
+  /* -- organisms-gantt -- */
+  --c-gantt-bg:          var(--s-surface-panel);
+  --c-gantt-header-bg:   var(--s-surface-raised);
+  --c-gantt-border:      var(--s-border-subtle);
+  --c-gantt-bar-radius:  var(--p-radius-sm);
+  --c-gantt-dep-color:   var(--s-brand-solid);
+  --c-gantt-name-col:    320px;
+
+  /* -- organisms-loginpage -- */
+  --c-loginpage-card-bg:      var(--c-card-bg);        /* #141210 via --s-surface-panel */
+  --c-loginpage-card-border:  var(--c-card-border);    /* #2a2622 via --s-border-subtle  */
+  --c-loginpage-card-radius:  var(--c-card-radius);    /* 10px via --p-radius-lg         */
+  --c-loginpage-card-shadow:  var(--p-shadow-lg);      /* 0 12px 30px rgba(0,0,0,0.6)   */
+  --c-loginpage-error-bg:     var(--s-danger-subtle);  /* rgba(224,122,122,0.12) */
+  --c-loginpage-error-border: var(--s-danger-border);  /* rgba(224,122,122,0.40) */
+  --c-loginpage-error-fg:     var(--s-danger-fg);      /* #e89898 via --p-red-400 */
+  --c-loginpage-focus-ring:
+
+  /* -- organisms-loginscreen -- */
+  --c-loginscreen-bg:           var(--s-surface-page);
+  --c-loginscreen-title-font:   var(--s-font-display);
+  --c-loginscreen-title-size:   var(--p-text-24);
+  --c-loginscreen-error-fg:     var(--s-danger-fg);
+  --c-loginscreen-footer-fg:    var(--s-brand-fg);
+  --c-loginscreen-focus-gap:    var(--s-surface-page);
+  --c-loginscreen-focus-color:  var(--s-border-focus);
+
+  /* -- organisms-menubar -- */
+  --c-menubar-bar-bg:           var(--s-surface-panel);     /* #141210 — distinct from page bg */
+  --c-menubar-bar-border:       var(--s-border-subtle);     /* #2a2622 */
+  --c-menubar-bar-radius:       var(--p-radius-md);         /* 6px */
+  --c-menubar-trigger-fg:       var(--s-ink-secondary);     /* #c9c0b4 — idle */
+  --c-menubar-trigger-bg-hover: var(--s-surface-raised);    /* #1a1714 */
+  --c-menubar-trigger-bg-open:  var(--s-surface-elevated);  /* #1f1c18 */
+  --c-menubar-trigger-radius:   var(--p-radius-sm);         /* 4px */
+  --c-menubar-content-bg:       var(--s-surface-raised);    /* #1a1714 — dropdown panel */
+  --c-menubar-item-fg:          var(--s-ink-primary);       /* #f6f1e7 */
+  --c-menubar-item-bg-hover:    var(--s-brand-subtle);      /* rgba(224,122,74,0.10) — NOT solid amber */
+  --c-menubar-item-radius:      var(--p-radius-sm);         /* 4px */
+  --c-menubar-shortcut-font:    var(--p-font-mono);         /* JetBrains Mono — DS kbd rule */
+  --c-menubar-shortcut-fg:      var(--s-ink-muted);         /* #7d7568 */
+  --c-menubar-indicator-color:  var(--s-brand-solid);       /* #E07A4A — checkbox/radio checked mark */
+  --c-menubar-dest-fg:          var(--s-danger-fg);         /* #e89898 */
+  --c-menubar-dest-bg-hover:    var(--s-danger-subtle);     /* rgba(224,122,122,0.12) */
+  --c-menubar-ring-trigger:     0 0 0 2px var(--c-menubar-bar-bg), 0 0 0 3px var(--s-border-focus);
+  --c-menubar-ring-item:        0 0 0 2px var(--c-menubar-content-bg), 0 0 0 3px var(--s-border-focus);
+
+  /* -- organisms-navigationmenu -- */
+  --c-nav-bg:                  transparent;
+  --c-nav-fg:                  var(--s-ink-secondary);
+  --c-nav-trigger-radius:      var(--p-radius-md);      /* 6px */
+  --c-nav-trigger-h:           36px;
+  --c-nav-trigger-px:          14px;
+  --c-nav-trigger-hover-bg:    var(--s-surface-elevated);
+  --c-nav-trigger-hover-fg:    var(--s-ink-primary);
+  --c-nav-trigger-open-bg:     var(--s-brand-subtle);
+  --c-nav-trigger-open-fg:     var(--s-brand-fg);
+  --c-nav-trigger-open-border: var(--s-brand-border);
+  --c-nav-content-bg:          var(--s-surface-raised);
+  --c-nav-content-border:      var(--s-border-subtle);
+  --c-nav-content-radius:      8px;
+  --c-nav-content-shadow:      var(--p-shadow);
+  --c-nav-item-hover-bg:       var(--s-surface-elevated);
+  --c-nav-item-hover-fg:       var(--s-ink-primary);
+  --c-nav-item-active-bg:      var(--s-brand-subtle);
+  --c-nav-item-active-fg:      var(--s-brand-fg);
+  --c-nav-item-active-border:  var(--s-brand-solid);
+  --c-nav-indicator-color:     var(--s-border-subtle);
+
+  /* -- organisms-publishdrawer -- */
+  --c-publish-drawer-platform-fg: var(--s-danger-solid);
+  --c-publish-drawer-success-fg:  var(--s-success-solid);
+  --c-publish-drawer-footer-bg:   var(--s-surface-raised);
+  --c-publish-drawer-header-sep:  var(--s-border-subtle);
+  --c-publish-drawer-postid-font: var(--p-font-mono);
+
+  /* -- organisms-resizable -- */
+  --c-resizable-handle-track:           var(--s-border-subtle);   /* idle         */
+  --c-resizable-handle-track-hover:     var(--s-border-strong);   /* pointer-over */
+  --c-resizable-handle-track-focus:     var(--s-brand-solid);     /* :focus-visible */
+  --c-resizable-handle-track-drag:      var(--s-brand-solid);     /* dragging     */
+  --c-resizable-grip-bg:                var(--s-surface-elevated); /* idle bg      */
+  --c-resizable-grip-border:            var(--s-border-subtle);    /* idle border  */
+  --c-resizable-grip-border-hover:      var(--s-border-strong);    /* hover border */
+  --c-resizable-grip-border-focus:      var(--s-brand-solid);      /* focus border */
+  --c-resizable-grip-border-drag:       var(--s-brand-solid);      /* drag border  */
+  --c-resizable-grip-icon:              var(--s-ink-muted);        /* idle dots    */
+  --c-resizable-grip-icon-drag:         var(--s-brand-solid);      /* drag dots    */
+
+  /* -- organisms-sheet -- */
+  --c-sheet-bg:            var(--c-dialog-bg);      /* --s-surface-raised = #1a1714  */
+  --c-sheet-border:        var(--c-dialog-border);  /* --s-border-subtle  = #2a2622  */
+  --c-sheet-shadow:        var(--c-dialog-shadow);  /* 0 24px 60px rgba(0,0,0,0.7)  */
+  --c-sheet-scrim:         var(--c-dialog-scrim);   /* rgba(10,9,8,0.76) — token-native */
+  --c-sheet-radius-bottom: var(--p-radius-xl);      /* 14px                           */
+  --c-sheet-close-ring:    0 0 0 2px var(--c-sheet-bg), 0 0 0 3px #E07A4A;
+
+  /* -- organisms-sidebar -- */
+  --c-sidebar-bg:                var(--s-surface-page);
+  --c-sidebar-item-fg:           var(--s-ink-secondary);
+  --c-sidebar-item-hover-bg:     var(--s-surface-raised);
+  --c-sidebar-item-active-bg:    var(--s-brand-subtle);     /* rgba(224,122,74,.10) amber tint */
+  --c-sidebar-item-active-fg:    var(--s-brand-solid);      /* #E07A4A amber text + icon */
+  --c-sidebar-item-active-bar-w: 2px;                       /* left-edge indicator width */
+  --c-sidebar-group-label-fg:    var(--s-ink-muted);        /* #7d7568 muted, Barlow Condensed */
+  --c-sidebar-ring:              var(--s-border-focus);     /* #E07A4A */
+  --c-sidebar-border:            var(--s-border-subtle);
+
+  /* -- organisms-table -- */
+  --c-table-row-selected-bg:     var(--s-brand-subtle);  /* rgba(224,122,74,0.10) */
+  --c-table-row-selected-border: var(--s-brand-border);  /* rgba(224,122,74,0.22) */
+  --c-table-caption-fg:          var(--s-ink-muted);     /* #7d7568 */
+
+  /* -- organisms-usermenu -- */
+  --c-usermenu-trigger-hover-bg:           rgba(246, 241, 231, 0.06);
+  --c-usermenu-trigger-open-bg:            rgba(246, 241, 231, 0.08);
+  --c-usermenu-panel-bg:                   var(--s-surface-elevated);   /* #1f1c18 */
+  --c-usermenu-panel-width:                208px;    /* replaces hardcoded w-52 */
+  --c-usermenu-item-hover-bg:              var(--s-border-subtle);
+  --c-usermenu-danger-fg:                  var(--s-danger-fg);          /* #e89898 */
+  --c-usermenu-danger-hover-bg:            var(--s-danger-subtle);      /* rgba(224,122,122,0.12) */
+  --c-usermenu-item-focus-ring:            0 0 0 2px var(--s-surface-elevated), 0 0 0 3px var(--s-border-focus);
+  --c-usermenu-item-danger-focus-ring:     0 0 0 2px var(--s-surface-elevated), 0 0 0 3px var(--s-danger-fg);
+
+  /* -- templates-dashboard -- */
+  --c-dashboard-stat-font:       var(--s-font-mono);
+  --c-dashboard-stat-focus-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid);
+
+  /* -- templates-kanban -- */
+  --c-kanban-col-bg:              var(--s-surface-panel);        /* #141210 */
+  --c-kanban-col-border:          var(--s-border-subtle);        /* #2a2622 */
+  --c-kanban-col-radius:          var(--p-radius-lg);            /* 10px */
+  --c-kanban-accent-todo:         var(--s-border-strong);        /* neutral #3a3530 */
+  --c-kanban-accent-doing:        var(--s-brand-solid);          /* amber  #E07A4A */
+  --c-kanban-accent-review:       var(--s-info-solid);           /* blue   #7aa2e0 */
+  --c-kanban-accent-done:         var(--s-success-solid);        /* green  #5ec27e */
+  --c-kanban-count-bg:            var(--s-surface-elevated);     /* #1f1c18 */
+  --c-kanban-count-border:        var(--s-border-subtle);        /* #2a2622 */
+  --c-kanban-card-bg:             var(--s-surface-raised);       /* #1a1714 — floats above column */
+  --c-kanban-card-bg-hover:       var(--s-surface-elevated);     /* #1f1c18 — hover lift */
+  --c-kanban-card-border:         var(--s-border-subtle);        /* #2a2622 */
+  --c-kanban-card-border-hover:   var(--s-border-strong);        /* #3a3530 */
+  --c-kanban-card-radius:         var(--p-radius-md);            /* 6px */
+  --c-kanban-card-drag-border:    var(--s-brand-border);         /* rgba(224,122,74,0.22) */
+  --c-kanban-card-drag-bg:        var(--s-surface-elevated);     /* #1f1c18 */
+  --c-kanban-card-drag-shadow:    var(--p-shadow-lg);            /* 0 12px 30px rgba(0,0,0,0.6) */
+  --c-kanban-card-focus-ring:     0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A;
+  --c-kanban-card-done-opacity:   0.6;
+  --c-kanban-dropzone-border:     var(--s-border-strong);        /* 1.5px dashed #3a3530 */
+  --c-kanban-dropzone-fg:         var(--s-ink-muted);            /* #7d7568 */
+  --c-kanban-id-font:             var(--s-font-mono);            /* JetBrains Mono */
+  --c-kanban-id-fg:               var(--s-ink-muted);            /* #7d7568 */
+
+  /* -- templates-listpage -- */
+  --c-listpage-pagination-active-bg:     var(--s-brand-subtle);   /* rgba(224,122,74,0.10) */
+  --c-listpage-pagination-active-border: var(--s-brand-border);   /* rgba(224,122,74,0.22) */
+  --c-listpage-pagination-active-fg:     var(--s-brand-solid);    /* #E07A4A amber text     */
+  --c-listpage-cell-id-fg:     var(--s-ink-secondary);  /* #c9c0b4 — ID is metadata, not primary data  */
+  --c-listpage-cell-amount-fg: var(--s-ink-primary);    /* #f6f1e7 — amount is salient, full contrast  */
+  --c-listpage-empty-icon-bg:     var(--s-surface-elevated); /* #1f1c18 — raised container              */
+  --c-listpage-empty-icon-border: var(--s-border-subtle);    /* #2a2622 — container stroke               */
+  --c-listpage-empty-icon-fg:     var(--s-ink-muted);        /* #7d7568 — icon recedes, not accent       */
+  --c-listpage-empty-title-fg:    var(--s-ink-secondary);    /* #c9c0b4 — bold title, not primary ink    */
+  --c-listpage-empty-sub-fg:      var(--s-ink-muted);        /* #7d7568 — supporting copy, fully muted   */
+
+  /* -- templates-appshell -- */
+  --c-appshell-nav-active-bg:     var(--s-brand-subtle);    /* amber 10% fill on active item */
+  --c-appshell-nav-active-fg:     var(--s-brand-solid);     /* #E07A4A text on active item */
+  --c-appshell-nav-active-border: var(--s-brand-border);    /* amber 22% border on active item */
+  --c-appshell-nav-hover-bg:      var(--s-surface-raised);  /* #1a1714 hover surface */
+  --c-appshell-nav-hover-fg:      var(--s-ink-primary);     /* #f6f1e7 hover text */
+  --c-appshell-focus-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-brand-solid);
+}
+
+/* AppShell interactive focus ring (box-shadow, not outline — survives sidebar overflow:hidden). */
+.c-appshell-focus:focus-visible {
+  outline: none;
+  box-shadow: var(--c-appshell-focus-ring);
+  transition: none;
+}

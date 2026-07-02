@@ -65,23 +65,23 @@ export const Focused: Story = {
  * Keyboard focus lands on the reveal toggle button — DS uniform focus ring visible.
  * Verifies the WCAG 2.1 SC 2.1.1 fix: tabIndex=-1 removed, toggle is reachable by Tab.
  */
-const ToggleFocusedDemo = () => {
-  const wrapperRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    const btn = wrapperRef.current?.querySelector<HTMLButtonElement>(
-      "button[type='button']",
-    );
-    btn?.focus();
-  }, []);
-  return (
-    <div ref={wrapperRef} style={{ width: 320 }}>
-      <PasswordInput label="Password" defaultValue="hunter2" />
-    </div>
-  );
-};
-
 export const ToggleFocused: Story = {
-  render: () => <ToggleFocusedDemo />,
+  render: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const wrapperRef = React.useRef<HTMLDivElement>(null);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      const btn = wrapperRef.current?.querySelector<HTMLButtonElement>(
+        "button[type='button']",
+      );
+      btn?.focus();
+    }, []);
+    return (
+      <div ref={wrapperRef} style={{ width: 320 }}>
+        <PasswordInput label="Password" defaultValue="hunter2" />
+      </div>
+    );
+  },
 };
 
 /** Field has a value typed in; dots rendered (type=password). Eye toggle ready. */
@@ -96,23 +96,23 @@ export const Filled: Story = {
  * Toggle was pressed: EyeOff icon shown, plain text visible in the field.
  * Rendered by programmatically clicking the toggle on mount.
  */
-const RevealedDemo = () => {
-  const wrapperRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    const btn = wrapperRef.current?.querySelector<HTMLButtonElement>(
-      "button[type='button']",
-    );
-    btn?.click();
-  }, []);
-  return (
-    <div ref={wrapperRef} style={{ width: 320 }}>
-      <PasswordInput label="Password" defaultValue="hunter2secret" />
-    </div>
-  );
-};
-
 export const Revealed: Story = {
-  render: () => <RevealedDemo />,
+  render: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const wrapperRef = React.useRef<HTMLDivElement>(null);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    React.useEffect(() => {
+      const btn = wrapperRef.current?.querySelector<HTMLButtonElement>(
+        "button[type='button']",
+      );
+      btn?.click();
+    }, []);
+    return (
+      <div ref={wrapperRef} style={{ width: 320 }}>
+        <PasswordInput label="Password" defaultValue="hunter2secret" />
+      </div>
+    );
+  },
 };
 
 /** Label + input + helper text below in --s-ink-muted. */

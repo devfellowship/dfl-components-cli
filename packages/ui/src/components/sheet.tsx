@@ -1,3 +1,21 @@
+/**
+ * Sheet — DFL Design System v0
+ *
+ * Tokens consumed (via --c-sheet-* → --c-dialog-* → --s-* chain):
+ *   --c-sheet-bg       panel background  (--c-dialog-bg  → --s-surface-raised = #1a1714)
+ *   --c-sheet-border   edge border       (--c-dialog-border → --s-border-subtle = #2a2622)
+ *   --c-sheet-shadow   depth shadow      (--c-dialog-shadow → 0 24px 60px rgba(0,0,0,0.7))
+ *   --c-sheet-scrim    overlay backdrop  (--c-dialog-scrim  → rgba(10,9,8,0.76), warm token-native)
+ *   --c-sheet-radius-bottom  top-corner radius on bottom variant (--p-radius-xl = 14px)
+ *   --c-sheet-close-ring     DS uniform ring on close button
+ *                            (0 0 0 2px panel-bg gap + 0 0 0 3px #E07A4A)
+ *
+ * Fixes over plain shadcn:
+ *   - SheetOverlay: bg-black/80 (pure cold black) → var(--c-sheet-scrim) (warm rgba token)
+ *   - SheetContent: bg-background/shadow-lg/border-{side} → component-token equivalents
+ *   - Close button: shadcn ring-offset approach → DS double box-shadow ring (gap = panel bg)
+ *   - Bottom variant: adds top-corner pill radius for mobile action-sheet feel
+ */
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
@@ -19,7 +37,9 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      // --c-sheet-scrim → --c-dialog-scrim → rgba(10,9,8,0.76) — warm, token-native
+      // replaces the raw `bg-black/80` (pure cold black) that violated the surface system
+      "fixed inset-0 z-50 [background:var(--c-sheet-scrim)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
     {...props}
@@ -29,16 +49,29 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  // Base: consume --c-sheet-{bg,shadow,border} instead of raw Tailwind aliases
+  [
+    "fixed z-50 gap-4 p-6 transition ease-in-out",
+    "bg-[var(--c-sheet-bg)]",           // --s-surface-raised = #1a1714
+    "[box-shadow:var(--c-sheet-shadow)]", // --p-shadow-overlay = 0 24px 60px rgba(0,0,0,0.7)
+    "[border-color:var(--c-sheet-border)]", // --s-border-subtle = #2a2622
+    "data-[state=open]:animate-in data-[state=closed]:animate-out",
+    "data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  ].join(" "),
   {
     variants: {
       side: {
         top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
-        bottom:
-          "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        bottom: [
+          "inset-x-0 bottom-0 border-t",
+          // pill top corners for mobile action-sheet feel (--p-radius-xl = 14px)
+          "[border-top-left-radius:var(--c-sheet-radius-bottom)]",
+          "[border-top-right-radius:var(--c-sheet-radius-bottom)]",
+          "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        ].join(" "),
         left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
         right:
-          "inset-y-0 right-0 h-full w-3/4  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+          "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
       },
     },
     defaultVariants: {
@@ -57,7 +90,13 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
       <SheetOverlay />
       <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
         {children}
-        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+        {/*
+          Close button — DS uniform focus ring:
+            gap color = panel bg (--c-sheet-bg, #1a1714) so the ring is visible
+            against the sheet surface, not the page bg.
+          Replaces: `focus:ring-2 focus:ring-ring focus:ring-offset-2 ring-offset-background`
+        */}
+        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:[box-shadow:var(--c-sheet-close-ring)] data-[state=open]:bg-[var(--s-surface-raised)] disabled:pointer-events-none">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
