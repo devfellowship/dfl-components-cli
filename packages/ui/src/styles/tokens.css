@@ -1484,3 +1484,57 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * NavigationMenu — Organisms layer (DS v0 brand fixes, organisms-navigationmenu
+ * refactor 2026-07-02)
+ *
+ * Fixes four critical brand failures vs vanilla shadcn:
+ *   1. Hover bg: was --accent = amber #E07A4A (heavy orange); now surface-elevated
+ *      lift (#1f1c18) — amber is reserved for primary CTA, not hover states.
+ *   2. Focus ring: was ring-[3px] ring-ring/50 (wrong width + opacity); now DS
+ *      uniform ring (2px gap + 1px amber, box-shadow, transition: none).
+ *   3. Content focus suppressor: removed `**:[data-slot=navigation-menu-link]:focus:ring-0`
+ *      — keyboard users now see focus rings inside the open dropdown.
+ *   4. No --c-nav-* tokens existed; component ran entirely on palette leakage.
+ *
+ * All values resolve to existing --s-* semantic tokens (Layer 2).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Root / bar */
+  --c-nav-bg:                  transparent;
+  --c-nav-fg:                  var(--s-ink-secondary);
+
+  /* Trigger geometry */
+  --c-nav-trigger-radius:      var(--p-radius-md);      /* 6px */
+  --c-nav-trigger-h:           36px;
+  --c-nav-trigger-px:          14px;
+
+  /* Trigger — hover (surface lift, NOT amber fill) */
+  --c-nav-trigger-hover-bg:    var(--s-surface-elevated);
+  --c-nav-trigger-hover-fg:    var(--s-ink-primary);
+
+  /* Trigger — open (amber-subtle tint: dropdown is active) */
+  --c-nav-trigger-open-bg:     var(--s-brand-subtle);
+  --c-nav-trigger-open-fg:     var(--s-brand-fg);
+  --c-nav-trigger-open-border: var(--s-brand-border);
+
+  /* Content panel */
+  --c-nav-content-bg:          var(--s-surface-raised);
+  --c-nav-content-border:      var(--s-border-subtle);
+  --c-nav-content-radius:      8px;
+  --c-nav-content-shadow:      var(--p-shadow);
+
+  /* Content items — hover */
+  --c-nav-item-hover-bg:       var(--s-surface-elevated);
+  --c-nav-item-hover-fg:       var(--s-ink-primary);
+
+  /* Content items — active / current route */
+  --c-nav-item-active-bg:      var(--s-brand-subtle);
+  --c-nav-item-active-fg:      var(--s-brand-fg);
+  --c-nav-item-active-border:  var(--s-brand-solid);
+
+  /* Indicator arrow caret (matches content border) */
+  --c-nav-indicator-color:     var(--s-border-subtle);
+}
