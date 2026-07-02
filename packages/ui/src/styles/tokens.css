@@ -1316,4 +1316,26 @@
 
   /* Trigger focus ring (outer off-element DS spec ring) */
   --c-contextmenu-trigger-ring: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
+ * LAYER 3 — ButtonLab playground (DesignPlayground experiment)
+ *
+ *   Consumed ONLY by src/design-playground/ButtonLab.stories.tsx.
+ *   NOT distributed via registry / npm. Delete this block once the
+ *   recording experiment graduates (or is retired) via the playground
+ *   → Components/Atoms/Button promotion flow.
+ *
+ *   All values resolve to existing --s-* semantic tokens.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Recording experiment — Active (pulsing amber dot, "Gravando…")
+   * Amber-brand treatment: signal ≠ error. NOT destructive/danger tokens. */
+  --c-buttonlab-recording-bg:           var(--s-brand-subtle);      /* rgba(224,122,74,.10) */
+  --c-buttonlab-recording-fg:           var(--s-brand-fg);           /* var(--p-amber-300)   */
+  --c-buttonlab-recording-border:       var(--s-brand-border);       /* rgba(224,122,74,.22) */
+
+  /* Recording experiment — Idle (static dimmed dot, "Parado")
+   * Neutral treatment — same layout, subdued palette. */
+  --c-buttonlab-recording-idle-bg:      var(--s-surface-page);       /* transparent on page  */
+  --c-buttonlab-recording-idle-fg:      var(--s-ink-muted);          /* var(--p-sand-400)    */
+  --c-buttonlab-recording-idle-border:  var(--s-border-subtle);      /* var(--p-sand-700)    */
 }
