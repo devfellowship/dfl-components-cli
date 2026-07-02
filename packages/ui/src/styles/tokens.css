@@ -1484,3 +1484,65 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — KanbanBoard component tokens (--c-kanban-*)
+ *
+ *   Fixes the inverted elevation hierarchy in the previous implementation
+ *   (columns used --muted = sand-850 = #1a1714 while cards used bg-card =
+ *   sand-900 = #141210, making cards DARKER than their column container).
+ *
+ *   Correct 4-level stack:
+ *     page (#0a0908) → column panel (#141210) → card raised (#1a1714) →
+ *     card hover elevated (#1f1c18)
+ *
+ *   All values resolve to existing --s-* semantic tokens. No --p-* or raw
+ *   hex is introduced here (the focus ring #E07A4A is the DS canonical literal
+ *   used throughout — same pattern as --c-toggle-focus-ring et al.).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Column surface — panel tier (one step above page, below card) */
+  --c-kanban-col-bg:              var(--s-surface-panel);        /* #141210 */
+  --c-kanban-col-border:          var(--s-border-subtle);        /* #2a2622 */
+  --c-kanban-col-radius:          var(--p-radius-lg);            /* 10px */
+
+  /* Column status top-border accent colours (resolved from semantic tokens) */
+  --c-kanban-accent-todo:         var(--s-border-strong);        /* neutral #3a3530 */
+  --c-kanban-accent-doing:        var(--s-brand-solid);          /* amber  #E07A4A */
+  --c-kanban-accent-review:       var(--s-info-solid);           /* blue   #7aa2e0 */
+  --c-kanban-accent-done:         var(--s-success-solid);        /* green  #5ec27e */
+
+  /* Column count chip */
+  --c-kanban-count-bg:            var(--s-surface-elevated);     /* #1f1c18 */
+  --c-kanban-count-border:        var(--s-border-subtle);        /* #2a2622 */
+
+  /* Card surfaces — raised above column (not below) */
+  --c-kanban-card-bg:             var(--s-surface-raised);       /* #1a1714 — floats above column */
+  --c-kanban-card-bg-hover:       var(--s-surface-elevated);     /* #1f1c18 — hover lift */
+  --c-kanban-card-border:         var(--s-border-subtle);        /* #2a2622 */
+  --c-kanban-card-border-hover:   var(--s-border-strong);        /* #3a3530 */
+  --c-kanban-card-radius:         var(--p-radius-md);            /* 6px */
+
+  /* Card dragging state */
+  --c-kanban-card-drag-border:    var(--s-brand-border);         /* rgba(224,122,74,0.22) */
+  --c-kanban-card-drag-bg:        var(--s-surface-elevated);     /* #1f1c18 */
+  --c-kanban-card-drag-shadow:    var(--p-shadow-lg);            /* 0 12px 30px rgba(0,0,0,0.6) */
+
+  /* Card focus ring — DS uniform double box-shadow spec (ch.5.2):
+   *   2px page-bg gap (creates visual offset) + 1px amber outer ring.
+   *   transition: none (instant per DS spec — no animation on focus).
+   *   Applied via focus-visible:[] Tailwind class on the card element. */
+  --c-kanban-card-focus-ring:     0 0 0 2px var(--s-surface-page), 0 0 0 3px #E07A4A;
+
+  /* Done attenuation — applied as opacity on done-column cards */
+  --c-kanban-card-done-opacity:   0.6;
+
+  /* Drop zone (empty column placeholder) */
+  --c-kanban-dropzone-border:     var(--s-border-strong);        /* 1.5px dashed #3a3530 */
+  --c-kanban-dropzone-fg:         var(--s-ink-muted);            /* #7d7568 */
+
+  /* Ticket ID typography — JetBrains Mono per DS code/ID spec */
+  --c-kanban-id-font:             var(--s-font-mono);            /* JetBrains Mono */
+  --c-kanban-id-fg:               var(--s-ink-muted);            /* #7d7568 */
+}
