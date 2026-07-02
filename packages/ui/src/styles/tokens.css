@@ -1484,3 +1484,48 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Templates/ListPage (--c-listpage-*)
+ *
+ *   Composition tokens for the Templates/ListPage story. Resolves exclusively
+ *   to existing --s-* semantic tokens (no --p-* primitives added directly).
+ *
+ *   Design decisions:
+ *
+ *   Pagination active — subtle amber TINT, not solid amber fill.
+ *     --s-brand-subtle bg + --s-brand-border border + --s-brand-solid text so
+ *     the "current page" tile is visually distinct from inactive pages without
+ *     competing with solid primary action buttons (which also use amber).
+ *
+ *   Cell typography — invoice IDs and monetary amounts use --s-font-mono
+ *     (JetBrains Mono) per DS v0 spec for codes, identifiers, and numbers.
+ *     --c-listpage-cell-id-fg uses ink-secondary (recessive; ID is metadata).
+ *     --c-listpage-cell-amount-fg uses ink-primary (salient; amount = key fact).
+ *
+ *   Empty-state anatomy — three-part layout per DS v0 §5.7:
+ *     icon container (surface-elevated + border-subtle + ink-muted icon),
+ *     bold title (ink-secondary, weight 600),
+ *     muted sub-line (ink-muted).
+ *     The outline CTA button reuses existing --c-button-* tokens.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Pagination — active page tile: subtle amber tint (not solid fill) */
+  --c-listpage-pagination-active-bg:     var(--s-brand-subtle);   /* rgba(224,122,74,0.10) */
+  --c-listpage-pagination-active-border: var(--s-brand-border);   /* rgba(224,122,74,0.22) */
+  --c-listpage-pagination-active-fg:     var(--s-brand-solid);    /* #E07A4A amber text     */
+
+  /* Table cell typography */
+  --c-listpage-cell-id-fg:     var(--s-ink-secondary);  /* #c9c0b4 — ID is metadata, not primary data  */
+  --c-listpage-cell-amount-fg: var(--s-ink-primary);    /* #f6f1e7 — amount is salient, full contrast  */
+
+  /* Empty-state anatomy */
+  --c-listpage-empty-icon-bg:     var(--s-surface-elevated); /* #1f1c18 — raised container              */
+  --c-listpage-empty-icon-border: var(--s-border-subtle);    /* #2a2622 — container stroke               */
+  --c-listpage-empty-icon-fg:     var(--s-ink-muted);        /* #7d7568 — icon recedes, not accent       */
+  --c-listpage-empty-title-fg:    var(--s-ink-secondary);    /* #c9c0b4 — bold title, not primary ink    */
+  --c-listpage-empty-sub-fg:      var(--s-ink-muted);        /* #7d7568 — supporting copy, fully muted   */
+
+}
