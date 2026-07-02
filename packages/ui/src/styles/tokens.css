@@ -405,6 +405,13 @@
   --c-header-h:            56px;
   --c-statusbar-h:         24px;
   --c-content-max:         1280px;
+
+  /* Textarea — uniform focus rings (DS v0 ch.5.2)
+   * Structure: 2px page-bg gap + 1px solid outer ring.
+   * Kept separate from the shared --c-input-ring-focus (single translucent spread)
+   * to avoid cross-PR conflicts with Input/Select refactors. */
+  --c-textarea-ring-focus:       0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
+  --c-textarea-ring-focus-error: 0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-danger-solid);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
