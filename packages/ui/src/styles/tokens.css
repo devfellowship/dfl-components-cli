@@ -525,3 +525,31 @@
   outline-offset: var(--ds-focus-ring-offset);
   transition: none;  /* instant — no animation on focus */
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Component: Switch (--c-switch-*)
+ *   Layer 3 knobs. All values resolve to existing --s-* semantic tokens
+ *   except --c-switch-thumb-bg which maps to --p-sand-50 (warm off-white
+ *   has no semantic alias — intentional; the thumb sits on both dark and
+ *   amber surfaces and must contrast with both).
+ *
+ *   Fixes two bugs in the original shadcn output:
+ *     1. Thumb was bg-background → #0a0908 (near-black, invisible on track)
+ *        → now --c-switch-thumb-bg (#f6f1e7, warm off-white).
+ *     2. Focus ring was ring-2/ring-ring/ring-offset (outline approach)
+ *        → now --c-switch-focus-ring (box-shadow only, uniform DS contract).
+ *
+ *   PR: claude-main/refactor/atoms-switch
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Switch */
+  --c-switch-track-off-bg:        var(--s-surface-elevated);  /* #1f1c18 — elevated dark surface */
+  --c-switch-track-off-border:    var(--s-border-subtle);     /* #2a2622 — inset ring (via CSS border) */
+  --c-switch-track-on-bg:         var(--s-brand-solid);       /* #E07A4A — amber checked track */
+  --c-switch-track-on-bg-hover:   var(--s-brand-hover);       /* #ea915a — lighter amber on hover */
+  --c-switch-track-on-bg-active:  var(--s-brand-pressed);     /* #c2663b — darker amber on press */
+  --c-switch-thumb-bg:            var(--p-sand-50);           /* #f6f1e7 — warm off-white (no s-* alias) */
+  --c-switch-focus-ring:          0 0 0 2px var(--s-surface-page), 0 0 0 3px var(--s-border-focus);
+  --c-switch-disabled-opacity:    0.40;
+}
