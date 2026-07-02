@@ -1484,3 +1484,21 @@
   --c-form-label-error-fg:   var(--s-danger-fg);      /* softer #e89898 vs full-sat #e07a7a */
   --c-form-description-fg:   var(--s-ink-muted);
   --c-form-message-error-fg: var(--s-danger-fg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LAYER 3 — Table extended token block (--c-table-row-selected-*, --c-table-caption-fg)
+ *
+ * Appended to complement the --c-table-* knobs in the main Layer 3 block.
+ * Covers the selected-row brand signal and caption/empty-state muted text.
+ * All values resolve exclusively to existing --s-* semantic tokens.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Selected row — brand-subtle amber wash + 2 px left-border signal */
+  --c-table-row-selected-bg:     var(--s-brand-subtle);  /* rgba(224,122,74,0.10) */
+  --c-table-row-selected-border: var(--s-brand-border);  /* rgba(224,122,74,0.22) */
+
+  /* Caption text + empty-state cell color */
+  --c-table-caption-fg:          var(--s-ink-muted);     /* #7d7568 */
+}
