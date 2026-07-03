@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Avatar, AvatarFallback, AvatarImage } from "../components/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarImage,
+  AvatarStatus,
+} from "../components/avatar";
 
 const meta: Meta<typeof Avatar> = {
   title: "Components/Atoms/Avatar",
@@ -117,5 +123,120 @@ export const FocusVisible: Story = {
         <AvatarFallback>TF</AvatarFallback>
       </Avatar>
     </button>
+  ),
+};
+
+// ── Tones ─────────────────────────────────────────────────────────────────────
+
+/** Brand tone — DFL amber fallback (--c-avatar-brand-bg), dark ink. */
+export const BrandTone: Story = {
+  name: "Tone-brand (amber)",
+  render: () => (
+    <Avatar>
+      <AvatarFallback tone="brand">DF</AvatarFallback>
+    </Avatar>
+  ),
+};
+
+/**
+ * Member palette — deterministic colour hashed from the seed so a given person
+ * is always the same colour. Twelve muted jewel tones (--c-avatar-member-N).
+ */
+export const MemberPalette: Story = {
+  render: () => (
+    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+      {["AB", "CD", "EF", "GH", "IJ", "KL", "MN", "OP", "QR", "ST", "UV", "WX"].map(
+        (s) => (
+          <Avatar key={s}>
+            <AvatarFallback tone="member" seed={s}>
+              {s}
+            </AvatarFallback>
+          </Avatar>
+        ),
+      )}
+    </div>
+  ),
+};
+
+// ── Status indicator ──────────────────────────────────────────────────────────
+
+/** Online — green presence dot, ringed in page colour. */
+export const StatusOnline: Story = {
+  render: () => (
+    <Avatar>
+      <AvatarFallback tone="member" seed="TF">
+        TF
+      </AvatarFallback>
+      <AvatarStatus status="online" />
+    </Avatar>
+  ),
+};
+
+/** Away — amber presence dot. */
+export const StatusAway: Story = {
+  render: () => (
+    <Avatar>
+      <AvatarFallback tone="member" seed="AW">
+        AW
+      </AvatarFallback>
+      <AvatarStatus status="away" />
+    </Avatar>
+  ),
+};
+
+/** Offline — grey presence dot. */
+export const StatusOffline: Story = {
+  render: () => (
+    <Avatar>
+      <AvatarFallback tone="member" seed="OF">
+        OF
+      </AvatarFallback>
+      <AvatarStatus status="offline" />
+    </Avatar>
+  ),
+};
+
+// ── Group ─────────────────────────────────────────────────────────────────────
+
+/** Overlapping stack with page-coloured separator rings. */
+export const Group: Story = {
+  render: () => (
+    <AvatarGroup>
+      <Avatar>
+        <AvatarFallback tone="member" seed="AB">AB</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback tone="member" seed="CD">CD</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback tone="member" seed="EF">EF</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback tone="brand">DF</AvatarFallback>
+      </Avatar>
+    </AvatarGroup>
+  ),
+};
+
+/** Overflow — max=3 collapses the remainder into a "+N" chip. */
+export const GroupWithOverflow: Story = {
+  render: () => (
+    <AvatarGroup max={3}>
+      <Avatar>
+        <AvatarFallback tone="member" seed="AB">AB</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback tone="member" seed="CD">CD</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback tone="member" seed="EF">EF</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback tone="member" seed="GH">GH</AvatarFallback>
+      </Avatar>
+      <Avatar>
+        <AvatarFallback tone="member" seed="IJ">IJ</AvatarFallback>
+      </Avatar>
+    </AvatarGroup>
   ),
 };

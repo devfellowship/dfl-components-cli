@@ -20,6 +20,11 @@ const meta: Meta<typeof Badge> = {
       control: "select",
       options: ["pill", "square"],
     },
+    fill: {
+      control: "select",
+      options: ["subtle", "solid"],
+    },
+    dot: { control: "boolean" },
     children: { control: "text" },
   },
 };
@@ -95,4 +100,39 @@ export const InfoVariant: Story = {
  */
 export const ShapeSquare: Story = {
   args: { children: "Category", variant: "default", shape: "square" },
+};
+
+// ── Solid fill (count indicators / emphatic status) ───────────────────────────
+
+/** Solid default — amber fill + inverse ink (--c-badge-solid-default-bg). */
+export const SolidDefault: Story = {
+  args: { children: "New", variant: "default", fill: "solid" },
+};
+
+/** Solid success — count / "Done" chip on a solid green fill. */
+export const SolidSuccess: Story = {
+  args: { children: "Done", variant: "success", fill: "solid" },
+};
+
+/** Solid danger — emphatic "Blocked" on a solid red fill. */
+export const SolidDanger: Story = {
+  args: { children: "Blocked", variant: "danger", fill: "solid" },
+};
+
+/** Solid info — numeric count indicator on solid blue. */
+export const SolidCount: Story = {
+  args: { children: "12", variant: "info", fill: "solid", shape: "pill" },
+};
+
+// ── Status dot ────────────────────────────────────────────────────────────────
+
+/** With status dot — leading dot coloured by the badge's intent (currentColor). */
+export const WithStatusDot: Story = {
+  args: { children: "Active", variant: "success", dot: true },
+};
+
+/** Status dot on a pending (warning) chip. */
+export const WithStatusDotPending: Story = {
+  name: "WithStatusDot-Pending",
+  args: { children: "Pending", variant: "warning", dot: true },
 };

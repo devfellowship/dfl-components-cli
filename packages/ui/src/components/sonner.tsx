@@ -77,6 +77,50 @@ const TOASTER_CSS = `
   .toaster [data-sonner-toast][data-type="warning"]::before {
     background: var(--s-warning-solid);
   }
+
+  /* ── Icon vertical alignment: pin the leading icon to the title row ── */
+  .toaster [data-sonner-toast] {
+    align-items: flex-start;
+  }
+  .toaster [data-sonner-toast] [data-icon] {
+    align-self: flex-start;
+    margin-top: 1px;
+  }
+  /* Per-type icon colour so the icon matches the toast intent. */
+  .toaster [data-sonner-toast][data-type="success"] [data-icon] { color: var(--s-success-fg); }
+  .toaster [data-sonner-toast][data-type="error"]   [data-icon] { color: var(--s-danger-fg); }
+  .toaster [data-sonner-toast][data-type="info"]    [data-icon] { color: var(--s-info-fg); }
+  .toaster [data-sonner-toast][data-type="warning"] [data-icon] { color: var(--s-warning-fg); }
+
+  /* ── Action button follows the toast variant colour (was always amber) ── */
+  .toaster [data-sonner-toast][data-type="success"] [data-button] {
+    color: var(--s-success-fg) !important;
+    border-color: var(--c-toast-success-border) !important;
+  }
+  .toaster [data-sonner-toast][data-type="success"] [data-button]:hover {
+    background: var(--c-toast-success-bg) !important;
+  }
+  .toaster [data-sonner-toast][data-type="error"] [data-button] {
+    color: var(--s-danger-fg) !important;
+    border-color: var(--c-toast-danger-border) !important;
+  }
+  .toaster [data-sonner-toast][data-type="error"] [data-button]:hover {
+    background: var(--c-toast-danger-bg) !important;
+  }
+  .toaster [data-sonner-toast][data-type="info"] [data-button] {
+    color: var(--s-info-fg) !important;
+    border-color: var(--c-toast-info-border) !important;
+  }
+  .toaster [data-sonner-toast][data-type="info"] [data-button]:hover {
+    background: var(--c-toast-info-bg) !important;
+  }
+  .toaster [data-sonner-toast][data-type="warning"] [data-button] {
+    color: var(--s-warning-fg) !important;
+    border-color: var(--c-toast-warning-border) !important;
+  }
+  .toaster [data-sonner-toast][data-type="warning"] [data-button]:hover {
+    background: var(--c-toast-warning-bg) !important;
+  }
 `;
 
 const SonnerToaster = ({ ...props }: ToasterProps) => {

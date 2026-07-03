@@ -28,7 +28,7 @@ const meta: Meta<typeof IconButton> = {
     },
     size: {
       control: "select",
-      options: ["xs", "sm", "default", "lg"],
+      options: ["xs", "sm", "md", "default", "lg"],
     },
     disabled: { control: "boolean" },
   },
@@ -214,6 +214,17 @@ export const SizeXS: Story = {
 export const SizeSM: Story = {
   name: "Size/SM",
   args: { variant: "ghost", size: "sm", "aria-label": "Buscar" },
+  render: (args) => (
+    <IconButton {...args}>
+      <Search />
+    </IconButton>
+  ),
+};
+
+/** md — 34×34, canonical mid size (alias of default). */
+export const SizeMD: Story = {
+  name: "Size/MD",
+  args: { variant: "ghost", size: "md", "aria-label": "Buscar" },
   render: (args) => (
     <IconButton {...args}>
       <Search />
