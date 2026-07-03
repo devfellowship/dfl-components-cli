@@ -69,6 +69,9 @@ const iconButtonVariants = cva(
       size: {
         xs: "h-5 w-5 [&_svg]:size-3",
         sm: "h-7 w-7 [&_svg]:size-3.5",
+        // `md` is the canonical mid size (alias of `default`) so the sm/md/lg
+        // trio is nameable explicitly alongside the shadcn `default` key.
+        md: "h-[34px] w-[34px] [&_svg]:size-4",
         default: "h-[34px] w-[34px] [&_svg]:size-4",
         lg: "h-10 w-10 [&_svg]:size-[18px]",
       },

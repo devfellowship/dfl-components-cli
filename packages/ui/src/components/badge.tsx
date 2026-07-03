@@ -93,21 +93,60 @@ const badgeVariants = cva(
         pill:   "rounded-[var(--c-pill-radius)]",
         square: "rounded-[var(--c-badge-radius)]",
       },
+      /**
+       * Fill treatment.
+       *   subtle — tinted bg + semantic border (the default look).
+       *   solid  — solid intent fill + inverse ink. For count indicators /
+       *            emphatic status (e.g. "3", "New", "Blocked"). Backed by
+       *            --c-badge-solid-{intent}-bg + --c-badge-solid-fg.
+       */
+      fill: {
+        subtle: "",
+        solid: "border-transparent text-[var(--c-badge-solid-fg)]",
+      },
     },
+    compoundVariants: [
+      // solid fill × each semantic intent → solid bg (border already transparent)
+      { fill: "solid", variant: "default",     class: "bg-[var(--c-badge-solid-default-bg)]" },
+      { fill: "solid", variant: "success",     class: "bg-[var(--c-badge-solid-success-bg)]" },
+      { fill: "solid", variant: "warning",     class: "bg-[var(--c-badge-solid-warning-bg)]" },
+      { fill: "solid", variant: "danger",      class: "bg-[var(--c-badge-solid-danger-bg)]" },
+      { fill: "solid", variant: "destructive", class: "bg-[var(--c-badge-solid-danger-bg)]" },
+      { fill: "solid", variant: "info",        class: "bg-[var(--c-badge-solid-info-bg)]" },
+      // secondary/outline solid → neutral brand solid so the API never no-ops
+      { fill: "solid", variant: "secondary",   class: "bg-[var(--c-badge-solid-default-bg)]" },
+      { fill: "solid", variant: "outline",     class: "bg-[var(--c-badge-solid-default-bg)]" },
+    ],
     defaultVariants: {
       variant: "default",
       shape: "pill",
+      fill: "subtle",
     },
   },
 );
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  /**
+   * Render a leading status dot (coloured with the badge's own text/intent
+   * colour via currentColor). For presence/status chips — "● Active".
+   */
+  dot?: boolean;
+}
 
-function Badge({ className, variant, shape, ...props }: BadgeProps) {
+function Badge({ className, variant, shape, fill, dot, children, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant, shape }), className)} {...props} />
+    <div className={cn(badgeVariants({ variant, shape, fill }), className)} {...props}>
+      {dot && (
+        <span
+          aria-hidden="true"
+          className="inline-block h-1.5 w-1.5 shrink-0 rounded-full"
+          style={{ backgroundColor: "currentColor" }}
+        />
+      )}
+      {children}
+    </div>
   );
 }
 

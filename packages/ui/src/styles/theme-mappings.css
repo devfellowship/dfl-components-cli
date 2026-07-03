@@ -70,12 +70,17 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  /* ─── Border radius ────────────────────────────────────────────────────── */
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
-  --radius-full: var(--radius-full);
+  /* ─── Border radius ──────────────────────────────────────────────────────
+   * Map Tailwind's radius scale onto the DS --p-radius-* primitives. These
+   * MUST reference a differently-named source (the --p-* primitives) — the
+   * old `--radius-md: var(--radius-md)` was self-referential, so it resolved
+   * to nothing and EVERY `rounded-{sm,md,lg,xl,full}` utility computed to 0px
+   * (Avatar/Switch/Slider/RadioGroup rendered square). */
+  --radius-sm: var(--p-radius-sm);     /* 4px  */
+  --radius-md: var(--p-radius-md);     /* 6px  */
+  --radius-lg: var(--p-radius-lg);     /* 10px */
+  --radius-xl: var(--p-radius-xl);     /* 14px */
+  --radius-full: var(--p-radius-pill); /* 999px — full circle / pill */
 
   /* ─── Fonts ────────────────────────────────────────────────────────────── */
   --font-sans: var(--font-sans);
