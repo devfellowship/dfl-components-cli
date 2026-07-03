@@ -211,7 +211,10 @@ export function Gantt({
   const recomputeEdges = React.useCallback(() => {
     const root = gridRef.current;
     if (!root || dependencies.length === 0) {
-      setEdges([]);
+      // Functional update avoids triggering a re-render when edges is already
+      // empty — prevents the update loop (React #185) that fires when
+      // `dependencies` defaults to a new `[]` on every render.
+      setEdges((prev) => (prev.length === 0 ? prev : []));
       return;
     }
     const rootBox = root.getBoundingClientRect();
