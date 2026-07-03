@@ -1,456 +1,229 @@
-
-# DevFellowship Component Hub
-
-A dark-themed, minimalist micro-app for browsing, previewing, and copying reusable frontend components within your development team.
-
-## Design System Reference
-
-The canonical DS v0 reference (single-file static HTML, 48 component anchors) is hosted at:
-
-- **DS v0 artifact (live):** https://devfellowship.s3.amazonaws.com/media/1779275454681-1779273267327-AgADbwUAAn7PaEQ.html
-
-Tokens live in [`packages/ui/src/styles/tokens.css`](packages/ui/src/styles/tokens.css) (mirrored to `src/styles/tokens.css` for the showcase). The 3-layer architecture is:
-
-| Layer            | Prefix     | Role                                       | Count |
-| ---------------- | ---------- | ------------------------------------------ | ----- |
-| **Primitives**   | `--p-*`    | Raw atoms (color stops, type, spacing)     | 112   |
-| **Semantic**     | `--s-*`    | Intent-mapped (surface-page, ink-muted, …) | 40    |
-| **Component**    | `--c-*`    | Per-component knobs (5–10 each)            | 64    |
-
-Brand color is `#E07A4A` (DS v0 amber-500). The legacy `#F39325` was retired in v1.0.0.
-
-Phase plan: https://plans.tainanfidelis.com/20260520-dfl-components-ds-v0-revamp
-
-### Consuming the DS styles in an app
-
-Pick the import that matches how your app's Tailwind theme references its CSS vars:
-
-| App type | What your theme does | Import this |
-| --- | --- | --- |
-| **DS-native / hex-var** | reads `var(--background)` directly, or uses the DS Tailwind preset (`bg-background` etc.) | `@import '@devfellowship/components/styles';` (+ `@import '@devfellowship/components/tailwind';` for utilities) |
-| **shadcn-slate** | wraps vars as `hsl(var(--background))`, `hsl(var(--primary))`, … (standard shadcn convention) | `@import '@devfellowship/components/shadcn';` then set dark mode |
-
-**Why two paths?** `@devfellowship/components/styles` ships the semantic vars
-(`--background`, `--primary`, …) as **hex** values. That's correct for DS-native
-apps, but a shadcn-slate app wraps the same names as `hsl(var(--background))` — hex
-inside `hsl()` is invalid CSS and breaks the render. The **`/shadcn`** bridge
-(added in **v1.2.0**) re-declares the standard shadcn semantic vars as bare **HSL
-channels** (`H S% L%`, no wrapper) mapped to the DS v0 dark palette, scoped under
-both `:root` and `.dark`. It's a separate, additive, opt-in export — it does **not**
-change the hex layer, so existing hex-var consumers are untouched. shadcn-slate apps
-just bump to `^1.2.0`, swap their hand-mirrored palette for `@import
-'@devfellowship/components/shadcn'`, and set dark — no more hand-mirroring.
-
-DS v0 is dark-only; the bridge channels are dark.
-
-#### ⚠️ Import EXACTLY ONE — NEVER both `/styles` and `/shadcn`
-
-`@devfellowship/components/styles` and `@devfellowship/components/shadcn` are
-**mutually exclusive**. They declare the **same** semantic CSS vars
-(`--background`, `--primary`, `--card`, …) in **incompatible value formats**:
-
-| Export | `--background` value | For apps whose theme reads it as |
-| --- | --- | --- |
-| `/styles` (theme.css) | **hex** — `#0A0908` | `var(--background)` (raw color) |
-| `/shadcn` (shadcn.css) | **HSL channels** — `30 11% 4%` | `hsl(var(--background))` |
-
-If an app imports **both**, whichever lands later in the CSS cascade
-**clobbers** `--background` (and every sibling var):
-
-- `/shadcn` after `/styles` → a hex consumer now reads `30 11% 4%` as a color → garbage.
-- `/styles` after `/shadcn` → an `hsl(var(--background))` consumer evaluates
-  `hsl(#0A0908)` → **invalid CSS** → the declaration is dropped → the surface
-  renders **transparent**. This is exactly the **transparent quiz-dialog bug**:
-  the dialog's `background` silently disappeared because both layers were
-  imported and the bare-HSL channel from `/shadcn` made `/styles`' hex invalid.
-
-**Rule, by app type:**
-
-- **DS-native (hex) app** → import `@devfellowship/components/styles` **only**.
-- **shadcn-slate (HSL-channel) app** → import `@devfellowship/components/shadcn` **only**.
-- **Never import both. Never mix them in the same app** (not in `.css`, not via
-  a JS/TS side-effect `import`).
-
-##### Lint-time guard (deterministic)
-
-A guard ships in the CLI so CI catches the collision before it reaches a browser:
-
-```bash
-# scan the current app (cwd) — exit 1 if BOTH imports are present
-npx @devfellowship/components check-style-imports
-# or point at a subdir, or get machine-readable output
-npx @devfellowship/components check-style-imports ./src --json
-```
-
-It scans every `.css` / `.scss` / `.less` / `.ts` / `.tsx` / `.js` / `.jsx`
-(skipping `node_modules`, `dist`, build dirs) for `@import` **and** JS `import` /
-`require` of the two exports. Exit `0` = clean (zero or one export imported),
-exit `1` = both imported (prints each offending file:line). **Adopt it** by
-adding a step to your app's CI lint job:
-
-```yaml
-- name: Guard DS style co-import collision
-  run: npx @devfellowship/components check-style-imports
-```
-
-(or as a `package.json` script / pre-commit hook). No app needs to bump a
-dependency version to adopt it — it runs straight from the published CLI bin.
-
-## Features
-
-- **Component Browser**: Grid-based layout with category filtering and search
-- **Live Preview**: Visual preview of UI components with source code
-- **Copy-to-Clipboard**: One-click code copying for rapid development
-- **Multi-Page Components**: Support for components with multiple sub-pages
-- **Dark Theme**: Professional dark-only interface optimized for developers
-- **Embeddable**: Self-contained component ready for integration
-- **Observability**: Built-in Sentry error tracking and OpenTelemetry integration
-- **Containerized**: Docker and devcontainer support for consistent development environments
-
-## Tech Stack
-
-- React 18 with TypeScript
-- Tailwind CSS v4 (CSS-first config via `@theme inline`) for styling
-- shadcn/ui components
-- Lucide React icons
-- Vite for development and building
-- Vitest for testing
-- Sentry (`@sentry/react`) for error tracking
-- OpenTelemetry for distributed tracing
-- Docker for containerized development and deployment
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20+ and npm
-- Modern web browser
-- (Optional) Docker and Docker Compose for containerized development
-- (Optional) VS Code with the Dev Containers extension
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/devfellowship/dfl-components-cli.git
-cd dfl-components-cli
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-Open [http://localhost:8080](http://localhost:8080) to view the app.
-
-### Running with Docker
-
-You can run the entire application inside a Docker container without installing Node.js locally:
-
-```bash
-# Build and start with Docker Compose
-docker compose up
-
-# Or build the image directly
-docker build -t dfl-components-cli .
-docker run -p 8080:8080 dfl-components-cli
-```
-
-The app will be available at [http://localhost:8080](http://localhost:8080).
-
-### Using the Dev Container
-
-This project includes a VS Code devcontainer configuration for a fully sandboxed development environment:
-
-1. Open the repository in VS Code.
-2. When prompted, click **Reopen in Container** (or run the command **Dev Containers: Reopen in Container** from the command palette).
-3. VS Code will build the Docker image, install dependencies via `npm install`, and open a terminal inside the container.
-4. The workspace is mounted at `/app` with ESLint and Prettier extensions pre-installed.
-
-The devcontainer uses the same `docker-compose.yml` as the standalone Docker workflow, so behavior is consistent across environments.
-
-### Building for Production
-
-```bash
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-### Available Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start the Vite development server |
-| `npm run dev:portless` | Start dev server via the portless proxy |
-| `npm run build` | Production build |
-| `npm run build:dev` | Development build (unminified) |
-| `npm run lint` | Run ESLint |
-| `npm run preview` | Preview the production build locally |
-| `npm test` | Run tests with Vitest |
-| `npm run test:watch` | Run tests in watch mode |
-
-## Environment Variables
-
-Copy `.env.example` to `.env` and adjust values as needed:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VITE_REGISTRY_URL` | Override the component registry URL | GitHub raw URL |
-| `VITE_PORT` | Dev server port | `8080` |
-| `VITE_SENTRY_DSN` | Sentry DSN for error tracking | _(disabled if empty)_ |
-| `VITE_OTEL_API_KEY` | API key for the OpenTelemetry collector | _(none)_ |
-| `VITE_OTEL_ENABLED` | Enable observability in non-production builds | `false` |
-| `VITE_APP_NAME` | Service name reported to collectors | `"unknown"` |
-| `VITE_APP_VERSION` | Service version reported to collectors | `"0.0.0"` |
-
-## Observability (Sentry and OpenTelemetry)
-
-The app ships with an `ObservabilityProvider` component that initializes both Sentry and OpenTelemetry when enabled. It is located at `src/components/observability/`.
-
-### What it provides
-
-- **Sentry error tracking** -- automatic capture of uncaught exceptions and unhandled promise rejections.
-- **React Error Boundary** -- wraps the component tree so render errors are caught, reported, and displayed gracefully.
-- **OpenTelemetry tracing** -- browser spans sent to the DevFellowship collector.
-- **Core Web Vitals** -- LCP, FID, CLS metrics collected automatically.
-- **Fetch instrumentation** -- outgoing HTTP requests are traced.
-- **React Query error reporting** -- failed queries are reported as spans.
-
-### Usage
-
-Wrap your app with `ObservabilityProvider`:
-
-```tsx
-import { ObservabilityProvider } from "./components/observability";
-
-function App() {
-  return (
-    <ObservabilityProvider sentryDsn="https://...@sentry.io/...">
-      <YourApp />
-    </ObservabilityProvider>
-  );
-}
-```
-
-All configuration props are optional; the provider reads `VITE_*` environment variables as defaults. Set `enabled={false}` or omit the Sentry DSN to disable tracking entirely.
-
-## CLI — shipped as the `dfl-components` bin of `@devfellowship/components`
-
-The CLI is **part of `@devfellowship/components`** — there is **no separate
-`-cli` package**. Installing (or `npx`-ing) `@devfellowship/components` exposes
-the `dfl-components` binary. The standalone `@devfellowship/components-cli`
-package is **deprecated** (folded in here); use the bin below instead.
-
-```bash
-# add shared components from the registry
-npx @devfellowship/components add button card
-
-# map / validate / stamp this app's UX paths (folds the former dfl-ux-paths CLI)
-npx @devfellowship/components ux-paths init
-npx @devfellowship/components ux-paths validate
-npx @devfellowship/components ux-paths generate-mermaid
-npx @devfellowship/components ux-paths diff web/flows.json mobile/flows.json
-npx @devfellowship/components ux-paths stamp        # minimal-diff by default
-
-# guard against importing BOTH /styles and /shadcn (see "Consuming the DS styles")
-npx @devfellowship/components check-style-imports
-```
-
-### `ux-paths` subcommands
-
-| Command | What it does |
-| --- | --- |
-| `init` | Bootstrap `.dfl-ux-paths/flows.json` in the cwd. |
-| `validate [path]` | Validate a flows.json against the canonical v1 schema (fetched from `dfl-ux-paths`). |
-| `generate-mermaid [path]` | Emit a `flows.mmd` Mermaid graph. |
-| `diff <a> <b>` | Screen/action/flow gap analysis between two flows.json (e.g. web vs mobile). |
-| `stamp [path]` | Refresh `app_version` → `YYYY-MM-DD-<git-sha>` and bump `generated_at`. |
-
-The JSON **Schema** still lives in [`devfellowship/dfl-ux-paths`](https://github.com/devfellowship/dfl-ux-paths)
-(`schema/v1.json`); only the CLI was folded into this hub so there's a single
-published npm CLI. `validate` fetches the schema from the canonical raw URL at
-runtime.
-
-**`stamp` minimal-diff (`--preserve-format`, default-on):** re-stamping updates
-ONLY the volatile `app_version` / `generated_at` fields via surgical string
-replacement, preserving the existing file's formatting. This keeps re-stamps
-from reformatting the whole `flows.json` (compact→multi-line) and producing
-noisy diffs. Pass `--no-preserve-format` to opt into the legacy whole-file
-reformat.
-
-## Embedding the Component Hub
-
-The entire app is encapsulated in a single `ComponentHubApp` component that can be embedded in larger applications:
-
-```tsx
-import ComponentHubApp from './components/ComponentHubApp';
-
-function SuperApp() {
-  return (
-    <div className="app-container">
-      {/* Your existing app content */}
-
-      {/* Embed the Component Hub */}
-      <ComponentHubApp />
-    </div>
-  );
-}
-```
-
-### CSS Isolation
-
-The component hub uses Tailwind CSS classes that are scoped to avoid conflicts:
-- All content is wrapped in a container with `bg-gray-950` for dark theme
-- No global styles that would affect parent applications
-- Self-contained styling using shadcn/ui components
-
-## Component Structure
-
-### Component Data Model
-
-Each component in the hub follows this structure:
-
-```typescript
-interface Component {
-  id: string;
-  name: string;
-  description: string;
-  category: 'UI' | 'Hooks' | 'Providers' | 'Pages';
-  tags: string[];
-  version: string;
-  code: string;
-  previewComponent?: React.ComponentType;
-  subPages?: {
-    name: string;
-    code: string;
-    previewComponent?: React.ComponentType;
-  }[];
-}
-```
-
-### Adding New Components
-
-To add new components to the hub:
-
-1. **Update Mock Data**: Add your component to the `mockComponents` array in `ComponentHubApp.tsx`
-2. **Create Preview Component**: Build a preview version for the modal
-3. **Add Source Code**: Include the complete source code as a string
-4. **Set Metadata**: Define category, tags, version, and description
-
-Example:
-
-```typescript
-{
-  id: 'new-component',
-  name: 'MyComponent',
-  description: 'A useful component that does something great',
-  category: 'UI',
-  tags: ['button', 'interactive'],
-  version: '1.0.0',
-  code: `// Your component source code here`,
-  previewComponent: MyComponentPreview
-}
-```
-
-## Authentication Integration
-
-The hub includes placeholder authentication pages ready for integration:
-
-### Future Auth Integration Points
-
-Located in `/src/components/auth/`:
-
-- `LoginPage.tsx` - Complete login form with validation
-- `RegisterPage.tsx` - Registration form with password confirmation
-
-**Integration Comments**: Look for `// TODO: Replace with actual auth service call` throughout the codebase for integration points.
-
-### Planned Auth Features
-
-- Role-based component access control
-- User session management
-- Integration with existing auth providers
-- Component usage tracking per user
-
-## Architecture Decisions
-
-### Why Mock Data?
-
-The current implementation uses hard-coded component data to:
-- Provide immediate functionality without backend dependencies
-- Allow rapid prototyping and UI development
-- Make the component hub embeddable in any environment
-
-### Component Preview Strategy
-
-- **UI Components**: Live React component previews
-- **Hooks/Providers**: Code-only display with usage examples
-- **Pages**: Full page component rendering in modal
-
-### Search and Filter Logic
-
-- **Search**: Case-insensitive matching on component name and tags
-- **Filter**: Category-based filtering with "All" option
-- **Real-time**: Instant results as you type
-
-## Customization
-
-### Theme Customization
-
-The dark theme can be customized by modifying Tailwind classes:
-
-```css
-/* Main background */
-bg-gray-950
-
-/* Card backgrounds */
-bg-gray-900
-
-/* Border colors */
-border-gray-800
-
-/* Accent colors */
-bg-blue-600 (primary actions)
-text-blue-400 (links and highlights)
-```
-
-### Layout Modifications
-
-- **Grid Layout**: Modify `grid-cols-*` classes in the component grid
-- **Modal Size**: Adjust `max-w-6xl` in the detail modal
-- **Responsive Breakpoints**: Update `md:`, `lg:`, `xl:` prefixes
-
-## Roadmap
-
-### Immediate Enhancements
-- [ ] Component dependency visualization
-- [ ] Bulk copy functionality
-- [ ] Advanced search (by code content)
-- [ ] Component usage examples
-
-### Future Features
-- [ ] Real authentication integration
-- [ ] Component versioning UI
-- [ ] Usage analytics dashboard
-- [ ] Team collaboration features
-- [ ] Integration with design systems
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is intended for internal use within DevFellowship. All rights reserved.
+# @devfellowship/components
+
+The **DevFellowship design system** — React UI components, design tokens, a live
+Storybook, and the `dfl-components` CLI (component scaffolding **+** `ux-paths`
+app-flow mapping). Shipped as a single published npm package.
+
+[![npm version](https://img.shields.io/npm/v/@devfellowship/components)](https://www.npmjs.com/package/@devfellowship/components)
+[![npm downloads](https://img.shields.io/npm/dm/@devfellowship/components)](https://www.npmjs.com/package/@devfellowship/components)
+![license](https://img.shields.io/npm/l/@devfellowship/components)
+
+- 📦 **npm:** https://www.npmjs.com/package/@devfellowship/components
+- 📖 **Storybook (live):** https://storybook.devfellowship.com/
+- 🎨 **DS v0 static reference:** https://devfellowship.s3.amazonaws.com/media/1779275454681-1779273267327-AgADbwUAAn7PaEQ.html
 
 ---
 
-**Need Help?** Check the component source code for detailed implementation examples and integration patterns.
+## What's in the box
+
+- **~55 UI components** — dark-themed, DS-v0-tokenized primitives + molecules +
+  organisms + app-shell templates (built on Radix + `class-variance-authority`,
+  shadcn-compatible). Real exports include `Button`, `Alert`, `Avatar`, `Badge`,
+  `Card`, `Dialog`, `Input`, `Select`, `Table`, `Sidebar`, `Toaster`, …
+- **Design tokens** — a 3-layer CSS-variable system (primitives → semantic →
+  component) shipped as importable stylesheets.
+- **Hooks, utils & providers** — `useToast`, `useAuth`, `useIsMobile`, `cn`,
+  `formatCurrency`, `formatDate`, `AuthProvider`, `FeatureFlagProvider`, …
+- **The `dfl-components` CLI** — scaffold components into an app **and** map/validate
+  each app's UX paths (`ux-paths`), folding the former `dfl-ux-paths` CLI into one bin.
+
+---
+
+## Install
+
+```bash
+# pnpm
+pnpm add @devfellowship/components
+
+# npm
+npm install @devfellowship/components
+
+# yarn
+yarn add @devfellowship/components
+
+# bun
+bun add @devfellowship/components
+```
+
+**Peer dependencies** (bring your own): `react >=18`, `react-dom >=18`,
+`tailwindcss >=4`, and — only if you use `AuthProvider` / data hooks —
+`@supabase/supabase-js >=2`.
+
+---
+
+## Usage
+
+Import a component and the design-token stylesheet:
+
+```tsx
+import { Button } from "@devfellowship/components";
+import "@devfellowship/components/styles"; // DS v0 tokens + theme (dark)
+
+export function Example() {
+  return <Button variant="default">Ship it</Button>;
+}
+```
+
+Sub-path exports (tree-shakeable, typed):
+
+```ts
+import { useToast, useAuth, useIsMobile } from "@devfellowship/components/hooks";
+import { cn, formatCurrency, formatDate }  from "@devfellowship/components/utils";
+import { AuthProvider, FeatureFlagProvider } from "@devfellowship/components/providers";
+
+import "@devfellowship/components/styles";   // semantic vars as HEX (DS-native apps)
+import "@devfellowship/components/tailwind";  // Tailwind v4 utility layer
+```
+
+### Consuming the DS styles — pick ONE stylesheet
+
+The DS is **dark-only**. Which stylesheet you import depends on how your app's
+Tailwind theme references its CSS vars:
+
+| App type | What your theme does | Import this |
+| --- | --- | --- |
+| **DS-native / hex-var** | reads `var(--background)` directly, or uses the DS Tailwind preset (`bg-background`) | `@devfellowship/components/styles` (+ `.../tailwind` for utilities) |
+| **shadcn-slate** | wraps vars as `hsl(var(--background))`, `hsl(var(--primary))`, … | `@devfellowship/components/shadcn` then set `.dark` |
+
+> ⚠️ **Import EXACTLY ONE — NEVER both `/styles` and `/shadcn`.** They declare
+> the same semantic vars in incompatible formats: `/styles` ships them as **hex**
+> (`#0A0908`), `/shadcn` ships them as bare **HSL channels** (`30 11% 4%`). Whichever
+> lands later in the cascade clobbers the other → broken colors. The `/shadcn`
+> bridge (added v1.2.0) is additive/opt-in and does not touch the hex layer.
+
+Available style exports: `/styles` (theme), `/shadcn` (shadcn bridge), `/tokens`
+(raw token vars), `/tailwind` (Tailwind v4 preset).
+
+### Design-token architecture
+
+Tokens live in [`packages/ui/src/styles/tokens.css`](packages/ui/src/styles/tokens.css). Three layers:
+
+| Layer          | Prefix   | Role                                       | Count |
+| -------------- | -------- | ------------------------------------------ | ----- |
+| **Primitives** | `--p-*`  | Raw atoms (color stops, type, spacing)     | 112   |
+| **Semantic**   | `--s-*`  | Intent-mapped (surface-page, ink-muted, …) | 40    |
+| **Component**  | `--c-*`  | Per-component knobs (5–10 each)            | 64    |
+
+Brand color is `#E07A4A` (DS v0 amber-500). The legacy `#F39325` was retired in v1.0.0.
+
+---
+
+## Storybook
+
+The live Storybook is the browsable catalog of every component and its states:
+
+**https://storybook.devfellowship.com/**
+
+Stories follow a strict **one-state-per-story** convention — each story export
+renders **exactly one** state/variant (no galleries), organized under
+`Components/{Atoms,Molecules,Organisms}/<Name>` plus a `Templates/` track. See
+[`CLAUDE.md`](CLAUDE.md) for the full authoring rules.
+
+Run it locally:
+
+```bash
+npm run storybook        # dev server on :6006 (proxies packages/ui)
+npm run build-storybook  # static build
+```
+
+---
+
+## CLI — `dfl-components`
+
+The package ships a `dfl-components` bin. Run it via `npx` (no install needed) or
+after adding the package globally:
+
+```bash
+npx @devfellowship/components <command>
+# or
+pnpm add -g @devfellowship/components && dfl-components <command>
+```
+
+### Top-level commands
+
+| Command | Description |
+| --- | --- |
+| `init` | Initialize a project with `dfl-components` configuration |
+| `add [components...]` | Add shared component(s) to your project (`--all`, `--overwrite`) |
+| `ux-paths <cmd>` | Versioned, schema-validated per-app UX-path mapping (below) |
+| `check-style-imports` | Guard against importing both `/styles` and `/shadcn` |
+
+### `ux-paths` subcommands
+
+Maps an app's screens/actions/flows into a versioned `.dfl-ux-paths/flows.json`
+(schema in [`devfellowship/dfl-ux-paths`](https://github.com/devfellowship/dfl-ux-paths)).
+
+| Command | Description |
+| --- | --- |
+| `ux-paths init` | Scaffold a `.dfl-ux-paths/flows.json` stub |
+| `ux-paths validate [path]` | Validate a `flows.json` against the canonical JSON Schema |
+| `ux-paths generate-mermaid [path]` | Emit the sibling `flows.mmd` (Mermaid) from the JSON |
+| `ux-paths diff <a> <b>` | Diff two `flows.json` files (missing screens/actions — migration audits) |
+| `ux-paths stamp [path]` | Stamp `app_version` (`YYYY-MM-DD-<git-sha>`) into `flows.json` |
+
+```bash
+npx @devfellowship/components ux-paths init
+npx @devfellowship/components ux-paths validate .dfl-ux-paths/flows.json
+```
+
+---
+
+## Repository structure
+
+```
+.
+├── packages/
+│   └── ui/                     # ← the published @devfellowship/components package
+│       ├── src/
+│       │   ├── components/     # UI components (atoms / molecules / organisms / templates)
+│       │   ├── hooks/          # useToast, useAuth, useIsMobile, …
+│       │   ├── providers/      # AuthProvider, FeatureFlagProvider
+│       │   ├── utils/ · lib/   # cn, formatCurrency, formatDate
+│       │   ├── styles/         # tokens.css, theme, shadcn bridge, tailwind preset
+│       │   ├── stories/        # Storybook (one-state-per-story)
+│       │   └── cli/            # dfl-components CLI (init, add, ux-paths, check-style-imports)
+│       └── package.json        # published package manifest + `dfl-components` bin
+├── src/                        # component-showcase micro-app (Vite/React, not published)
+├── registry/                   # component registry served to the `add` CLI
+├── scripts/                    # release + guard scripts
+└── .github/workflows/          # CI, publish-npm, deploy-storybook, guards
+```
+
+`packages/ui` is a standalone package with its **own lockfile** (not an npm
+workspace of the root). The root app is the local component showcase.
+
+---
+
+## Development
+
+Requires **Node.js 20+**.
+
+```bash
+git clone https://github.com/devfellowship/dfl-components-cli.git
+cd dfl-components-cli
+npm install            # root showcase app deps
+npm run dev            # Vite showcase on http://localhost:8080
+
+# Work on the library itself:
+cd packages/ui
+npm install
+npm run build          # tsup: library + CLI bundles
+npm run storybook      # Storybook on :6006
+npm test               # Vitest
+```
+
+### Releasing to npm
+
+Publishing is **automated** via the `Publish @dfl/components to NPM` GitHub Actions
+workflow ([`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml)) —
+`workflow_dispatch` with a `version` input (`patch` | `minor` | `major` | explicit).
+It computes the next version from the **live npm** latest, builds, `npm publish`es,
+pushes the `v<version>` tag, and opens+admin-merges a source-bump PR back to `main`.
+Prefer this workflow over a manual `npm publish`.
+
+---
+
+## License
+
+Internal DevFellowship design system. No open-source license is currently declared
+in the package manifest — treat as proprietary to DevFellowship unless stated otherwise.
