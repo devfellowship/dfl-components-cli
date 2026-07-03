@@ -9,12 +9,33 @@
  *   Signup            — signup mode, terms unchecked; CTA disabled (--s-surface-elevated bg).
  *   SignupTermsAccepted — terms checked; CTA enables amber via --c-button-primary-bg.
  */
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { LoginPage } from "../components/organisms/LoginPage";
+import { AuthContext } from "../hooks/use-auth";
+
+/** Minimal stub context so useAuth() resolves without a live Supabase client. */
+const mockAuthValue = {
+  user: null,
+  session: null,
+  profile: null,
+  isLoading: false,
+  login: async () => ({ error: null }),
+  signup: async () => ({ error: null }),
+  logout: async () => {},
+  refreshProfile: async () => {},
+} as const;
 
 const meta: Meta<typeof LoginPage> = {
   title: "Components/Organisms/LoginPage",
   component: LoginPage,
+  decorators: [
+    (Story) => (
+      <AuthContext.Provider value={mockAuthValue}>
+        <Story />
+      </AuthContext.Provider>
+    ),
+  ],
   parameters: {
     layout: "fullscreen",
   },
