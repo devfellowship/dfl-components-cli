@@ -82,11 +82,14 @@
   --radius-xl: var(--p-radius-xl);     /* 14px */
   --radius-full: var(--p-radius-pill); /* 999px — full circle / pill */
 
-  /* ─── Fonts ────────────────────────────────────────────────────────────── */
-  --font-sans: var(--font-sans);
-  --font-condensed: var(--font-condensed);
-  --font-mono: var(--font-mono);
-  --font-editorial: var(--font-editorial);
+  /* ─── Fonts ──────────────────────────────────────────────────────────────
+   * Same rule as radius above: map onto the differently-named --p-font-*
+   * primitives. The old `--font-sans: var(--font-sans)` was self-referential,
+   * so it resolved to nothing (mirrors tokens.css §"Font shortcuts"). */
+  --font-sans:      var(--p-font-sans);
+  --font-condensed: var(--p-font-display);
+  --font-mono:      var(--p-font-mono);
+  --font-editorial: var(--p-font-editorial);
 
   /* ─── Editorial / paper (light, NOT default — see tokens.css §5.8) ─────── */
   --color-paper:          var(--paper);
