@@ -30,6 +30,15 @@ jobs:
       - name: Guard — no Storybook Docs pages
         run: node packages/ui/scripts/check-no-storybook-docs.mjs
 
+      # Design-token lint — catches orphaned / self-referential / duplicate /
+      # cyclic custom properties + unbalanced braces in the DS token files.
+      # This is the exact bug class that made `rounded-*` compute 0px (radius
+      # self-ref) and left --c-* orphaned. Node built-ins only — no deps, so it
+      # runs BEFORE install and is a HARD gate. Script vendored at
+      # scripts/lint-tokens.mjs (kept in sync with the design-token-lint skill).
+      - name: Guard — design tokens (orphaned/self-ref/duplicate vars)
+        run: node scripts/lint-tokens.mjs packages/ui/src/styles/*.css
+
       - name: Install dependencies
         run: |
           if [ -f package-lock.json ]; then
