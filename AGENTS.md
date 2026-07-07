@@ -49,12 +49,12 @@ Stories live in `packages/ui/src/stories/*.tsx`. Two top-level sections, very
 different meanings (full detail in `CLAUDE.md` → "Storybook: atomic hierarchy"):
 
 - **`Components/{Atoms,Molecules,Organisms}/<Name>`** = the REAL exported
-  `@devfellowship/components` library — distributed via `registry/registry.json`
-  and the `dfl-components add <name>` CLI. Titles MUST be `Components/<Tier>/<Name>`
-  per the tier map in CLAUDE.md.
+  `@devfellowship/components` library — distributed as library exports from
+  `src/index.ts` (consumed via `import { … } from "@devfellowship/components"`).
+  Titles MUST be `Components/<Tier>/<Name>` per the tier map in CLAUDE.md.
 - **`DesignPlayground/<Experiment>`** (`packages/ui/src/design-playground/`) = an
   experimentation SANDBOX. Shows in Storybook but is **NEVER exported** (not from
-  `src/index.ts`, not in the registry, not via the CLI). Shares the same
+  `src/index.ts`). Shares the same
   theme/CSS/tokens as production. Enforced by CI:
   `scripts/check-no-playground-export.mjs` /
   `.github/workflows/guard-playground-export.yml` (`npm run guard:playground`)
@@ -64,7 +64,7 @@ different meanings (full detail in `CLAUDE.md` → "Storybook: atomic hierarchy"
   page-level DEMONSTRATIONS that COMPOSE the real exported organisms/molecules
   (AppNavbar, AppSidebar, Table, Card, Badge, Button, Select, Input, Skeleton,
   Chart, Pagination, …) into page archetypes with mock data — **NOT new exported
-  components** (no index/registry/CLI). Titles are `Templates/<Name>`. Current:
+  components** (no `src/index.ts` entry). Titles are `Templates/<Name>`. Current:
   AppShell, ListPage, Dashboard, Kanban. One primary story per template (plus a
   few meaningful states); each template is its own file — no all-in-one gallery.
 
@@ -74,6 +74,7 @@ render-based gallery into individual named `StoryObj` exports. Keep
 `argTypes.options` in sync with the component's real `cva`.
 
 **Pods graduation:** experiment in `DesignPlayground/` → promote the winner into
-`src/components/<name>.tsx` cva + `Components/{...}/<Name>` stories + the registry.
+`src/components/<name>.tsx` cva + `Components/{...}/<Name>` stories + export from
+`src/index.ts`.
 
 <!-- END MANUAL:repo/agent-notes -->

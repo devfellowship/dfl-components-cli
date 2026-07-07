@@ -2,60 +2,56 @@
 # AI-inferred structured metadata for context sync
 
 name: dfl-components-cli
-display_name: Component Hub + CLI
+display_name: "@devfellowship/components — design-system library + ux-paths CLI"
 description: >
-  Shared component distribution system for the DFL ecosystem. Two parts:
-  (1) Vite React showcase app for browsing components, (2) Node.js CLI
-  tool (npx dfl-components) that installs shared UI components, hooks,
-  providers, and page templates into any DFL React project.
+  The DFL design system. Publishes @devfellowship/components — a React UI
+  component library consumed as library imports
+  (`import { Button } from "@devfellowship/components"`) — plus the
+  `dfl-components` CLI bin for versioned per-app UX-path mapping (`ux-paths`).
+  The shadcn-style component registry and the `add`/`init` scaffolding CLI were
+  REMOVED in v3.0.0 (a fleet-wide audit found zero consumers).
 
 type: platform
 status: active
 
 tech_stack:
-  showcase:
+  library:
     runtime: browser
-    framework: react-18.3.1
-    bundler: vite-5
+    framework: react->=18
+    bundler: tsup-8
     language: typescript-5
-    styling: tailwindcss + shadcn/ui
+    styling: tailwindcss-4 + radix + class-variance-authority
   cli:
     runtime: node->=18
     framework: commander-12
     bundler: tsup-8
     language: typescript-5
     dependencies:
+      - ajv
       - chalk
-      - ora
-      - prompts
       - fs-extra
-      - cosmiconfig
-      - zod
 
 schemas: []
 
 primary_domain: developer-tooling
 personas:
-  - dfl-developer: Installs shared components into their app via CLI
-  - platform-engineer: Adds new components to the registry
+  - dfl-developer: Imports shared components from @devfellowship/components
+  - platform-engineer: Adds new components to the library (exported from src/index.ts)
 
 entry_points:
-  showcase: src/components/ComponentHubApp.tsx
-  # The CLI was folded into @devfellowship/components — it ships as the
-  # `dfl-components` bin of packages/ui (built via tsup.cli.config.ts).
+  # The published package @devfellowship/components ships from packages/ui.
+  library: packages/ui/src/index.ts
+  # The CLI ships as the `dfl-components` bin of packages/ui (tsup.cli.config.ts).
   cli: packages/ui/src/cli/index.ts
-  registry: registry/registry.json
 
 key_files:
+  - packages/ui/src/index.ts
   - packages/ui/src/cli/index.ts
-  - packages/ui/src/cli/commands/add.ts
-  - packages/ui/src/cli/commands/init.ts
   - packages/ui/src/cli/ux-paths/index.ts
   - packages/ui/tsup.cli.config.ts
-  - registry/registry.json
-  - src/data/mockComponents.ts
+  - packages/ui/package.json
 
 cross_repo_impact: high
 impact_description: >
-  Every DFL React app can consume components from this registry.
-  Changes to registry format or CLI behavior affect all 20+ consumer repos.
+  Every DFL React app can import components from @devfellowship/components.
+  Changes to the exported component API affect all 20+ consumer repos.

@@ -1,8 +1,9 @@
 # @devfellowship/components
 
 The **DevFellowship design system** — React UI components, design tokens, a live
-Storybook, and the `dfl-components` CLI (component scaffolding **+** `ux-paths`
-app-flow mapping). Shipped as a single published npm package.
+Storybook, and the `dfl-components` CLI (`ux-paths` app-flow mapping). Shipped as
+a single published npm package. Components are consumed as **library imports**
+(`import { Button } from "@devfellowship/components"`).
 
 [![npm version](https://img.shields.io/npm/v/@devfellowship/components)](https://www.npmjs.com/package/@devfellowship/components)
 [![npm downloads](https://img.shields.io/npm/dm/@devfellowship/components)](https://www.npmjs.com/package/@devfellowship/components)
@@ -24,8 +25,9 @@ app-flow mapping). Shipped as a single published npm package.
   component) shipped as importable stylesheets.
 - **Hooks, utils & providers** — `useToast`, `useAuth`, `useIsMobile`, `cn`,
   `formatCurrency`, `formatDate`, `AuthProvider`, `FeatureFlagProvider`, …
-- **The `dfl-components` CLI** — scaffold components into an app **and** map/validate
-  each app's UX paths (`ux-paths`), folding the former `dfl-ux-paths` CLI into one bin.
+- **The `dfl-components` CLI** — map/validate each app's UX paths (`ux-paths`),
+  folding the former `dfl-ux-paths` CLI into one bin. (Components themselves are
+  used as library imports, not scaffolded.)
 
 ---
 
@@ -139,12 +141,16 @@ npx @devfellowship/components <command>
 pnpm add -g @devfellowship/components && dfl-components <command>
 ```
 
+> **Note (v3.0.0):** the shadcn-style component **registry** and the `add` / `init`
+> scaffolding commands were **removed**. Components are consumed as **library
+> imports** (`import { Button } from "@devfellowship/components"`) — see [Usage](#usage)
+> above. The CLI now exists purely for `ux-paths` (plus the `check-style-imports`
+> guard).
+
 ### Top-level commands
 
 | Command | Description |
 | --- | --- |
-| `init` | Initialize a project with `dfl-components` configuration |
-| `add [components...]` | Add shared component(s) to your project (`--all`, `--overwrite`) |
 | `ux-paths <cmd>` | Versioned, schema-validated per-app UX-path mapping (below) |
 | `check-style-imports` | Guard against importing both `/styles` and `/shadcn` |
 
@@ -181,16 +187,14 @@ npx @devfellowship/components ux-paths validate .dfl-ux-paths/flows.json
 │       │   ├── utils/ · lib/   # cn, formatCurrency, formatDate
 │       │   ├── styles/         # tokens.css, theme, shadcn bridge, tailwind preset
 │       │   ├── stories/        # Storybook (one-state-per-story)
-│       │   └── cli/            # dfl-components CLI (init, add, ux-paths, check-style-imports)
+│       │   └── cli/            # dfl-components CLI (ux-paths, check-style-imports)
 │       └── package.json        # published package manifest + `dfl-components` bin
-├── src/                        # component-showcase micro-app (Vite/React, not published)
-├── registry/                   # component registry served to the `add` CLI
 ├── scripts/                    # release + guard scripts
 └── .github/workflows/          # CI, publish-npm, deploy-storybook, guards
 ```
 
 `packages/ui` is a standalone package with its **own lockfile** (not an npm
-workspace of the root). The root app is the local component showcase.
+workspace of the root).
 
 ---
 
@@ -200,12 +204,7 @@ Requires **Node.js 20+**.
 
 ```bash
 git clone https://github.com/devfellowship/dfl-components-cli.git
-cd dfl-components-cli
-npm install            # root showcase app deps
-npm run dev            # Vite showcase on http://localhost:8080
-
-# Work on the library itself:
-cd packages/ui
+cd dfl-components-cli/packages/ui
 npm install
 npm run build          # tsup: library + CLI bundles
 npm run storybook      # Storybook on :6006
