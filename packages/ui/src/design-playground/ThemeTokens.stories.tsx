@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from "@storybook/react";
  * except where the token IS a hex literal (ramp stops, focus ring color).
  */
 const meta: Meta = {
-  title: "DesignPlayground/ThemeTokens",
+  title: "Design Playground/ThemeTokens",
 };
 
 export default meta;
