@@ -35,7 +35,7 @@ import {
  *   BadgeVariants canonical tag → badge variant semantic map
  */
 const meta: Meta = {
-  title: "Templates/Kanban",
+  title: "Components/Templates/Kanban",
   parameters: { layout: "padded" },
 };
 

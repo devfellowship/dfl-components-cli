@@ -51,7 +51,7 @@ import {
  *   DownTrend — all four stats show negative deltas (danger path end-to-end)
  */
 const meta: Meta = {
-  title: "Templates/Dashboard",
+  title: "Components/Templates/Dashboard",
   parameters: {
     layout: "padded",
   },

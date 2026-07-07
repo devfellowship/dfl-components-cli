@@ -49,7 +49,7 @@ import {
  * One story per state: WithData | WithDataFocusStates | Loading | Empty.
  */
 const meta: Meta = {
-  title: "Templates/ListPage",
+  title: "Components/Templates/ListPage",
   parameters: {
     layout: "padded",
   },

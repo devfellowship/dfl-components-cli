@@ -15,7 +15,7 @@ import { Kbd } from "../components/kbd";
  *   --c-kbd-radius    → --p-radius-sm        4px
  */
 const meta: Meta<typeof Kbd> = {
-  title: "Atoms/Kbd",
+  title: "Components/Atoms/Kbd",
   component: Kbd,
   argTypes: {
     size: {
