@@ -17,9 +17,10 @@
  */
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { BookOpen, CreditCard, FileText, Home, Settings, Users } from "lucide-react";
+import { BookOpen, CreditCard, FileText, Home, LogOut, Settings, Users } from "lucide-react";
 import { AppNavbar } from "../../components/organisms/AppNavbar";
 import { AppSidebar } from "../../components/organisms/AppSidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/avatar";
 import { Button } from "../../components/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/card";
 import {
@@ -125,12 +126,39 @@ function PageBody() {
 // ── Story 1 — Default (expanded, amber active, unified 56px topbar, theme=dark) ──
 
 /**
+ * Custom sidebar footer for the Default story: reproduces the AppSidebar user
+ * block (avatar + name + email) and adds a full-width Logout button below it,
+ * via the `footer` prop (which replaces the built-in user footer).
+ */
+function UserFooterWithLogout() {
+  return (
+    <div className="px-2 py-3 flex flex-col gap-3">
+      <div className="flex items-center gap-2">
+        <Avatar className="h-7 w-7 shrink-0">
+          <AvatarImage src={userInfo.avatarUrl} alt={userInfo.name} />
+          <AvatarFallback className="text-[10px] font-bold text-[var(--s-brand-fg)]">JS</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col overflow-hidden">
+          <span className="text-[12px] font-medium truncate">{userInfo.name}</span>
+          <span className="text-[11px] font-mono text-muted-foreground truncate">{userInfo.email}</span>
+        </div>
+      </div>
+      <Button variant="outline" size="sm" className="w-full">
+        <LogOut className="h-4 w-4 shrink-0" />
+        Logout
+      </Button>
+    </div>
+  );
+}
+
+/**
  * Default — sidebar expanded.
  *
  * - SidebarTrigger in AppNavbar leftSlot: single unified 56px topbar (no stacked strip).
  * - Active nav item (Cursos) uses DS amber trio: brand-subtle bg + brand-solid text + brand-border.
  * - theme="dark" (dark-first default): Sun icon renders, implying "switch to light".
  * - DS uniform focus ring (box-shadow, clip-safe) on all interactive elements.
+ * - Custom `footer`: user info + Logout button below the e-mail.
  */
 export const Default: Story = {
   render: () => (
@@ -141,6 +169,7 @@ export const Default: Story = {
       appLabel="Plataforma"
       activeUrl="/courses"
       defaultOpen
+      footer={<UserFooterWithLogout />}
     >
       <AppNavbar
         breadcrumbs={breadcrumbs}
