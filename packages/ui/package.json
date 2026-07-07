@@ -43,6 +43,7 @@
   ],
   "scripts": {
     "build": "tsup && tsup --config tsup.cli.config.ts",
+    "release": "npm run build && changeset publish",
     "build:lib": "tsup",
     "build:cli": "tsup --config tsup.cli.config.ts",
     "build:watch": "tsup --watch",
