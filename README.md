@@ -211,14 +211,39 @@ npm run storybook      # Storybook on :6006
 npm test               # Vitest
 ```
 
-### Releasing to npm
+### Releasing to npm — Changesets (automated, deterministic SemVer)
 
-Publishing is **automated** via the `Publish @dfl/components to NPM` GitHub Actions
-workflow ([`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml)) —
-`workflow_dispatch` with a `version` input (`patch` | `minor` | `major` | explicit).
-It computes the next version from the **live npm** latest, builds, `npm publish`es,
-pushes the `v<version>` tag, and opens+admin-merges a source-bump PR back to `main`.
-Prefer this workflow over a manual `npm publish`.
+Releases are driven by **[Changesets](https://github.com/changesets/changesets)**.
+The published version is a **pure function of the accumulated changeset files** — no
+commit-message heuristics, no manual `npm publish`.
+
+**Per PR that changes `packages/ui`:** add a changeset declaring the bump.
+
+```bash
+cd packages/ui
+npx changeset            # pick patch | minor | major + write a one-line summary
+git add .changeset && git commit -m "chore: changeset"
+```
+
+Semver intent:
+- **patch** — bug fix, no API change
+- **minor** — new backwards-compatible component/prop/export
+- **major** — a breaking change (removed/renamed export, changed signature)
+
+**On merge to `main`**, the [`Release`](.github/workflows/release.yml) workflow
+(`changesets/action@v1`, `ubuntu-latest`) does one of two things:
+1. If unreleased changesets exist → it opens/updates a **"Version Packages" PR** that
+   bumps `packages/ui/package.json` + writes `CHANGELOG.md`.
+2. When that **Version Packages PR is merged** → it builds `dist/` and runs
+   `changeset publish` → `npm publish` + pushes the `v<version>` git tag.
+
+So **publishing only ever happens by merging the Version Packages PR** — the single,
+reviewable, irreversible step. A soft [`Changeset Check`](.github/workflows/changeset-check.yml)
+job *warns* (non-blocking) on PRs touching `packages/ui/**` that lack a changeset.
+
+> The old `workflow_dispatch` manual publish (`publish-npm.yml`) has been **retired** in
+> favor of this flow to avoid two competing publish paths. The npm token is the existing
+> `NPM_TOKEN` repo secret (consumed as `NODE_AUTH_TOKEN`).
 
 ---
 
