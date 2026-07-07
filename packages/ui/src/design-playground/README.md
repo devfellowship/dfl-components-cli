@@ -3,8 +3,7 @@
 This folder is a **sandbox** for design experiments. Everything here shows up in
 Storybook under the top-level **`DesignPlayground/`** section, but **none of it is
 part of the published `@devfellowship/components` library** — it is never exported
-from `src/index.ts`, never added to `registry/registry.json`, and never
-distributed by the `dfl-components add <name>` CLI.
+from `src/index.ts`.
 
 ## Rules
 
@@ -15,11 +14,10 @@ distributed by the `dfl-components add <name>` CLI.
   components and consume the real design tokens (`src/styles/*`), so what you see
   is faithful — the only difference is distribution.
 - **Never import a `design-playground` module from `src/index.ts`, a component,
-  a hook, a provider, or the registry.** The CI guard
+  a hook, or a provider.** The CI guard
   (`scripts/check-no-playground-export.mjs`, workflow
   `.github/workflows/guard-playground-export.yml`) fails the build if anything
-  under `src/design-playground/**` is referenced by the public export surface or
-  the registry manifest.
+  under `src/design-playground/**` is referenced by the public export surface.
 
 ## Pods graduation flow (experiment → promote)
 
@@ -29,8 +27,8 @@ distributed by the `dfl-components add <name>` CLI.
    - add the variant/props to the component's `class-variance-authority` config
      in `src/components/<name>.tsx`,
    - add one-state-per-story exports under `Components/{Atoms,Molecules,Organisms}/<Name>`,
-   - (if it's a new component) register it in `registry/registry.json` so the CLI
-     can distribute it.
+   - (if it's a new component) export it from `src/index.ts` so library consumers
+     can import it.
 3. **Delete or trim** the corresponding playground experiment once it has
    graduated — the sandbox stays lean.
 
