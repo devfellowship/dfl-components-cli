@@ -1,0 +1,47 @@
+# Soft gate: WARN (never block) when a PR touching packages/ui/** ships without a changeset.
+# A missing changeset means the change won't be released. This is intentionally non-blocking
+# (continue-on-error) — Tainan can harden it to a required check later if desired.
+#
+# Public repo: self-hosted dfl-runner blocked (allows_public=false). ubuntu-latest per CLAUDE.md carve-out.
+name: Changeset Check
+
+on:
+  pull_request:
+    paths:
+      - 'packages/ui/**'
+
+permissions:
+  contents: read
+
+jobs:
+  changeset-status:
+    runs-on: ubuntu-latest
+    # Housekeeping / advisory only — must never block the PR rollup.
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref || 'main' }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (packages/ui)
+        working-directory: packages/ui
+        run: npm ci || (rm -f package-lock.json && npm install)
+
+      - name: Warn if no changeset present
+        working-directory: packages/ui
+        run: |
+          BASE="origin/${{ github.event.pull_request.base.ref || 'main' }}"
+          if npx changeset status --since="$BASE"; then
+            echo "✅ Changeset present (or no releasable change) — good."
+          else
+            echo "::warning title=No changeset::This PR touches packages/ui/** but has no changeset. Run \`npx changeset\` in packages/ui to declare a patch/minor/major bump, or ignore if this change should not be released."
+          fi

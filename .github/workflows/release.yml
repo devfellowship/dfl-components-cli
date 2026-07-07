@@ -1,0 +1,64 @@
+# Automated release for @devfellowship/components (packages/ui) via Changesets.
+#
+# Flow:
+#   - On every push to `main`, this runs `changesets/action@v1` with cwd=packages/ui.
+#   - If there are unreleased changesets, the action opens/updates a "Version Packages"
+#     PR that bumps packages/ui/package.json + writes CHANGELOG.md (deterministic SemVer
+#     computed purely from the accumulated .changeset/*.md files — no commit-message magic).
+#   - When that Version Packages PR is merged, no changesets remain, so the action instead
+#     runs `changeset publish` → builds (via prepublishOnly) + `npm publish` + pushes git tags.
+#
+# Publishing is the only irreversible step and happens exclusively on the merge of a
+# Version Packages PR — never on a plain feature merge.
+#
+# Public repo: self-hosted dfl-runner blocked (allows_public=false). ubuntu-latest per CLAUDE.md carve-out.
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write        # bump commit / tags / GitHub Releases
+  pull-requests: write   # open/update the "Version Packages" PR
+  id-token: write        # npm provenance (if enabled)
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies (packages/ui)
+        working-directory: packages/ui
+        run: npm ci || (rm -f package-lock.json && npm install)
+
+      - name: Create Release PR or publish to npm
+        uses: changesets/action@v1
+        with:
+          cwd: packages/ui
+          # `version` opens/updates the Version Packages PR (runs `changeset version`).
+          version: npx changeset version
+          # `publish` runs when no changesets remain (i.e. after the Version PR merges).
+          # `prepublishOnly` in packages/ui/package.json builds dist/ before npm publish;
+          # we also build here explicitly so dist/ is guaranteed present.
+          publish: npm run build && npx changeset publish
+        env:
+          # RELEASE_SYNC_PAT (org-admin, ruleset bypass) preferred so the Version PR can
+          # be opened and tags pushed past the Protect Main ruleset; GITHUB_TOKEN fallback.
+          GITHUB_TOKEN: ${{ secrets.RELEASE_SYNC_PAT || secrets.GITHUB_TOKEN }}
+          # Reuses the SAME secret the retired manual publish workflow used.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
