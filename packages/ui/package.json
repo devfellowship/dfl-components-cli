@@ -1,6 +1,6 @@
 {
   "name": "@devfellowship/components",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "DFL Design System — UI components, hooks, utils and providers",
   "type": "module",
   "sideEffects": [
@@ -43,6 +43,7 @@
   ],
   "scripts": {
     "build": "tsup && tsup --config tsup.cli.config.ts",
+    "release": "npm run build && changeset publish",
     "build:lib": "tsup",
     "build:cli": "tsup --config tsup.cli.config.ts",
     "build:watch": "tsup --watch",
@@ -68,6 +69,8 @@
     }
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.0",
     "@storybook/addon-a11y": "^9.1.20",
     "@storybook/addon-themes": "^9.1.20",
     "@storybook/react": "^9.1.20",
@@ -76,9 +79,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.0.0",
-    "@types/prompts": "^2.4.9",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
@@ -128,16 +129,11 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "commander": "^12.0.0",
-    "cosmiconfig": "^9.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
-    "fs-extra": "^11.2.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.4.6",
-    "node-fetch": "^3.3.2",
-    "ora": "^8.0.1",
-    "prompts": "^2.4.2",
     "react-day-picker": "^8.10.1",
     "react-hook-form": "^7.72.1",
     "react-resizable-panels": "^2.1.9",

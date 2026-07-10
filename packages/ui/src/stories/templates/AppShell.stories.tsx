@@ -34,7 +34,7 @@ import {
 } from "../../components/sidebar";
 
 const meta: Meta = {
-  title: "Templates/AppShell",
+  title: "Components/Templates/AppShell",
   parameters: {
     layout: "fullscreen",
   },

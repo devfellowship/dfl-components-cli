@@ -36,8 +36,8 @@ export const Default: Story = {
       <Terminal />
       <AlertTitle>Heads up!</AlertTitle>
       <AlertDescription>
-        Você pode adicionar componentes ao app usando a CLI com{" "}
-        <code>dfl-components add alert</code>.
+        Importe os componentes direto da biblioteca:{" "}
+        <code>{`import { Alert } from "@devfellowship/components"`}</code>.
       </AlertDescription>
     </Alert>
   ),

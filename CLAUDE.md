@@ -67,14 +67,24 @@ registry/                     # JSON component registry
 <!-- BEGIN MANUAL:repo/local-notes -->
 ## Adding a New Component or Hook
 
-When adding a new component or hook to @dfl/components:
+> **Note (v3.0.0):** the shadcn-style component **registry** and the `add`/`init`
+> scaffolding CLI were **removed** (a fleet-wide audit found zero consumers).
+> Components are now distributed purely as **library exports** —
+> `import { Button } from "@devfellowship/components"`. The `dfl-components` CLI
+> is now `ux-paths`-only.
 
-1. **Add the component source** — create `registry/components/<name>.json` (or `hooks/`, `providers/`, `pages/`) following the existing JSON schema: `{ name, type, title, description, category, version, tags, dependencies, registryDependencies, files: [{ path, content }] }`
-2. **Update the registry index** — add an entry to `registry/registry.json` items array with: name, type, title, description, category, version, registryDependencies, dependencies
-3. **Update the Component Hub data** — re-generate `src/data/designSystemData.json` by running: `node scripts/generate-design-data.mjs`
-4. **Verify the Component Hub** — `npm run dev` and confirm the new component appears on the hub listing AND detail page
-5. **Verify after deploy** — confirm it appears on components.devfellowship.com
-6. **If it doesn't appear** — check that the individual JSON file, the registry.json entry, AND the designSystemData.json all include the component
+When adding a new component or hook to @devfellowship/components:
+
+1. **Add the component source** — create `packages/ui/src/components/<name>.tsx`
+   (or under `hooks/`, `providers/`), built on Radix + `class-variance-authority`
+   following the existing components.
+2. **Export it** — add the export to `packages/ui/src/index.ts` (or the relevant
+   sub-path entry: `hooks.ts` / `providers.ts` / `utils.ts`) so consumers can
+   `import` it.
+3. **Add a Storybook story** — one-state-per-story exports under
+   `Components/{Atoms,Molecules,Organisms}/<Name>` (see the Storybook section below).
+4. **Verify** — `cd packages/ui && npm run build` (library + CLI bundles) and
+   `npm run storybook` to confirm the component renders.
 
 ## Storybook — NO Docs pages (autodocs disabled)
 
@@ -105,9 +115,9 @@ two top-level sections and they mean very different things:
 ### `Components/{Atoms,Molecules,Organisms}/<Name>` — the REAL exported library
 
 - These are the **actual `@devfellowship/components` library** components,
-  **distributed via the registry (`registry/registry.json`) and the
-  `dfl-components add <name>` CLI**. What you see in this section ships to
-  consumers.
+  **distributed as library exports from `src/index.ts`** (consumed via
+  `import { … } from "@devfellowship/components"`). What you see in this section
+  ships to consumers.
 - **Tier map** (which component is Atom vs Molecule vs Organism):
   - **Atoms** — smallest primitives: Button, IconButton, Badge, Kbd, Input,
     Textarea, Label, Checkbox, Switch, RadioGroup, Slider, Toggle, Avatar,
@@ -127,15 +137,14 @@ two top-level sections and they mean very different things:
 
 - Lives in `packages/ui/src/design-playground/` (e.g.
   `DesignPlayground/ButtonLab`, `DesignPlayground/ThemeTokens`). It shows up in
-  Storybook but is **NEVER exported** — not from `src/index.ts`, not in
-  `registry/registry.json`, not via the CLI.
+  Storybook but is **NEVER exported** — not from `src/index.ts`.
 - It **shares the same theme / CSS / design tokens** as production (playground
   stories import the real components + real `src/styles/*` tokens) — the only
   difference is distribution.
 - **Enforced by CI:** `scripts/check-no-playground-export.mjs`
   (workflow `.github/workflows/guard-playground-export.yml`, plus
   `npm run guard:playground`) **fails the build** if any `design-playground`
-  module leaks into the public export surface, the registry manifest, or the
+  module leaks into the public export surface or the
   tsup build entries — and if any non-story/non-README module is added under
   `src/design-playground/`.
 
@@ -146,8 +155,8 @@ two top-level sections and they mean very different things:
   that COMPOSES the real exported `@devfellowship/components` organisms/molecules
   (AppNavbar, AppSidebar, Table, Card, Badge, Button, Select, Input, Skeleton,
   Chart, Pagination, …) into a page-level archetype with realistic mock data.
-- **These are NOT new exported components** — no `src/index.ts` entry, no
-  registry, no CLI. They only show how to assemble a page from primitives, and
+- **These are NOT new exported components** — no `src/index.ts` entry. They only
+  show how to assemble a page from primitives, and
   share the same theme / CSS / tokens as production.
 - **Title convention:** `Templates/<Name>`. Current tracks: **AppShell**
   (AppSidebar + AppNavbar + `<main>`), **ListPage** (PageHeader + FilterBar +
@@ -166,7 +175,7 @@ two top-level sections and they mean very different things:
 2. **Promote** the winner into the real library: add the variant/props to the
    component's `class-variance-authority` config in `src/components/<name>.tsx`,
    add one-state-per-story exports under `Components/{Atoms,Molecules,Organisms}/<Name>`,
-   and (if new) register it in `registry/registry.json` for CLI distribution.
+   and (if new) export it from `src/index.ts` so library consumers can import it.
 3. **Trim** the playground experiment once it has graduated.
 
 ### One-state-per-story rule (NON-NEGOTIABLE)

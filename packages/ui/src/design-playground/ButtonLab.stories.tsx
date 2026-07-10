@@ -15,7 +15,7 @@ import { Button } from "../components/button";
  * One story per treatment — conforms to the one-state-per-story rule.
  */
 const meta: Meta = {
-  title: "DesignPlayground/ButtonLab",
+  title: "Design Playground/ButtonLab",
 };
 
 export default meta;
