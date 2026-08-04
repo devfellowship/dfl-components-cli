@@ -156,8 +156,14 @@ pnpm add -g @devfellowship/components && dfl-components <command>
 
 ### `ux-paths` subcommands
 
-Maps an app's screens/actions/flows into a versioned `.dfl-ux-paths/flows.json`
-(schema in [`devfellowship/dfl-ux-paths`](https://github.com/devfellowship/dfl-ux-paths)).
+Maps an app's screens/actions/flows into a versioned `.dfl-ux-paths/flows.json`.
+
+The schema is authored in `devfellowship/dfl-ux-paths`, which is **private** as
+of 2026-08-04 — that link resolves only for org members. You do not need access
+to run these commands: the schema is **vendored** into this package
+(`src/cli/ux-paths/lib/v1.schema.json`, inlined into `dist/cli.js`), so
+`ux-paths validate` does no network I/O and works offline. A schema change there
+must be mirrored here in the same round.
 
 | Command | Description |
 | --- | --- |
