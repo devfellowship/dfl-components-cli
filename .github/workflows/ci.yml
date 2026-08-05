@@ -39,6 +39,35 @@ jobs:
       - name: Guard — design tokens (orphaned/self-ref/duplicate vars)
         run: node scripts/lint-tokens.mjs packages/ui/src/styles/*.css
 
+      # ── ux-paths CLI: offline-safety gate ────────────────────────────────
+      #
+      # `ux-paths validate` used to fetch its JSON Schema from
+      # raw.githubusercontent at validate-time. dfl-ux-paths went PRIVATE on
+      # 2026-08-04 and every `validate` run in the published package started
+      # 404ing. The schema is vendored now (#105 / 3.0.1); this gate keeps it
+      # that way by asserting on the artifact users actually execute.
+      #
+      # It installs and builds explicitly, in packages/ui, and has NO
+      # continue-on-error. That is deliberate:
+      #
+      # ⚠️ THE GENERIC Install/Build/Test/Typecheck/Lint STEPS BELOW ARE NO-OPS.
+      #    They probe for a package.json at the REPO ROOT, and this repo has
+      #    none — everything lives in packages/ui. So every one of them prints
+      #    "⚠️ No … found, skipping" and the job still reports "✅ CI passed".
+      #    The vitest suite added in #105 to prevent exactly this bug has
+      #    therefore never run in CI. Same silent-degradation shape as the bug
+      #    it was written to catch: a check that quietly stops checking and
+      #    reports success. Repairing those steps properly is a separate round
+      #    (it also surfaces 9 pre-existing React-test failures unrelated to the
+      #    CLI), so until then THIS is the step that actually enforces anything.
+      - name: Guard — ux-paths CLI is offline-safe
+        working-directory: packages/ui
+        run: |
+          npm ci
+          npm run build:cli
+          node scripts/check-cli-bundle-offline.mjs
+          npx vitest run src/cli/
+
       - name: Install dependencies
         run: |
           if [ -f package-lock.json ]; then

@@ -52,7 +52,8 @@
     "prepublishOnly": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "lint:no-docs": "node scripts/check-no-storybook-docs.mjs"
+    "lint:no-docs": "node scripts/check-no-storybook-docs.mjs",
+    "check:cli-offline": "node scripts/check-cli-bundle-offline.mjs"
   },
   "peerDependencies": {
     "@supabase/supabase-js": ">=2.0.0",
