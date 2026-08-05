@@ -32,9 +32,11 @@ jobs:
         with:
           node-version: 20
 
+      # `npm ci` only — see the note in release.yml. A lockfile that fails to
+      # install must surface, not be deleted and re-resolved.
       - name: Install dependencies (packages/ui)
         working-directory: packages/ui
-        run: npm ci || (rm -f package-lock.json && npm install)
+        run: npm ci
 
       - name: Warn if no changeset present
         working-directory: packages/ui
