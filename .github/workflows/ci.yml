@@ -12,6 +12,25 @@ concurrency:
   group: ci-pr-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
+# ─────────────────────────────────────────────────────────────────────────────
+# All real work lives in packages/ui. There is NO package.json at the repo root.
+#
+# This workflow used to open every generic step with a probe like
+# `if [ -f package.json ]; … else echo "⚠️ No package.json found, skipping"; fi`
+# executed from the repo ROOT. The probe never matched, so install, build, test,
+# typecheck and lint ALL skipped — and the job still printed "✅ CI passed".
+# Verified no-op on run 30941973561. The vitest suite added in #105 specifically
+# to prevent a silent-degradation bug had therefore never executed once.
+#
+# The rule this file now follows: a step must never be able to "pass" by not
+# running. Nothing here is conditional on a file existing. The preflight step
+# asserts the workspace layout up front and FAILS if it ever changes, and the
+# final gate treats any outcome that is not exactly `success` — including
+# `skipped` — as a failure.
+# ─────────────────────────────────────────────────────────────────────────────
+env:
+  WORKSPACE: packages/ui
+
 jobs:
   ci:
     # Public repo: self-hosted dfl-runner blocked (allows_public=false). ubuntu-latest per CLAUDE.md carve-out.
@@ -24,6 +43,33 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
+
+      # ── Preflight: the guard against this workflow going no-op again ───────
+      #
+      # If the workspace moves or a script is renamed, every step below would
+      # otherwise degrade quietly. This turns that into an immediate, loud red
+      # with an explicit message instead.
+      - name: Preflight — workspace and required scripts exist
+        run: |
+          set -euo pipefail
+          if [ ! -f "$WORKSPACE/package.json" ]; then
+            echo "::error::No package.json at $WORKSPACE. The CI workspace moved."
+            echo "::error::Update \$WORKSPACE in .github/workflows/ci.yml — do NOT add a"
+            echo "::error::'skip if missing' fallback: that is exactly how this job"
+            echo "::error::silently stopped running anything (run 30941973561)."
+            exit 1
+          fi
+          missing=0
+          for s in build test typecheck; do
+            if ! jq -e --arg s "$s" '.scripts[$s]' "$WORKSPACE/package.json" >/dev/null; then
+              echo "::error::Required npm script '$s' is missing from $WORKSPACE/package.json"
+              missing=1
+            fi
+          done
+          [ "$missing" = "0" ] || exit 1
+          echo "✅ workspace=$WORKSPACE with build, test, typecheck"
 
       # Storybook must have ZERO Docs pages (autodocs / mdx / docs addon banned).
       # Hard gate — no dependencies needed (Node built-ins only). See CLAUDE.md.
@@ -39,6 +85,28 @@ jobs:
       - name: Guard — design tokens (orphaned/self-ref/duplicate vars)
         run: node scripts/lint-tokens.mjs packages/ui/src/styles/*.css
 
+      - name: Install dependencies
+        working-directory: packages/ui
+        run: npm ci
+
+      - name: Build
+        id: build
+        working-directory: packages/ui
+        run: npm run build
+        continue-on-error: true
+
+      - name: Tests (vitest)
+        id: tests
+        working-directory: packages/ui
+        run: npm test
+        continue-on-error: true
+
+      - name: Typecheck
+        id: typecheck
+        working-directory: packages/ui
+        run: npm run typecheck
+        continue-on-error: true
+
       # ── ux-paths CLI: offline-safety gate ────────────────────────────────
       #
       # `ux-paths validate` used to fetch its JSON Schema from
@@ -47,87 +115,37 @@ jobs:
       # 404ing. The schema is vendored now (#105 / 3.0.1); this gate keeps it
       # that way by asserting on the artifact users actually execute.
       #
-      # It installs and builds explicitly, in packages/ui, and has NO
-      # continue-on-error. That is deliberate:
-      #
-      # ⚠️ THE GENERIC Install/Build/Test/Typecheck/Lint STEPS BELOW ARE NO-OPS.
-      #    They probe for a package.json at the REPO ROOT, and this repo has
-      #    none — everything lives in packages/ui. So every one of them prints
-      #    "⚠️ No … found, skipping" and the job still reports "✅ CI passed".
-      #    The vitest suite added in #105 to prevent exactly this bug has
-      #    therefore never run in CI. Same silent-degradation shape as the bug
-      #    it was written to catch: a check that quietly stops checking and
-      #    reports success. Repairing those steps properly is a separate round
-      #    (it also surfaces 9 pre-existing React-test failures unrelated to the
-      #    CLI), so until then THIS is the step that actually enforces anything.
+      # Runs against the bundle produced by the Build step above. No
+      # continue-on-error: shipping a CLI that phones home is release-blocking.
       - name: Guard — ux-paths CLI is offline-safe
         working-directory: packages/ui
-        run: |
-          npm ci
-          npm run build:cli
-          node scripts/check-cli-bundle-offline.mjs
-          npx vitest run src/cli/
+        run: node scripts/check-cli-bundle-offline.mjs
 
-      - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci || (rm package-lock.json && npm install)
-          elif [ -f package.json ]; then
-            npm install
-          else
-            echo "⚠️ No package.json found, skipping install"
-          fi
-
-      - name: Build
-        id: build
-        run: |
-          if jq -e '.scripts.build' package.json &>/dev/null; then
-            npm run build
-          else
-            echo "⚠️ No build script found, skipping"
-          fi
-        continue-on-error: true
-
-      - name: Smoke tests (vitest)
-        id: tests
-        run: |
-          if jq -e '.scripts.test' package.json &>/dev/null; then
-            npm test
-          else
-            echo "⚠️ No test script found, skipping"
-          fi
-        continue-on-error: true
-
-      - name: Typecheck
-        id: typecheck
-        run: |
-          if jq -e '.scripts.typecheck' package.json &>/dev/null; then
-            npm run typecheck 2>&1 | tee typecheck-output.txt
-          else
-            echo "⚠️ No typecheck script found, skipping"
-          fi
-        continue-on-error: true
-
-      - name: Lint
-        id: lint
-        run: |
-          if [ -f eslint.config.js ] || [ -f .eslintrc.js ] || [ -f .eslintrc.json ]; then
-            npx eslint . -f json -o eslint-report.json || true
-          else
-            echo "⚠️ No eslint config found, skipping"
-            echo '[]' > eslint-report.json
-          fi
+      # NOTE: there is deliberately no eslint step. This package has no eslint
+      # config and no eslint dependency. The step that used to sit here wrote
+      # `[]` to eslint-report.json and reported success, which claimed a lint
+      # had run when none had. Static analysis that DOES run lives in the two
+      # hard guards above (check-no-storybook-docs, lint-tokens) plus tsc in
+      # Typecheck. If eslint is ever adopted, add it as an unconditional step.
 
       - name: Check if CI failed
         if: always()
         run: |
+          set -uo pipefail
           FAILED=0
-          if [ "${{ steps.build.outcome }}" = "failure" ]; then echo "❌ Build failed"; FAILED=1; fi
-          if [ "${{ steps.tests.outcome }}" = "failure" ]; then echo "❌ Tests failed"; FAILED=1; fi
-          if [ "${{ steps.typecheck.outcome }}" = "failure" ]; then echo "❌ Typecheck failed"; FAILED=1; fi
-          if [ -f eslint-report.json ]; then
-            ERRORS=$(node -e "const r=JSON.parse(require('fs').readFileSync('eslint-report.json','utf8')||'[]');console.log(r.reduce((a,f)=>a+(f.errorCount||0),0))")
-            if [ "$ERRORS" -gt 0 ]; then echo "❌ $ERRORS lint error(s)"; FAILED=1; fi
-          fi
+          # `skipped` counts as failure: a step that did not run has not passed.
+          # That conflation is what let this job report green while doing nothing.
+          check() {
+            local name="$1" outcome="$2"
+            if [ "$outcome" != "success" ]; then
+              echo "❌ $name: $outcome"
+              FAILED=1
+            else
+              echo "✅ $name"
+            fi
+          }
+          check "Build"     "${{ steps.build.outcome }}"
+          check "Tests"     "${{ steps.tests.outcome }}"
+          check "Typecheck" "${{ steps.typecheck.outcome }}"
           if [ "$FAILED" = "1" ]; then exit 1; fi
           echo "✅ CI passed"
