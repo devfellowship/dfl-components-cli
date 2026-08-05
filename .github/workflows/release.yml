@@ -42,9 +42,16 @@ jobs:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
 
+      # `npm ci` only, with NO `|| (rm -f package-lock.json && npm install)`
+      # fallback. That fallback meant a lockfile that failed to install was
+      # DELETED and replaced with freshly-resolved floating versions — and this
+      # is the workflow that publishes to npm. A drifted lockfile is a signal
+      # worth stopping for, not one to paper over: the recovery silently shipped
+      # a build against dependency versions nobody had reviewed or pinned.
+      # If npm ci fails here, fix the lockfile in a PR.
       - name: Install dependencies (packages/ui)
         working-directory: packages/ui
-        run: npm ci || (rm -f package-lock.json && npm install)
+        run: npm ci
 
       - name: Create Release PR or publish to npm
         uses: changesets/action@v1

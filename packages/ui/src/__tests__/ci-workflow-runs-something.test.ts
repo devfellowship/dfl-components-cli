@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 /**
@@ -91,5 +91,37 @@ describe("ci.yml cannot pass while executing nothing", () => {
     // claiming a lint had run when none existed. Either lint for real or do not
     // claim it — never emit a fake empty report.
     expect(workflow).not.toMatch(/echo\s+'\[\]'\s*>\s*eslint-report\.json/);
+  });
+});
+
+/**
+ * Same defect class, different workflow: an install step that recovers from its
+ * own failure by discarding the thing that made it reproducible.
+ *
+ * Every workflow used `npm ci || (rm -f package-lock.json && npm install)`. When
+ * npm ci failed, the lockfile was DELETED and dependencies re-resolved to
+ * whatever floated. release.yml is the workflow that publishes to npm, so that
+ * recovery could ship a build against versions nobody reviewed — and it would
+ * do it while reporting success.
+ *
+ * A lockfile that fails to install is a signal. This asserts no workflow papers
+ * over it again.
+ */
+const WORKFLOW_DIR = resolve(__dirname, "..", "..", "..", "..", ".github", "workflows");
+
+describe("no workflow bypasses the lockfile", () => {
+  const files = readdirSync(WORKFLOW_DIR).filter((f) => f.endsWith(".yml") || f.endsWith(".yaml"));
+
+  it("finds workflows to check (a zero-length sweep proves nothing)", () => {
+    expect(files.length).toBeGreaterThan(0);
+  });
+
+  it.each(files)("%s does not delete package-lock.json on install failure", (file) => {
+    const text = readFileSync(resolve(WORKFLOW_DIR, file), "utf8")
+      .split("\n")
+      .filter((line) => !/^\s*#/.test(line))
+      .join("\n");
+    expect(text).not.toMatch(/rm\s+(-f\s+)?package-lock\.json/);
+    expect(text).not.toMatch(/npm\s+ci\s*\|\|/);
   });
 });
