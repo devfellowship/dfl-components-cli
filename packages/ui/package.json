@@ -27,6 +27,11 @@
       "import": "./dist/providers.js",
       "require": "./dist/providers.cjs"
     },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js",
+      "require": "./dist/testing.cjs"
+    },
     "./styles": "./dist/styles/theme.css",
     "./shadcn": "./dist/styles/shadcn.css",
     "./tokens": "./dist/styles/tokens.css",
