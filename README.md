@@ -77,6 +77,56 @@ import "@devfellowship/components/styles";   // semantic vars as HEX (DS-native 
 import "@devfellowship/components/tailwind";  // Tailwind v4 utility layer
 ```
 
+### `/testing` — assertions that fail when emptiness proves nothing
+
+Supabase RLS hides unauthorized rows as **HTTP 200 with an empty body**, not
+`403`. So a gated page viewed by the shared level-0 smoke identity renders "no
+results", and `expect(rows).toHaveCount(0)` passes **vacuously** — satisfied by
+absence of permission rather than by the state under test. (Measured: the
+spec-builder `/history` page showed "0 registros" while the table held 17 rows.)
+
+PostgREST cannot tell "RLS hid it" from "genuinely empty" — this entry does not
+pretend otherwise. It **names the ambiguity** and requires an *independent*
+authorization signal before believing an empty result.
+
+```ts
+import {
+  assertNotVacuouslyEmpty,
+  iamMemberProbe,
+  classifyEmptiness,
+  VacuousVerificationError,
+} from "@devfellowship/components/testing";
+
+// Layer 2 — e2e adapter. Throws VacuousVerificationError instead of going green.
+await assertNotVacuouslyEmpty(page, {
+  surface: "spec-builder /history",
+  countText: /^(\d+) registros?$/,             // capture group 1 = the count
+  rowSelector: "[data-testid='spec-row']",      // …or count elements instead
+  deniedSelector: '[data-testid="access-denied"]',
+  viewerIsAuthorized: () => iamMemberProbe(supabase), // independent signal
+});
+
+// Layer 1 — pure decision, no I/O, unit-testable on its own.
+classifyEmptiness({ rowCount: 0, deniedSignalPresent: false, viewerIsAuthorized: false });
+// → { verdict: "vacuous", reason: "…indistinguishable from lack of access…" }
+```
+
+| Verdict | When | Meaning |
+| --- | --- | --- |
+| `populated` | rows > 0 | nothing to disambiguate |
+| `denied` | empty **+** denied signal | the app failed loud — asserting emptiness is meaningful |
+| `genuinely-empty` | empty, no denial, viewer **provably** authorized | the emptiness is real |
+| `vacuous` | empty, no denial, authorization `false` or `'unknown'` | **throws** — the check proves nothing |
+
+`iamMemberProbe()` calls the `get_my_iam_role()` RPC and resolves `level >= 50`;
+an errored/empty RPC resolves `'unknown'`, **never** `true`. `'unknown'` is
+treated exactly as harshly as `false`.
+
+> **Zero runtime dependencies.** The entry duck-types the `Page` / `Locator` /
+> `rpc` surfaces it needs (`PageLike`, `LocatorLike`, `SupabaseRpcClientLike`)
+> rather than importing `@playwright/test` or `@supabase/supabase-js`, so it
+> never lands in an app bundle and is testable with a plain object literal.
+
 ### Consuming the DS styles — pick ONE stylesheet
 
 The DS is **dark-only**. Which stylesheet you import depends on how your app's
@@ -191,6 +241,7 @@ npx @devfellowship/components ux-paths validate .dfl-ux-paths/flows.json
 │       │   ├── hooks/          # useToast, useAuth, useIsMobile, …
 │       │   ├── providers/      # AuthProvider, FeatureFlagProvider
 │       │   ├── utils/ · lib/   # cn, formatCurrency, formatDate
+│       │   ├── testing/        # e2e assertion helpers (dependency-free)
 │       │   ├── styles/         # tokens.css, theme, shadcn bridge, tailwind preset
 │       │   ├── stories/        # Storybook (one-state-per-story)
 │       │   └── cli/            # dfl-components CLI (ux-paths, check-style-imports)

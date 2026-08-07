@@ -18,6 +18,10 @@ export default defineConfig({
     hooks: 'src/hooks/index.ts',
     utils: 'src/utils/index.ts',
     providers: 'src/providers/index.ts',
+    // e2e assertion helpers. Deliberately dependency-free (no @playwright/test,
+    // no @supabase/supabase-js) — it duck-types the Page/Locator/rpc surfaces
+    // it needs, so importing it never drags a test runner into an app bundle.
+    testing: 'src/testing/index.ts',
   },
   format: ['esm', 'cjs'],
   target: 'es2020',
