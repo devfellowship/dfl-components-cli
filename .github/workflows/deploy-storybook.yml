@@ -33,6 +33,18 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          # REQUIRED. `cache: npm` looks for a lockfile at the REPO ROOT by
+          # default, and there is no package.json or package-lock.json there —
+          # everything lives in packages/ui. setup-node then fails the step with
+          # "Dependencies lock file is not found in /home/runner/work/…", before
+          # install, build or deploy ever run.
+          #
+          # This job had been red on every push to main since 2026-08-05, so
+          # storybook.devfellowship.com stopped receiving new stories while the
+          # PR checks stayed green — the deploy runs only on `push: main` and is
+          # therefore invisible in a PR rollup. ci.yml already sets this path;
+          # this workflow was simply never updated to match.
+          cache-dependency-path: packages/ui/package-lock.json
 
       # packages/ui is NOT an npm workspace of the root — it has its own
       # package-lock.json and its own storybook dep, so install + build there.
