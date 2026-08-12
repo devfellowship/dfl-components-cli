@@ -32,6 +32,12 @@
       "import": "./dist/testing.js",
       "require": "./dist/testing.cjs"
     },
+    "./canvas": {
+      "types": "./dist/canvas.d.ts",
+      "import": "./dist/canvas.js",
+      "require": "./dist/canvas.cjs"
+    },
+    "./canvas.css": "./dist/styles/canvas.css",
     "./styles": "./dist/styles/theme.css",
     "./shadcn": "./dist/styles/shadcn.css",
     "./tokens": "./dist/styles/tokens.css",
@@ -58,10 +64,13 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint:no-docs": "node scripts/check-no-storybook-docs.mjs",
-    "check:cli-offline": "node scripts/check-cli-bundle-offline.mjs"
+    "check:cli-offline": "node scripts/check-cli-bundle-offline.mjs",
+    "check:canvas-isolated": "node scripts/check-canvas-entry-isolated.mjs"
   },
   "peerDependencies": {
+    "@dagrejs/dagre": ">=3.0.0",
     "@supabase/supabase-js": ">=2.0.0",
+    "@xyflow/react": ">=12.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
     "tailwindcss": ">=4.0.0"
@@ -72,11 +81,18 @@
     },
     "@supabase/supabase-js": {
       "optional": true
+    },
+    "@xyflow/react": {
+      "optional": true
+    },
+    "@dagrejs/dagre": {
+      "optional": true
     }
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.0",
+    "@dagrejs/dagre": "^3.1.1",
     "@storybook/addon-a11y": "^9.1.20",
     "@storybook/addon-themes": "^9.1.20",
     "@storybook/react": "^9.1.20",
@@ -89,6 +105,7 @@
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
+    "@xyflow/react": "^12.11.3",
     "jsdom": "^26.1.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",

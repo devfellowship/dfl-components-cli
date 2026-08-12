@@ -22,6 +22,11 @@ export default defineConfig({
     // no @supabase/supabase-js) — it duck-types the Page/Locator/rpc surfaces
     // it needs, so importing it never drags a test runner into an app bundle.
     testing: 'src/testing/index.ts',
+    // <FlowCanvas>. Its OWN entry, never re-exported from src/index.ts, because
+    // it imports @xyflow/react and @dagrejs/dagre. Folding it into the main
+    // bundle would make two optional peer dependencies mandatory for every
+    // consumer of the design system, including the ones that draw no graph.
+    canvas: 'src/canvas/index.ts',
   },
   format: ['esm', 'cjs'],
   target: 'es2020',
@@ -29,7 +34,10 @@ export default defineConfig({
   dts: true,
   splitting: false,
   sourcemap: false,
-  external: ['react', 'react-dom', 'tailwindcss'],
+  // @xyflow/react and @dagrejs/dagre are OPTIONAL PEERS of the canvas entry —
+  // externalising them keeps them out of the bundle and out of every consumer
+  // that never imports `@devfellowship/components/canvas`.
+  external: ['react', 'react-dom', 'tailwindcss', '@xyflow/react', '@dagrejs/dagre'],
   esbuildOptions(options) {
     options.jsx = 'automatic';
   },
@@ -42,6 +50,9 @@ export default defineConfig({
     copyFileSync('src/styles/tailwind.css', 'dist/styles/tailwind.css');
     copyFileSync('src/styles/tokens.css', 'dist/styles/tokens.css');
     copyFileSync('src/styles/fonts.css', 'dist/styles/fonts.css');
+    // Canvas chrome skin — only meaningful on a page that renders <FlowCanvas>,
+    // so it is a separate sheet rather than part of theme.css.
+    copyFileSync('src/styles/canvas.css', 'dist/styles/canvas.css');
     console.log('CSS files copied to dist/styles/');
   },
 });

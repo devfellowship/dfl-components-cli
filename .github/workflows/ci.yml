@@ -121,6 +121,21 @@ jobs:
         working-directory: packages/ui
         run: node scripts/check-cli-bundle-offline.mjs
 
+      # ── FlowCanvas: the optional peers must stay optional ────────────────
+      #
+      # `@xyflow/react` and `@dagrejs/dagre` are optional peer dependencies, and
+      # that promise holds only while <FlowCanvas> stays behind its own
+      # `./canvas` entry. A single re-export from src/index.ts would make both
+      # mandatory for every consumer of the design system — and the failure
+      # would not appear here, it would appear in a consumer's build as an
+      # unresolvable module. Asserted against the built bundles.
+      #
+      # Runs against the Build step above. No continue-on-error: shipping a
+      # main entry that drags React Flow in is release-blocking.
+      - name: Guard — canvas entry is isolated
+        working-directory: packages/ui
+        run: node scripts/check-canvas-entry-isolated.mjs
+
       # NOTE: there is deliberately no eslint step. This package has no eslint
       # config and no eslint dependency. The step that used to sit here wrote
       # `[]` to eslint-report.json and reported success, which claimed a lint

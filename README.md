@@ -28,6 +28,9 @@ a single published npm package. Components are consumed as **library imports**
 - **The `dfl-components` CLI** — map/validate each app's UX paths (`ux-paths`),
   folding the former `dfl-ux-paths` CLI into one bin. (Components themselves are
   used as library imports, not scaffolded.)
+- **`FlowCanvas`** — a shared, auto-laid-out graph canvas behind its own
+  `@devfellowship/components/canvas` entry. One canvas, N lenses: see
+  [The canvas — one canvas, N lenses](#the-canvas--one-canvas-n-lenses).
 
 ---
 
@@ -49,7 +52,71 @@ bun add @devfellowship/components
 
 **Peer dependencies** (bring your own): `react >=18`, `react-dom >=18`,
 `tailwindcss >=4`, and — only if you use `AuthProvider` / data hooks —
-`@supabase/supabase-js >=2`.
+`@supabase/supabase-js >=2`. Only if you use `FlowCanvas`:
+`@xyflow/react >=12` and `@dagrejs/dagre >=3`.
+
+---
+
+## The canvas — one canvas, N lenses
+
+`FlowCanvas` draws a directed graph of cards, laid out automatically. It is the
+component a "map of screens" view is built from, and it is deliberately
+**domain-free**.
+
+```tsx
+import { FlowCanvas } from "@devfellowship/components/canvas";
+```
+
+```css
+/* Both sheets, in this order. The second overrides the first. */
+@import "@xyflow/react/dist/style.css";
+@import "@devfellowship/components/canvas.css";
+```
+
+### The split
+
+| The canvas owns | The lens owns |
+| --- | --- |
+| Ranking and positioning (dagre), `LR` or `TB` | What a card **shows** — `renderCard` |
+| Smoothstep edge routing, label chips, reciprocal-pair de-collision | What a click **does** — `onNodeClick` |
+| The card frame, the caption, the handles | Optionally, the caption — `renderCaption` |
+| MiniMap, Controls, Background, `fitView` | The mapping from its own data to nodes and edges |
+
+The canvas reads only `id`, `title` and `subtitle`. Everything else travels in
+`node.data`, which it **never inspects** — it only hands it back to the slots.
+
+That is the whole design. A card can draw a low-fidelity wireframe, a captured
+screenshot, a coverage figure or a diff badge, and the canvas cannot tell the
+difference. So a new view is a new render function, not a new canvas.
+**Duplicate the lens; never duplicate the canvas.**
+
+### Minimal use
+
+```tsx
+<FlowCanvas
+  nodes={screens.map((s) => ({ id: s.id, title: s.name, subtitle: s.route, data: s }))}
+  edges={transitions.map((t) => ({ id: t.key, source: t.from, target: t.to, label: t.action }))}
+  renderCard={(node) => <WireframePreview screen={node.data} />}
+  onNodeClick={(node) => select(node.id)}
+/>
+```
+
+Swap `renderCard` for `<img src={node.data.screenshot} />` and the same graph
+becomes an observed-reality view. Nothing else changes.
+
+### Why its own entry point
+
+`@xyflow/react` and `@dagrejs/dagre` are **optional peer dependencies**, and
+`FlowCanvas` is **not** re-exported from the main entry. A consumer that draws no
+graph installs nothing new and bundles nothing new. `npm run check:canvas-isolated`
+asserts that against the built bundles, and CI runs it as a hard gate.
+
+### Test ids
+
+Every id the canvas emits is prefixed by `testIdPrefix` (default `flow`):
+`<prefix>-canvas`, `<prefix>-node`, `<prefix>-node-content`,
+`<prefix>-node-caption`, `<prefix>-edge-label`. Each card also carries
+`data-node-id`. Two canvases on one page get two prefixes.
 
 ---
 
