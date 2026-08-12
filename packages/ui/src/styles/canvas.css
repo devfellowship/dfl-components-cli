@@ -1,0 +1,31 @@
+/* DS skin for React Flow's own chrome, used by <FlowCanvas> from
+   @devfellowship/components/canvas.
+
+   React Flow ships its Controls and MiniMap with a light-grey default look that
+   fights the DFL sand palette. These rules re-point that chrome at the DS
+   surface tokens. They live here, beside the component, so a second consumer of
+   FlowCanvas gets the same canvas rather than an unskinned one.
+
+   IMPORT ORDER MATTERS — this sheet overrides React Flow's base styles, so it
+   must come after them:
+
+     @import "@xyflow/react/dist/style.css";
+     @import "@devfellowship/components/canvas.css";
+
+   Deliberately NOT part of theme.css: these selectors are only meaningful on a
+   page that renders a canvas, and the design system must not push React Flow
+   rules into every consumer's stylesheet. */
+
+.react-flow__controls-button {
+  background: var(--s-surface-raised);
+  border-bottom: 1px solid var(--s-border-subtle);
+  color: var(--s-ink-secondary);
+}
+
+.react-flow__controls-button:hover {
+  background: var(--s-surface-elevated);
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor;
+}
