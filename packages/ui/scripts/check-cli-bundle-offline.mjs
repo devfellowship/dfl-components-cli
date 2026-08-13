@@ -80,11 +80,16 @@ for (const { pattern, what } of FORBIDDEN) {
 // The schema must actually be inlined. A bundle with no network I/O *and* no
 // schema would be a `validate` that silently accepts everything — strictly
 // worse than the 404 it replaced, because nothing would complain.
+//
+// The assertion is unchanged since the schema was vendored; only its source
+// moved. It now arrives from `@devfellowship/ux-paths-spec`, which
+// tsup.cli.config.ts marks `noExternal` precisely so this check keeps biting.
 if (!src.includes('DFL UX Paths v1')) {
   violations.push(
-    'the vendored v1 schema is NOT inlined in the bundle — `validate` would ' +
-      'have nothing to validate against. Check the `v1.schema.json` import in ' +
-      'src/cli/ux-paths/lib/load-schema.ts.',
+    'the v1 schema is NOT inlined in the bundle — `validate` would have ' +
+      'nothing to validate against. Check the `@devfellowship/ux-paths-spec` ' +
+      'import in src/cli/ux-paths/lib/load-schema.ts, and that the package is ' +
+      'still listed in `noExternal` in tsup.cli.config.ts.',
   );
 }
 

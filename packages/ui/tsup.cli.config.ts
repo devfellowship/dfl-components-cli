@@ -19,6 +19,14 @@ import { defineConfig } from 'tsup';
  *    extra runtime deps does NOT change the library's import surface — React
  *    consumers still import from `dist/index.js`; they merely install a handful
  *    of small CJS deps alongside.
+ *  - ONE exception to that rule: `@devfellowship/ux-paths-spec` is `noExternal`,
+ *    so the v1 JSON Schema is INLINED into `dist/cli.js`. It is pure ESM with
+ *    ZERO runtime dependencies, so none of the CJS-`require()` breakage above
+ *    applies to it. Inlining is deliberate, not incidental: the schema used to
+ *    be fetched from raw.githubusercontent at validate-time, and
+ *    `scripts/check-cli-bundle-offline.mjs` asserts on the built artifact that
+ *    the schema is present in it and that no network primitive is. Leaving the
+ *    package external would satisfy neither half of that guard.
  *  - `dts: false` — a bin needs no type declarations.
  *  - ESM only + node shebang banner.
  *  - This runs as a SEPARATE tsup invocation from the library build so the
@@ -26,6 +34,8 @@ import { defineConfig } from 'tsup';
  */
 export default defineConfig({
   entry: { cli: 'src/cli/index.ts' },
+  // See the note above: the schema package, and only it, is bundled in.
+  noExternal: ['@devfellowship/ux-paths-spec'],
   format: ['esm'],
   target: 'node18',
   platform: 'node',

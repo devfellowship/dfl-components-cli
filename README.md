@@ -277,10 +277,18 @@ Maps an app's screens/actions/flows into a versioned `.dfl-ux-paths/flows.json`.
 
 The schema is authored in `devfellowship/dfl-ux-paths`, which is **private** as
 of 2026-08-04 — that link resolves only for org members. You do not need access
-to run these commands: the schema is **vendored** into this package
-(`src/cli/ux-paths/lib/v1.schema.json`, inlined into `dist/cli.js`), so
-`ux-paths validate` does no network I/O and works offline. A schema change there
-must be mirrored here in the same round.
+to run these commands. The schema arrives as a **public npm package**,
+[`@devfellowship/ux-paths-spec`](https://www.npmjs.com/package/@devfellowship/ux-paths-spec),
+which `dfl-ux-paths` generates from its one canonical `schema/v1.json`. The
+package has zero runtime dependencies and does no I/O, and `tsup.cli.config.ts`
+inlines it into `dist/cli.js`, so `ux-paths validate` still works fully offline.
+
+This package therefore holds **no copy of the schema**. It used to: a vendored
+`src/cli/ux-paths/lib/v1.schema.json` that a comment asked a human to mirror "in
+the same round". A promise is not a mechanism, and a stale copy fails silently —
+`validate` keeps exiting 0 against a schema that no longer exists upstream. To
+take a schema change, bump the `@devfellowship/ux-paths-spec` version. That is a
+visible line in a diff, and Renovate raises it for you.
 
 | Command | Description |
 | --- | --- |
