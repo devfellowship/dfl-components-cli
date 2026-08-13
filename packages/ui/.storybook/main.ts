@@ -22,6 +22,22 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
     "@storybook/addon-themes",
   ],
+  // Storybook Composition — the fleet apps keep their stories next to their own
+  // code, and this Storybook is the single URL / single navigation tree the
+  // designer opens. Each `refs` entry is fetched BY THE VIEWER'S BROWSER, so a
+  // ref target must be anonymously reachable and must send CORS headers; the
+  // itera-storybook Cloudflare Pages project sends `access-control-allow-origin: *`
+  // on `index.json`, so it qualifies. A ref that becomes private stops resolving
+  // for everyone, and the section renders as an error in the sidebar.
+  refs: {
+    "itera-player": {
+      title: "ITERA Player",
+      url: "https://storybook.iterahq.dev",
+      // Collapsed by default — the composed tree is a neighbour, not the
+      // primary content of this Storybook.
+      expanded: false,
+    },
+  },
   framework: {
     name: "@storybook/react-vite",
     options: {},
