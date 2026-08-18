@@ -1,0 +1,176 @@
+name: Guard UX Paths Stamp
+# ═══════════════════════════════════════════════════════════════════════════
+# The data-source stamp must NEVER reach a published build of the design system.
+# ═══════════════════════════════════════════════════════════════════════════
+# `scripts/source-stamp.mjs` writes data-source="packages/ui/src/…tsx:<line>"
+# onto every host element this package renders. That is what makes a UX Paths
+# screenshot resolve a click to a DESIGN SYSTEM file instead of to whatever
+# application file mounted the component.
+#
+# This package ships COMPILED, so the stamp travels INSIDE the tarball. A leak
+# here is therefore not one application's problem — it is dead payload on every
+# element of every screen of every app in the fleet, and it prints an internal
+# file layout into the DOM of consumers that are private, where anyone who opens
+# dev tools reads it.
+#
+# So a failure of the FIRST job is a SECURITY failure, not a lint failure. Do
+# not skip it, and do not "fix" it by relaxing the detector.
+#
+# BOTH directions run, and the SECOND is the one that pays. A grep for a string
+# that is normally absent passes for free — and would keep passing if the
+# pattern were misspelled, if the plugin stopped being wired, or if tsup changed
+# how it emits props. Only a build that MUST contain the stamp separates a
+# genuinely clean release from a detector that stopped working.
+#
+# Public repo: self-hosted dfl-runner blocked (allows_public=false).
+# ubuntu-latest per CLAUDE.md carve-out.
+
+on:
+  pull_request:
+    paths:
+      - 'packages/ui/src/**'
+      - 'packages/ui/tsup.config.ts'
+      - 'packages/ui/scripts/source-stamp.mjs'
+      - 'packages/ui/scripts/pack-capture-build.mjs'
+      - 'packages/ui/package.json'
+      - 'packages/ui/package-lock.json'
+      - '.github/workflows/guard-ux-paths-stamp.yml'
+      - '.github/workflows/capture-build.yml'
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ux-paths-stamp-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: packages/ui
+
+jobs:
+  stamp-absent-by-default:
+    name: the PUBLISHED artifact carries ZERO stamps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # No UX_PATHS_SOURCE_STAMP anywhere in this job's environment. That
+      # ABSENCE is the assertion: the switch is opt-in, so the build a release
+      # runs is exactly this one.
+      - name: Build (release — switch absent)
+        run: npm run build
+
+      - name: Assert the release artifact discloses no file paths
+        run: npx ux-paths-assert-no-stamp dist
+
+      # `files: ["dist"]` means the tarball is dist/ — but that is a claim about
+      # package.json, and package.json is editable. Read the tarball npm would
+      # actually upload.
+      - name: Assert the PACKED TARBALL discloses no file paths
+        run: |
+          set -euo pipefail
+          npm pack --pack-destination /tmp/pack >/dev/null
+          mkdir -p /tmp/unpack
+          tar xzf /tmp/pack/*.tgz -C /tmp/unpack
+          npx ux-paths-assert-no-stamp /tmp/unpack/package/dist
+
+  stamp-present-when-asked:
+    name: the CAPTURE artifact carries MORE THAN ZERO stamps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # This artifact is built to be thrown away. It is never published — it
+      # exists so the assertion in the other job cannot pass by accident.
+      - name: Build (capture — switch set)
+        env:
+          UX_PATHS_SOURCE_STAMP: '1'
+        run: npm run build
+
+      - name: Assert the capture artifact IS stamped
+        run: npx ux-paths-assert-no-stamp dist --expect-present
+
+      # The stamp is only useful if it names a REPOSITORY-relative path. A root
+      # of `packages/ui` instead of the repository would emit `src/components/
+      # button.tsx`, which collides with a consuming app's own src/ namespace —
+      # wrong, plausible, and invisible to the counting assertion above.
+      - name: Assert the stamped paths are REPOSITORY-relative
+        run: |
+          set -euo pipefail
+          if ! grep -q 'data-source": "packages/ui/src/' dist/index.js; then
+            echo "::error::stamped paths are not repository-relative."
+            echo "::error::Expected packages/ui/src/…; found:"
+            grep -oE '"data-source": *"[^"]+"' dist/index.js | head -5 || true
+            exit 1
+          fi
+          echo "✅ $(grep -oE '"data-source": *"packages/ui/src/[^"]+"' dist/index.js | wc -l) repository-relative stamps"
+
+  capture-tarball-is-packable:
+    name: the capture tarball packs, and refuses to be a release tarball
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The RED direction of the packer, proven rather than asserted: a release
+      # dist/ must NOT be packable under a capture name. A capture tarball that
+      # is silently a release tarball fails green — the consumer builds, the
+      # capture runs, and the region maps come back exactly as coarse as before.
+      - name: Build (release) and prove the packer REFUSES it
+        run: |
+          set -euo pipefail
+          npm run build
+          if node scripts/pack-capture-build.mjs --out-dir /tmp/capture; then
+            echo "::error::pack-capture-build.mjs packed an UNSTAMPED dist/."
+            echo "::error::Its refusal is the only thing that stops a release"
+            echo "::error::tarball being distributed as a capture build."
+            exit 1
+          fi
+          echo "✅ the packer refused an unstamped dist/"
+
+      - name: Build (capture) and pack it
+        env:
+          UX_PATHS_SOURCE_STAMP: '1'
+        run: |
+          set -euo pipefail
+          npm run build
+          node scripts/pack-capture-build.mjs --out-dir /tmp/capture
+
+      - name: Assert the packed CAPTURE tarball is stamped
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/unpack-capture
+          tar xzf /tmp/capture/*-capture.tgz -C /tmp/unpack-capture
+          npx ux-paths-assert-no-stamp /tmp/unpack-capture/package/dist --expect-present
+          node -e "
+            const p = require('/tmp/unpack-capture/package/package.json');
+            if (!p.uxPathsCapture?.stamped) { console.error('::error::no uxPathsCapture marker'); process.exit(1); }
+            if (p.name !== '@devfellowship/components') { console.error('::error::name changed; imports would not resolve'); process.exit(1); }
+            console.log('✅ marker present, name intact:', p.name + '@' + p.version);
+          "

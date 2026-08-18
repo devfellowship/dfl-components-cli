@@ -379,6 +379,126 @@ job *warns* (non-blocking) on PRs touching `packages/ui/**` that lack a changese
 
 ---
 
+## 🗺️ UX Paths capture builds — the stamped design system
+
+[UX Paths](https://ux-paths.devfellowship.com/apps) resolves a click on a
+screenshot to the source file that drew that pixel. It does that with
+`data-source="<file>:<line>"` attributes written by a build transform.
+
+Every consuming application already runs that transform over its **own** `.tsx`.
+**This package was invisible to all of them**, because it ships COMPILED: tsup
+turns its JSX into `jsx()` calls here, long before a consuming app's bundler
+sees it. So a click on a DS button resolved to whatever application file
+*mounted* the button, not to the button.
+
+Measured on `dfl-learn` (46 screens, 5565 regions, `superadmin`) before this
+existed: a click answered with a box of 10% of the screen or less on a median of
+**41.5%** of screen area, worst screen **6.1%**.
+
+The design system now stamps itself, under the same fleet-wide gate.
+
+### The gate
+
+`UX_PATHS_SOURCE_STAMP`, read from `process.env`, **absent by default**.
+
+```bash
+npm run build                          # release build. ZERO stamps.
+UX_PATHS_SOURCE_STAMP=1 npm run build  # capture build. Stamped.
+```
+
+It is deliberately **not** the bundler mode. A capture build *is* a production
+build — the artifact under capture has to be the artifact that ships, minus the
+stamp — so a test on the mode is true exactly when the stamp is wanted **and**
+true for the real release.
+
+**Do not rename the variable.** Capture jobs in other repositories, in another
+GitHub organisation, already export this exact name. A local spelling disables
+them silently, and green.
+
+### 🚨 Distribution: a GitHub Release asset. NEVER npm.
+
+A package that ships compiled carries its stamp **inside its own published
+artifact**. So "publish a capture build" is a packaging problem, and the whole
+question is which channel carries the stamped tarball without ever leaking into
+an ordinary install.
+
+| | |
+|---|---|
+| `npm install @devfellowship/components` | **always the clean build**, forever |
+| the stamped build | `*-capture.tgz`, attached to the GitHub Release |
+
+That is the only shape where *"cannot happen by accident"* is a property of the
+system and not of everybody's discipline. The registry only ever holds the clean
+build, so **no semver range, no dist-tag, no `npm update`, no lockfile refresh
+and no Renovate PR can resolve to the stamped one — it is not there.** Getting it
+takes downloading one named file and installing it by path, which no dependency
+resolver does.
+
+This repository is public, so the asset downloads with no token: a consumer in
+another GitHub organisation needs no credential.
+
+**Two alternatives were rejected.** A `capture` **export condition** would put
+the stamped code inside the published tarball — the exact thing that must never
+happen. A `capture` **dist-tag** or `-capture` prerelease on npm is reachable by
+one explicit install and then **persists in a lockfile**, where the next `npm ci`
+puts a stamped design system into a production deploy and nothing says so.
+
+### Consume it
+
+```bash
+# 1. the clean install, exactly as normal
+npm ci
+
+# 2. overwrite ONLY the design system with the capture build
+gh release download <tag> --repo devfellowship/dfl-components-cli \
+  --pattern '*-capture.tgz' --dir /tmp
+npm install --no-save /tmp/devfellowship-components-*-capture.tgz
+
+# 3. prove you got it — over the ARTIFACT, never the filename
+npx ux-paths-assert-no-stamp node_modules/@devfellowship/components/dist --expect-present
+
+# 4. build your own app stamped too, and capture it
+UX_PATHS_SOURCE_STAMP=1 npm run build
+```
+
+Step 3 is not ceremony. A capture tarball that is silently a release tarball
+fails **green**: the build succeeds, the capture succeeds, and the region maps
+come back exactly as coarse as they were.
+
+### The guards
+
+[`guard-ux-paths-stamp.yml`](.github/workflows/guard-ux-paths-stamp.yml) runs on
+every PR and asserts over the **built artifact**, in **both** directions:
+
+| job | build | assertion |
+|---|---|---|
+| `stamp-absent-by-default` | `npm run build` | `dist/` **and the packed tarball** carry zero stamps |
+| `stamp-present-when-asked` | `UX_PATHS_SOURCE_STAMP=1 npm run build` | stamps are present **and repository-relative** |
+| `capture-tarball-is-packable` | both | the packer **refuses** an unstamped `dist/` |
+
+The second job is the one that pays. A grep for a normally-absent string passes
+for free, and would keep passing if the pattern were misspelled, if the plugin
+stopped being wired, or if tsup changed how it emits props.
+
+### Paths are REPOSITORY-relative
+
+A stamp reads `packages/ui/src/components/button.tsx:42`, never
+`src/components/button.tsx:42`. That prefix is what makes a DS file legible
+inside a *consumer's* region map — a consuming app has no `packages/` directory.
+Root it at the package instead and every path the DS emits collides with the
+consumer's own `src/…` namespace: wrong in a way that still looks plausible.
+Pinned by `src/__tests__/source-stamp.test.ts` and by a CI step.
+
+### What is still not attributed
+
+`providers`, `hooks` and `testing` emit **no host elements** — they render
+components and `{children}` only — so they carry no stamps, and that is correct
+rather than a gap. Third-party DOM (Radix portals, `recharts` internals) is
+still drawn by compiled code this transform never sees, and resolves through its
+nearest stamped ancestor.
+
+---
+
 ## License
 
 Internal DevFellowship design system. No open-source license is currently declared

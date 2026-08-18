@@ -1,0 +1,136 @@
+name: Capture Build
+# ═══════════════════════════════════════════════════════════════════════════
+# Publish the STAMPED design system — to a GitHub Release asset, never to npm.
+# ═══════════════════════════════════════════════════════════════════════════
+# `@devfellowship/components` ships COMPILED, so its JSX is gone before a
+# consuming app's bundler ever sees it. That is why a click on a screenshot of
+# any DFL app resolved to the file that MOUNTED a button rather than to the
+# button. Reaching the design system means stamping it at ITS build time — and
+# a stamp applied at build time travels inside the artifact.
+#
+# So the capture build is a SECOND artifact, and the whole question is which
+# channel carries it without ever leaking into a normal install.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# THE ANSWER: a GitHub Release asset. Never a registry.
+# ─────────────────────────────────────────────────────────────────────────────
+#   * `npm install @devfellowship/components` reads the npm registry, and the
+#     registry only ever holds the CLEAN build. No semver range, no dist-tag, no
+#     `npm update`, no lockfile refresh and no Renovate PR can resolve to a
+#     thing that is not published.
+#   * Getting the stamped build means downloading ONE NAMED FILE and installing
+#     it by path. No dependency resolver does that. A capture job does it on
+#     purpose, in a step anyone can read.
+#   * This repository is PUBLIC, so the asset downloads with no token. A
+#     consumer in another GitHub organisation — `iterahq/itera-player` — needs
+#     no credential to capture itself against a stamped design system.
+#
+# Rejected, and why:
+#   * A `capture` EXPORT CONDITION would put the stamped code inside the
+#     published tarball. That is the exact thing that must never happen.
+#   * A `capture` DIST-TAG or `-capture` prerelease on npm is reachable by one
+#     explicit install — and then it PERSISTS IN A LOCKFILE, where the next
+#     `npm ci` puts a stamped design system into a production deploy and nothing
+#     says so. npm publishes are also irreversible.
+#
+# Public repo: self-hosted dfl-runner blocked (allows_public=false).
+# ubuntu-latest per CLAUDE.md carve-out.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: >-
+          Attach the tarball to this existing release tag. Leave empty to
+          produce a workflow artifact only.
+        required: false
+        type: string
+
+permissions:
+  contents: write   # upload a release asset
+
+concurrency:
+  group: capture-build-${{ github.event.release.tag_name || inputs.release_tag || github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: packages/ui
+
+jobs:
+  capture-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (capture — the stamp switch is set HERE and nowhere else)
+        env:
+          UX_PATHS_SOURCE_STAMP: '1'
+        run: npm run build
+
+      # `pack-capture-build.mjs` re-asserts this over the bytes and refuses to
+      # pack an unstamped dist/. The step is here as well so the failure names
+      # the build rather than the packer.
+      - name: Assert the artifact is stamped before it is packed
+        run: npx ux-paths-assert-no-stamp dist --expect-present
+
+      - name: Pack the capture tarball
+        id: pack
+        run: node scripts/pack-capture-build.mjs --out-dir "$RUNNER_TEMP/capture"
+
+      # Always available, even for a dispatch with no release: 90-day retention,
+      # and it needs a token to download, so it is not a distribution channel on
+      # its own — it is the evidence for this run.
+      - name: Upload as a workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: components-capture-build
+          path: ${{ runner.temp }}/capture/*-capture.tgz
+          retention-days: 90
+
+      - name: Attach to the release
+        if: github.event_name == 'release' || inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" "$RUNNER_TEMP"/capture/*-capture.tgz --clobber \
+            --repo "$GITHUB_REPOSITORY"
+          echo "### Capture build attached to \`$TAG\`" >> "$GITHUB_STEP_SUMMARY"
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Install it in a capture job — and prove it over the artifact, never the filename:' >> "$GITHUB_STEP_SUMMARY"
+          echo '```bash' >> "$GITHUB_STEP_SUMMARY"
+          echo "gh release download $TAG --repo $GITHUB_REPOSITORY --pattern '*-capture.tgz' --dir /tmp" >> "$GITHUB_STEP_SUMMARY"
+          echo "npm install --no-save /tmp/*-capture.tgz" >> "$GITHUB_STEP_SUMMARY"
+          echo "npx ux-paths-assert-no-stamp node_modules/@devfellowship/components/dist --expect-present" >> "$GITHUB_STEP_SUMMARY"
+          echo "UX_PATHS_SOURCE_STAMP=1 npm run build" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      # 🚨 The last line of defence. If anything ever teaches this workflow to
+      # publish, this fails first: the stamped tarball must not be reachable
+      # from the registry under ANY tag.
+      - name: Assert nothing stamped is on the registry
+        run: |
+          set -euo pipefail
+          version=$(node -p "require('./package.json').version")
+          for tag in latest capture next beta; do
+            resolved=$(npm view "@devfellowship/components@$tag" version 2>/dev/null || echo "")
+            if [ -n "$resolved" ]; then
+              echo "dist-tag $tag -> $resolved"
+              case "$resolved" in
+                *capture*) echo "::error::a CAPTURE version is published on npm under dist-tag '$tag'"; exit 1 ;;
+              esac
+            fi
+          done
+          echo "✅ npm holds no capture version. Local capture build is $version (asset only)."
