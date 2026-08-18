@@ -1,6 +1,6 @@
 {
   "name": "@devfellowship/components",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "DFL Design System — UI components, hooks, utils and providers",
   "type": "module",
   "sideEffects": [
