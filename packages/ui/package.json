@@ -93,6 +93,7 @@
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.0",
     "@dagrejs/dagre": "^3.1.1",
+    "@devfellowship/ux-paths-capture": "^0.1.1",
     "@storybook/addon-a11y": "^9.1.20",
     "@storybook/addon-themes": "^9.1.20",
     "@storybook/react": "^9.1.20",

@@ -1,6 +1,9 @@
 import { defineConfig } from 'tsup';
 import { copyFileSync, mkdirSync } from 'fs';
 import { resolve } from 'path';
+// The UX Paths `data-source` stamp. Off unless UX_PATHS_SOURCE_STAMP is set in
+// the process environment. See scripts/source-stamp.mjs for the whole rationale.
+import { sourceStampEsbuildPlugin } from './scripts/source-stamp.mjs';
 
 // Build ignore-glob — the DesignPlayground sandbox is NEVER bundled/exported.
 //   IGNORE GLOB: src/design-playground/**
@@ -38,6 +41,29 @@ export default defineConfig({
   // externalising them keeps them out of the bundle and out of every consumer
   // that never imports `@devfellowship/components/canvas`.
   external: ['react', 'react-dom', 'tailwindcss', '@xyflow/react', '@dagrejs/dagre'],
+  // ═════════════════════════════════════════════════════════════════════════
+  // 🚨 THE UX PATHS CAPTURE STAMP — ABSENT FROM EVERY RELEASE BUILD
+  // ═════════════════════════════════════════════════════════════════════════
+  // `sourceStampEsbuildPlugin()` writes data-source="packages/ui/src/…tsx:<line>"
+  // onto every host element this package renders, which is what lets a click on
+  // a screenshot region resolve to a DESIGN SYSTEM file instead of to whatever
+  // application file mounted the component.
+  //
+  // It returns `undefined` unless UX_PATHS_SOURCE_STAMP is set in the process
+  // environment — never a .env file, never the bundler mode. esbuild rejects
+  // `undefined` inside its plugin array (Vite accepts it), so the filter below
+  // is wiring and not a second gate.
+  //
+  // A stamped artifact must NEVER be published to npm. It is dead payload on
+  // every element of every screen of every consuming app, and it publishes an
+  // internal file layout into the DOM. The stamped build is distributed as a
+  // GitHub Release ASSET instead — see .github/workflows/capture-build.yml and
+  // the "Capture builds" section of README.md. CI proves the default over the
+  // BUILT ARTIFACT in both directions (guard-ux-paths-stamp.yml), because a
+  // grep for a normally-absent string passes for free.
+  esbuildPlugins: [sourceStampEsbuildPlugin()].filter(Boolean) as NonNullable<
+    ReturnType<typeof sourceStampEsbuildPlugin>
+  >[],
   esbuildOptions(options) {
     options.jsx = 'automatic';
   },
