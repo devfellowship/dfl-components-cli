@@ -80,8 +80,9 @@ jobs:
       - name: Assert the PACKED TARBALL discloses no file paths
         run: |
           set -euo pipefail
+          # `npm pack --pack-destination` does not create the directory.
+          mkdir -p /tmp/pack /tmp/unpack
           npm pack --pack-destination /tmp/pack >/dev/null
-          mkdir -p /tmp/unpack
           tar xzf /tmp/pack/*.tgz -C /tmp/unpack
           npx ux-paths-assert-no-stamp /tmp/unpack/package/dist
 
