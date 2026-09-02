@@ -293,7 +293,7 @@ visible line in a diff, and Renovate raises it for you.
 | Command | Description |
 | --- | --- |
 | `ux-paths init` | Scaffold a `.dfl-ux-paths/flows.json` stub |
-| `ux-paths validate [path]` | Validate a `flows.json` against the canonical JSON Schema |
+| `ux-paths validate [path]` | Validate a `flows.json` against the canonical JSON Schema, **and** against the three rules a schema cannot express |
 | `ux-paths generate-mermaid [path]` | Emit the sibling `flows.mmd` (Mermaid) from the JSON |
 | `ux-paths diff <a> <b>` | Diff two `flows.json` files (missing screens/actions — migration audits) |
 | `ux-paths stamp [path]` | Stamp `app_version` (`YYYY-MM-DD-<git-sha>`) into `flows.json` |
@@ -302,6 +302,32 @@ visible line in a diff, and Renovate raises it for you.
 npx @devfellowship/components ux-paths init
 npx @devfellowship/components ux-paths validate .dfl-ux-paths/flows.json
 ```
+
+### `validate` checks more than the schema
+
+A JSON Schema cannot express a cross-reference, and it cannot express uniqueness
+across array items. So a document whose flow starts at a deleted screen, whose
+step walks one, whose action targets one, or which declares the same `screen.id`
+twice, satisfies schema v1 completely. `validate` used to print `OK` for all four
+and exit 0.
+
+`screen.id` is the schema's own "sticky 1:1 join key across apps". Every
+cross-app comparison and every atlas edge is built on that join, so each of those
+four documents breaks the model silently.
+
+`validate` now runs three further rules after the schema passes, and exits 1 on
+any of them:
+
+| Rule | Assertion |
+| --- | --- |
+| `unique-ids` | every `screen.id` is declared once |
+| `whole-flows` | every `flow.start` and every `step.screen` names a declared screen |
+| `action-targets` | every `screen.actions[].next_screen` names a declared screen (an empty string is an ABSENT reference, not a dangling one) |
+
+These are the same three rules `dfl-ci:scripts/ux-paths-guard.mjs` already ran in
+CI. The CLI now agrees with the CI job that judges the same file. This adds no
+new policy — before this change the two surfaces disagreed, and the CLI, the one
+a person actually runs, was the permissive one.
 
 ---
 
