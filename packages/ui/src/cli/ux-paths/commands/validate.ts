@@ -5,6 +5,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import chalk from 'chalk';
 import { loadSchemaV1 } from '../lib/load-schema.js';
+import { checkStructure } from '../lib/structural-checks.js';
 
 export function registerValidate(program: Command): void {
   program
@@ -35,19 +36,41 @@ export function registerValidate(program: Command): void {
       }
       const validate = ajv.compile(schema as object);
       const ok = validate(doc);
-      if (ok) {
-        console.log(chalk.green('OK'), path, 'conforms to schema v1.');
-        process.exit(0);
+      if (!ok) {
+        console.error(chalk.red('FAIL'), path);
+        for (const err of validate.errors ?? []) {
+          console.error(
+            chalk.yellow('  -'),
+            err.instancePath || '<root>',
+            err.message,
+            err.params ? JSON.stringify(err.params) : '',
+          );
+        }
+        process.exit(1);
       }
-      console.error(chalk.red('FAIL'), path);
-      for (const err of validate.errors ?? []) {
+
+      // The schema is satisfied. That is NOT the same as the document being
+      // sound: JSON Schema cannot express a cross-reference and cannot express
+      // uniqueness across array items, so a flow that starts at a deleted
+      // screen, a step that walks one, an action that targets one, and a
+      // repeated `screen.id` all validate cleanly. `screen.id` is the schema's
+      // own "sticky 1:1 join key across apps", so each of those breaks the join
+      // the whole comparison model rests on — silently, and with an `OK` on
+      // screen. See lib/structural-checks.ts for the measurement.
+      const problems = checkStructure(doc);
+      if (problems.length > 0) {
+        console.error(chalk.red('FAIL'), path);
         console.error(
-          chalk.yellow('  -'),
-          err.instancePath || '<root>',
-          err.message,
-          err.params ? JSON.stringify(err.params) : '',
+          chalk.yellow('  the document satisfies schema v1 but is not internally consistent:'),
         );
+        for (const problem of problems) {
+          console.error(chalk.yellow(`  [${problem.rule}]`), problem.message);
+          for (const line of problem.detail) console.error(chalk.dim(`  ${line}`));
+        }
+        process.exit(1);
       }
-      process.exit(1);
+
+      console.log(chalk.green('OK'), path, 'conforms to schema v1.');
+      process.exit(0);
     });
 }
