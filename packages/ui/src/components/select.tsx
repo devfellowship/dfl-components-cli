@@ -4,7 +4,102 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "../lib/utils";
 
-const Select = SelectPrimitive.Root;
+/**
+ * Select — DFL Design System
+ *
+ * A thin wrapper over `SelectPrimitive.Root` that adds ONE guard: it drops the
+ * empty-string echo the hidden native `<select>` sends back before its
+ * `<option>` list has registered.
+ *
+ * ## Why the guard exists
+ *
+ * Radix keeps a hidden native `<select>` (`SelectBubbleInput`) so the component
+ * participates in form submission. Radix renders it whenever the Select is a
+ * form control. When the Radix value changes, that input does two things in an
+ * effect:
+ *
+ * ```ts
+ * setValue.call(select, nextValue);              // assign select.value
+ * select.dispatchEvent(new Event("change", ...)) // and dispatch a REAL change
+ * ```
+ *
+ * and its own `onChange` reports `event.target.value` back through
+ * `onValueChange`.
+ *
+ * The `<option>` elements come from the `SelectItem` children. While the menu
+ * is closed, Radix mounts those children into a detached `DocumentFragment`
+ * that only exists after a layout effect. So for the first renders after mount
+ * the native `<select>` has NO options. The browser then resolves
+ * `select.value = "plan-b"` to `""`, and that empty string arrives at the
+ * consumer as `onValueChange("")`.
+ *
+ * A controlled consumer that sets its value asynchronously — a fetch, a
+ * hydration effect, an edit dialog that loads the current record — receives
+ * that echo AFTER it set the real value, and the echo WIPES it. The user sees
+ * the field reset itself to the placeholder.
+ *
+ * Found in production on 2026-08-21: the student plan picker in
+ * `marques-boxing-monorepo` cleared the plan every time the edit dialog opened.
+ * The app patched it locally (commit `df55d95`). This guard replaces that
+ * app-side patch, so every consumer of `@devfellowship/components` gets it.
+ *
+ * ## What the guard does
+ *
+ * It drops an `onValueChange("")` call when ALL of these hold:
+ *
+ *  1. The component is CONTROLLED (`value` is not `undefined`).
+ *  2. The current `value` is NOT the empty string.
+ *  3. `allowEmptyValue` is not set.
+ *
+ * A user selection can never produce `""`: Radix requires every `SelectItem` to
+ * carry a non-empty `value`. So an empty string on a controlled, non-empty
+ * Select can only come from the bubble-input echo.
+ *
+ * Uncontrolled usage (`defaultValue`, or no value at all) is UNCHANGED — the
+ * guard never runs there.
+ *
+ * ## Escape hatch
+ *
+ * Pass `allowEmptyValue` to opt out and receive every `onValueChange`,
+ * including `""`. Use it for a Select that genuinely clears itself to an empty
+ * value through the Radix value channel.
+ */
+interface SelectProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> {
+  /**
+   * Let an empty-string `onValueChange` through while the Select is controlled
+   * with a non-empty `value`. Default `false`, which drops the empty echo the
+   * hidden native `<select>` sends before its options register.
+   */
+  allowEmptyValue?: boolean;
+}
+
+const Select = ({ allowEmptyValue = false, onValueChange, value, ...props }: SelectProps) => {
+  // Read through a ref that is assigned during RENDER, not in an effect.
+  //
+  // The echo fires from an effect inside a Radix CHILD of this component, and
+  // React runs child effects BEFORE parent effects. Radix also reads
+  // `onValueChange` through its own effect-updated `useCallbackRef`. So at the
+  // instant the echo arrives, both an effect-updated ref here and the callback
+  // Radix holds still belong to the PREVIOUS render — the render before the
+  // async value landed. A render-phase assignment is the only read that already
+  // sees the new value when the comparison happens.
+  const latest = React.useRef({ value, onValueChange, allowEmptyValue });
+  latest.current = { value, onValueChange, allowEmptyValue };
+
+  const handleValueChange = React.useCallback((next: string) => {
+    const current = latest.current;
+    if (!current.onValueChange) return;
+
+    const isControlled = current.value !== undefined;
+    const isEmptyEcho = next === "" && isControlled && current.value !== "";
+    if (isEmptyEcho && !current.allowEmptyValue) return;
+
+    current.onValueChange(next);
+  }, []);
+
+  return <SelectPrimitive.Root value={value} onValueChange={handleValueChange} {...props} />;
+};
+Select.displayName = "Select";
 
 const SelectGroup = SelectPrimitive.Group;
 
@@ -218,6 +313,8 @@ const SelectSeparator = React.forwardRef<
   />
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
+
+export type { SelectProps, SelectTriggerProps };
 
 export {
   Select,
