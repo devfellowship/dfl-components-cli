@@ -1,5 +1,15 @@
 # @devfellowship/components
 
+## 3.5.0
+
+### Minor Changes
+
+- [#128](https://github.com/devfellowship/dfl-components-cli/pull/128) [`f202115`](https://github.com/devfellowship/dfl-components-cli/commit/f202115fd7f8bf81b90fb2c816876bee40ad8c80) Thanks [@taigfs](https://github.com/taigfs)! - Add the Roadmap SVG edge overlay with border anchors, gutter elbows, arrowheads,
+  semantic tones and midpoint label chips. Batch resize, node content and font
+  updates with one observer and animation frame. Expose debugPerf measurements.
+  Reduce mobile row spacing to 24px between node borders. Tailwind classes use
+  bracket syntax compatible with consumers that compile utilities with Tailwind v3.
+
 ## 3.4.0
 
 ### Minor Changes
