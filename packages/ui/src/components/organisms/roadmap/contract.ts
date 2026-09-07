@@ -14,7 +14,7 @@
  *
  * Colour is a TOKEN, never a hex (plan ADR-6). `tone` is one of eight names and
  * the schema REJECTS any other string, `"#fdff00"` included. That closed
- * vocabulary is what keeps the dark design system, the editorial surface and a
+ * vocabulary is what keeps the dark design system and a
  * downstream `--s-*` rebrand all working from one document.
  *
  * The live progress state does NOT live in the document (plan ADR-8). A document

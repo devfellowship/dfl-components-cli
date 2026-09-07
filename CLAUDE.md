@@ -190,4 +190,13 @@ two top-level sections and they mean very different things:
   `sm|default|lg|icon|icon-sm|icon-lg`).
 - Reference for the desired per-component scenarios/states style:
   `https://components.devfellowship.com/components`.
+## Roadmap organism
+
+`Roadmap` is a dark-only root export. Pass a validated `RoadmapDocument` to
+`document` and optional learner state to `state`. The CSS grid always has three
+tracks. `onNodeClick(node)` and `onAction(actionId, node)` expose native controls.
+`renderNode(node, state)` replaces node content. Group column subsets paint
+separate runs. Icons use a small registry; unknown names show a question mark.
+The edge overlay lands in R3 of the Roadmap plan.
+
 <!-- END MANUAL:repo/local-notes -->

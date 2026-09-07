@@ -131,7 +131,7 @@ describe("fromRoadmapSh — the mapping rules", () => {
         id: "sec1",
         from: 4,
         to: 5,
-        columns: ["center"],
+        columns: ["left", "center", "right"],
         tone: "neutral",
         title: "Section title",
       },
@@ -308,5 +308,29 @@ describe("the committed /frontend fixture", () => {
   it("lives outside the published entry — no source file re-exports the converter", () => {
     const roadmapIndex = readFileSync(resolve(__dirname, "..", "index.ts"), "utf8");
     expect(roadmapIndex).not.toMatch(/from\s+["']\.\/convert/);
+  });
+});
+
+// Origin: agent — Q5: groups use rect extents, not expanded member spans.
+describe("group column subsets from rectangle geometry", () => {
+  it("preserves disjoint side groups when a wide member spans all tracks", () => {
+    const result = fromRoadmapSh({ nodes: [
+      box("wide", "topic", 0, 100, 650, 49, { label: "Wide member" }),
+      box("right", "topic", 900, 100, 100, 49, { label: "Right member" }),
+      box("leftGroup", "section", 0, 80, 330, 100),
+      box("rightGroup", "section", 890, 80, 110, 100),
+    ] });
+    expect(result.document.groups.map(g => g.columns)).toEqual([["left"], ["right"]]);
+    expect(result.report.dropped["group:overlap"]).toBeUndefined();
+  });
+  it("still counts real overlaps on the same column", () => {
+    const result = fromRoadmapSh({ nodes: [
+      box("a", "topic", 0, 100, 100, 49, { label: "A" }),
+      box("b", "topic", 900, 100, 100, 49, { label: "B" }),
+      box("one", "section", 0, 80, 150, 100),
+      box("two", "section", 0, 90, 150, 100),
+    ] });
+    expect(result.document.groups).toHaveLength(1);
+    expect(result.report.dropped["group:overlap"]).toBe(1);
   });
 });

@@ -19,6 +19,33 @@
  */
 
 @theme inline {
+  /* Origin: agent — Roadmap token mappings. */
+  --color-c-roadmap-surface: var(--c-roadmap-surface);
+  --color-c-roadmap-border: var(--c-roadmap-border);
+  --color-c-roadmap-focus: var(--c-roadmap-focus);
+  --color-c-roadmap-done-bg: var(--c-roadmap-done-bg);
+  --color-c-roadmap-done-fg: var(--c-roadmap-done-fg);
+  --color-c-roadmap-learning-bg: var(--c-roadmap-learning-bg);
+  --color-c-roadmap-learning-fg: var(--c-roadmap-learning-fg);
+  --color-c-roadmap-skipped-bg: var(--c-roadmap-skipped-bg);
+  --color-c-roadmap-skipped-fg: var(--c-roadmap-skipped-fg);
+  --color-c-roadmap-primary-bg: var(--c-roadmap-primary-bg);
+  --color-c-roadmap-primary-fg: var(--c-roadmap-primary-fg);
+  --color-c-roadmap-secondary-bg: var(--c-roadmap-secondary-bg);
+  --color-c-roadmap-secondary-fg: var(--c-roadmap-secondary-fg);
+  --color-c-roadmap-accent-bg: var(--c-roadmap-accent-bg);
+  --color-c-roadmap-accent-fg: var(--c-roadmap-accent-fg);
+  --color-c-roadmap-muted-bg: var(--c-roadmap-muted-bg);
+  --color-c-roadmap-muted-fg: var(--c-roadmap-muted-fg);
+  --color-c-roadmap-neutral-bg: var(--c-roadmap-neutral-bg);
+  --color-c-roadmap-neutral-fg: var(--c-roadmap-neutral-fg);
+  --color-c-roadmap-success-bg: var(--c-roadmap-success-bg);
+  --color-c-roadmap-success-fg: var(--c-roadmap-success-fg);
+  --color-c-roadmap-info-bg: var(--c-roadmap-info-bg);
+  --color-c-roadmap-info-fg: var(--c-roadmap-info-fg);
+  --color-c-roadmap-danger-bg: var(--c-roadmap-danger-bg);
+  --color-c-roadmap-danger-fg: var(--c-roadmap-danger-fg);
+
   /* ─── Colours ──────────────────────────────────────────────────────────── */
   --color-background: var(--background);
   --color-foreground: var(--foreground);

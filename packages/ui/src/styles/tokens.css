@@ -1706,3 +1706,32 @@
   box-shadow: var(--c-appshell-focus-ring);
   transition: none;
 }
+
+/* Origin: agent — Roadmap. Q1: dark default and dark only. */
+:root {
+  --c-roadmap-surface: var(--s-surface-page);
+  --c-roadmap-border: var(--s-border-strong);
+  --c-roadmap-focus: var(--s-border-focus);
+  --c-roadmap-done-bg: var(--s-surface-raised);
+  --c-roadmap-done-fg: var(--s-ink-secondary);
+  --c-roadmap-learning-bg: var(--s-info-subtle);
+  --c-roadmap-learning-fg: var(--s-info-fg);
+  --c-roadmap-skipped-bg: var(--s-surface-elevated);
+  --c-roadmap-skipped-fg: var(--s-ink-muted);
+  --c-roadmap-primary-bg: var(--s-brand-solid);
+  --c-roadmap-primary-fg: var(--s-ink-inverse);
+  --c-roadmap-secondary-bg: var(--s-brand-subtle);
+  --c-roadmap-secondary-fg: var(--s-ink-primary);
+  --c-roadmap-accent-bg: var(--s-ink-primary);
+  --c-roadmap-accent-fg: var(--s-ink-inverse);
+  --c-roadmap-muted-bg: var(--s-surface-raised);
+  --c-roadmap-muted-fg: var(--s-ink-muted);
+  --c-roadmap-neutral-bg: var(--s-surface-panel);
+  --c-roadmap-neutral-fg: var(--s-ink-primary);
+  --c-roadmap-success-bg: var(--s-success-subtle);
+  --c-roadmap-success-fg: var(--s-success-fg);
+  --c-roadmap-info-bg: var(--s-info-subtle);
+  --c-roadmap-info-fg: var(--s-info-fg);
+  --c-roadmap-danger-bg: var(--s-danger-subtle);
+  --c-roadmap-danger-fg: var(--s-danger-fg);
+}
