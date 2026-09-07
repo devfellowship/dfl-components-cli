@@ -21,11 +21,13 @@ export function RoadmapNodeView({ node, state, badge, testIdPrefix, onNodeClick,
   // Inline tone variables belong on an outer element so state classes can override them.
   const label = <span data-testid={`${testIdPrefix}-node-label`} className={`[overflow-wrap:anywhere] ${state === "done" ? "line-through" : state === "learning" ? "underline" : ""}`}>{node.label}</span>;
   const interactiveClass = `block w-full min-w-0 text-inherit ${focusClass}`;
-  const primary = node.href && !locked ? <a href={node.href} className={interactiveClass} onClick={() => onNodeClick?.(node)}>{label}</a>
+  const wholeBox = !locked && !node.action && !node.links?.length;
+  const Box = wholeBox && node.href ? "a" : wholeBox && onNodeClick ? "button" : "div";
+  const primary = Box !== "div" ? label : node.href && !locked ? <a href={node.href} className={interactiveClass} onClick={() => onNodeClick?.(node)}>{label}</a>
     : onNodeClick && !locked ? <button type="button" className={interactiveClass} onClick={() => onNodeClick(node)}>{label}</button> : label;
   const icon = node.icon ?? (badge ? { name: badge.icon ?? "check", side: "right" as const, tone: badge.tone } : undefined);
   return <div style={toneStyle(nodeTone)} className="min-w-0">
-    <div data-roadmap-node-box={node.id} className={nodeVariants({ kind: node.kind, state })} aria-disabled={locked || undefined} title={node.kind === "topic" || node.kind === "subtopic" ? node.description : undefined}>
+    <Box data-roadmap-node-box={node.id} href={Box === "a" ? node.href : undefined} type={Box === "button" ? "button" : undefined} onClick={Box !== "div" ? () => onNodeClick?.(node) : undefined} className={`${nodeVariants({ kind: node.kind, state })} w-full ${Box !== "div" ? focusClass : ""}`} aria-disabled={locked || undefined} title={node.kind === "topic" || node.kind === "subtopic" ? node.description : undefined}>
       {icon && <RoadmapBadge name={icon.name} tone={icon.tone ?? nodeTone} label={badge?.label ?? icon.name} className={`absolute top-1/2 -translate-y-1/2 ${icon.side === "left" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2"}`} />}
       {primary}
       {node.description && node.kind === "paragraph" && <p className="mt-2 [overflow-wrap:anywhere]">{node.description}</p>}
@@ -33,6 +35,6 @@ export function RoadmapNodeView({ node, state, badge, testIdPrefix, onNodeClick,
       {node.action && <div style={toneStyle(node.action.tone ?? "primary")} className="mt-3 min-w-0">
         {node.action.href && !locked ? <a href={node.action.href} className={`inline-block rounded px-2 py-2 bg-[var(--c-roadmap-node-bg)] text-[var(--c-roadmap-node-fg)] [overflow-wrap:anywhere] ${focusClass}`}>{node.action.label}</a> : <button type="button" disabled={locked} className={`max-w-full rounded px-2 py-2 bg-[var(--c-roadmap-node-bg)] text-[var(--c-roadmap-node-fg)] [overflow-wrap:anywhere] ${focusClass}`} onClick={e => { e.stopPropagation(); if (node.action?.actionId) onAction?.(node.action.actionId, node); }}>{node.action.label}</button>}
       </div>}
-    </div>
+    </Box>
   </div>;
 }

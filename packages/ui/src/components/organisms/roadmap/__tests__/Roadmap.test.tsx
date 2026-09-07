@@ -33,6 +33,10 @@ describe("Roadmap", () => {
     fireEvent.click(screen.getByText("Left"));
     expect(click).not.toHaveBeenCalled();
   });
+  it("makes a simple href node's full border box a native link", () => {
+    render(<Roadmap document={{ ...document, nodes: [{ ...document.nodes[1], action: undefined }] }} />);
+    expect(screen.getByRole("link", { name: "Left" }).getAttribute("data-roadmap-node-box")).toBe("left");
+  });
   it("supports keyboard activation through native buttons", () => {
     const click = vi.fn(); render(<Roadmap document={document} onNodeClick={click} />);
     fireEvent.click(screen.getByRole("button", { name: "Right" }));
