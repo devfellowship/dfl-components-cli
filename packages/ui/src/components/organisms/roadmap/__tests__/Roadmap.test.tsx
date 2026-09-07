@@ -58,3 +58,23 @@ describe("Roadmap", () => {
     expect(screen.getAllByLabelText("Recommended").length).toBeGreaterThanOrEqual(1);
   });
 });
+
+describe("Roadmap column collapse", () => {
+  const center: RoadmapDocument = { ...document, nodes: [
+    { id: "heading", column: "center", order: 0, span: 3, kind: "title", label: "Path" },
+    { id: "only", column: "center", order: 1, kind: "topic", label: "A single path" },
+  ] };
+  it("uses the available width for a center path even with a full-width heading", () => {
+    render(<Roadmap document={center} />);
+    expect(screen.getByTestId("roadmap-grid").style.gridTemplateColumns).toBe("minmax(0, 0fr) minmax(0, 1.25fr) minmax(0, 0fr)");
+    expect(Number.parseFloat(screen.getByTestId("roadmap-grid").style.columnGap)).toBe(0);
+  });
+  it("can reserve all three tracks explicitly", () => {
+    render(<Roadmap document={center} collapseEmptyColumns={false} />);
+    expect(screen.getByTestId("roadmap-grid").style.gridTemplateColumns).toBe("minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr)");
+  });
+  it("retains every occupied lane including spanning content", () => {
+    render(<Roadmap document={{ ...center, nodes: [{ id: "content", column: "left", order: 0, kind: "paragraph", span: 3, label: "All lanes" }] }} />);
+    expect(screen.getByTestId("roadmap-grid").style.gridTemplateColumns).toBe("minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr)");
+  });
+});

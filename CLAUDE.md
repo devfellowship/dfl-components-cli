@@ -206,4 +206,18 @@ Edges support straight, curve and obstacle-tested gutter elbow routes, token ton
 arrowheads and midpoint labels. An elbow with overlapping custom borders and no
 free gutter is omitted. Scrolling does not trigger measurements.
 
+### Roadmap responsive layout
+
+`Roadmap` uses three tracks weighted `1 / 1.25 / 1`, capped at 1120px.
+Its container controls fonts, padding, and column gaps through plain CSS in
+`theme.css`. Import the normal `@devfellowship/components/styles` stylesheet.
+Fonts stay at least 12px. Row border gaps remain 24px for equal-height nodes.
+`collapseEmptyColumns` defaults to `true`: unused content lanes collapse.
+Full-width titles and labels do not reserve empty side lanes; spanning content
+such as paragraphs still does. Set the prop to `false` to reserve all lanes.
+The map uses page scroll. Print hides the SVG edge overlay.
+
+The explicit `FidelitySideBySide` reference comparison and interactive
+`PerfRecompute137` measurement are approved plan fixtures, not variant galleries.
+
 <!-- END MANUAL:repo/local-notes -->

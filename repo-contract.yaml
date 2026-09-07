@@ -54,6 +54,9 @@ cli_commands:
 
 # ─── What this repo consumes ────────────────────────────────────────────
 
+# Roadmap: root-exported DOM organism, roadmap/v1 input; three weighted tracks.
+# collapseEmptyColumns defaults true; full-width headings do not reserve side lanes.
+# Responsive container CSS ships through the existing /styles export.
 consumes: []
 
 # ─── Consumer repos (who uses this package) ─────────────────────────────
