@@ -1,5 +1,11 @@
 # @devfellowship/components
 
+## 3.4.0
+
+### Minor Changes
+
+- [#126](https://github.com/devfellowship/dfl-components-cli/pull/126) [`9560ec2`](https://github.com/devfellowship/dfl-components-cli/commit/9560ec238f3a0bc00c6487bb892113a3454fcf2b) Thanks [@taigfs](https://github.com/taigfs)! - Add the dark-only Roadmap grid with nodes, groups, legends, actions and learner state overlays. Export Roadmap from the root entry. The grid uses Tailwind v3-compatible utilities and bracket values. Fix the roadmap.sh converter to derive group column subsets from source rectangle extents.
+
 ## 3.3.0
 
 ### Minor Changes
