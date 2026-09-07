@@ -1709,6 +1709,19 @@
 
 /* Origin: agent — Roadmap. Q1: dark default and dark only. */
 :root {
+  --c-roadmap-group-accent-bg: var(--s-surface-elevated);
+  --c-roadmap-group-accent-fg: var(--s-ink-primary);
+  --c-roadmap-edge: var(--s-ink-muted);
+  --c-roadmap-edge-label-bg: var(--s-surface-elevated);
+  --c-roadmap-edge-label-fg: var(--s-ink-secondary);
+  --c-roadmap-primary-edge: var(--s-brand-solid);
+  --c-roadmap-secondary-edge: var(--s-ink-secondary);
+  --c-roadmap-accent-edge: var(--s-ink-primary);
+  --c-roadmap-muted-edge: var(--s-ink-muted);
+  --c-roadmap-neutral-edge: var(--s-ink-secondary);
+  --c-roadmap-success-edge: var(--s-success-fg);
+  --c-roadmap-info-edge: var(--s-info-fg);
+  --c-roadmap-danger-edge: var(--s-danger-fg);
   --c-roadmap-surface: var(--s-surface-page);
   --c-roadmap-border: var(--s-border-strong);
   --c-roadmap-focus: var(--s-border-focus);

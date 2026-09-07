@@ -197,6 +197,13 @@ two top-level sections and they mean very different things:
 tracks. `onNodeClick(node)` and `onAction(actionId, node)` expose native controls.
 `renderNode(node, state)` replaces node content. Group column subsets paint
 separate runs. Icons use a small registry; unknown names show a question mark.
-The edge overlay lands in R3 of the Roadmap plan.
+The SVG overlay anchors edges to node borders and updates on size/content/font changes.
+Custom node renderers can mark the actual border with `data-roadmap-node-box={node.id}`.
+Without this marker, the overlay measures the first rendered element. Text-only
+content uses the wrapper border. Mark the border for nested or multi-root content.
+`debugPerf` records `performance.measure("roadmap:edges")` for each batched pass.
+Edges support straight, curve and obstacle-tested gutter elbow routes, token tones,
+arrowheads and midpoint labels. An elbow with overlapping custom borders and no
+free gutter is omitted. Scrolling does not trigger measurements.
 
 <!-- END MANUAL:repo/local-notes -->

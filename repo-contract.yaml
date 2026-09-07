@@ -29,6 +29,9 @@ provides:
       guard. Components are consumed as LIBRARY IMPORTS, not scaffolded.
       Roadmap is a dark-only root export for roadmap/v1 documents, with a
       three-column DOM grid, group column subsets, legends and state overlays.
+      The measured SVG edge overlay supports labels, arrows and gutter elbows.
+      debugPerf exposes roadmap:edges measures; custom node borders can carry
+      data-roadmap-node-box for precise edge anchors.
     entry: packages/ui/dist/cli.js
     bin: dfl-components
     invocation: npx @devfellowship/components ux-paths <cmd>
