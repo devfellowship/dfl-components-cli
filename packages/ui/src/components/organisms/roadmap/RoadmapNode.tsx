@@ -27,7 +27,8 @@ export function RoadmapNodeView({ node, state, badge, testIdPrefix, onNodeClick,
     : onNodeClick && !locked ? <button type="button" className={interactiveClass} onClick={() => onNodeClick(node)}>{label}</button> : label;
   const icon = node.icon ?? (badge ? { name: badge.icon ?? "check", side: "right" as const, tone: badge.tone } : undefined);
   return <div style={toneStyle(nodeTone)} className="min-w-0">
-    <Box data-roadmap-node-box={node.id} href={Box === "a" ? node.href : undefined} type={Box === "button" ? "button" : undefined} onClick={Box !== "div" ? () => onNodeClick?.(node) : undefined} className={`${nodeVariants({ kind: node.kind, state })} w-full ${Box !== "div" ? focusClass : ""}`} aria-disabled={locked || undefined} title={node.kind === "topic" || node.kind === "subtopic" ? node.description : undefined}>
+    {/* The theme's unlayered universal border reset beats utility layers. */}
+    <Box style={{ borderColor: node.kind === "title" || node.kind === "label" ? "transparent" : "var(--c-roadmap-border)" }} data-roadmap-node-box={node.id} href={Box === "a" ? node.href : undefined} type={Box === "button" ? "button" : undefined} onClick={Box !== "div" ? () => onNodeClick?.(node) : undefined} className={`${nodeVariants({ kind: node.kind, state })} w-full ${Box !== "div" ? focusClass : ""}`} aria-disabled={locked || undefined} title={node.kind === "topic" || node.kind === "subtopic" ? node.description : undefined}>
       {icon && <RoadmapBadge name={icon.name} tone={icon.tone ?? nodeTone} label={badge?.label ?? icon.name} className={`absolute top-1/2 -translate-y-1/2 ${icon.side === "left" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2"}`} />}
       {primary}
       {node.description && node.kind === "paragraph" && <p className="mt-2 [overflow-wrap:anywhere]">{node.description}</p>}

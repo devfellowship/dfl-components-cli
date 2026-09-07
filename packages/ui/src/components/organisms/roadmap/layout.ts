@@ -245,3 +245,57 @@ export function firstFreeRow(
   }
   return row;
 }
+
+/** Container-relative border coordinates. No viewport or scroll state is retained. */
+export interface EdgeRect { left: number; right: number; top: number; bottom: number }
+export interface EdgePoint { x: number; y: number }
+export interface PathSpec { d: string; start: EdgePoint; end: EdgePoint; points?: EdgePoint[] }
+const pointText = (p: EdgePoint) => `${p.x} ${p.y}`;
+const center = (r: EdgeRect) => ({ x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2 });
+function segmentHits(a: EdgePoint, b: EdgePoint, r: EdgeRect): boolean {
+  return a.x === b.x
+    ? a.x > r.left && a.x < r.right && Math.max(a.y, b.y) > r.top && Math.min(a.y, b.y) < r.bottom
+    : a.y > r.top && a.y < r.bottom && Math.max(a.x, b.x) > r.left && Math.min(a.x, b.x) < r.right;
+}
+/**
+ * ADR-7: this is an edge router, never a node layout engine. Elbows search
+ * orthogonal gutters and test every segment against all measured node borders.
+ * A spanning node can close a gutter, so detours can use either outer rail.
+ */
+export function routeEdge(source: EdgeRect, target: EdgeRect, edge: import('./contract').RoadmapEdge, obstacles: readonly EdgeRect[] = []): PathSpec {
+  const a = center(source), b = center(target);
+  const sameColumn = Math.abs(a.x - b.x) < 1;
+  const vertical = sameColumn || (source.left < target.right && target.left < source.right);
+  const down = b.y >= a.y, right = b.x >= a.x;
+  const start = vertical ? { x: a.x, y: down ? source.bottom : source.top } : { x: right ? source.right : source.left, y: a.y };
+  const end = vertical ? { x: b.x, y: down ? target.top : target.bottom } : { x: right ? target.left : target.right, y: b.y };
+  const route = edge.route ?? 'auto';
+  if (route === 'straight' || (route === 'auto' && sameColumn)) return { start, end, d: `M ${pointText(start)} L ${pointText(end)}` };
+  if (route !== 'elbow') {
+    const mid = vertical ? (start.y + end.y) / 2 : (start.x + end.x) / 2;
+    const c1 = vertical ? { x: start.x, y: mid } : { x: mid, y: start.y };
+    const c2 = vertical ? { x: end.x, y: mid } : { x: mid, y: end.y };
+    return { start, end, d: `M ${pointText(start)} C ${pointText(c1)} ${pointText(c2)} ${pointText(end)}` };
+  }
+  const boxes = [...new Set([source, target, ...obstacles])];
+  const clearance = 4;
+  const ys = [...new Set(boxes.flatMap(r => [r.top - clearance, r.bottom + clearance]))];
+  // Try both sides of each endpoint. The nearest free channel wins.
+  let best: EdgePoint[] | undefined, bestLength = Infinity;
+  for (const sx of [source.left, source.right]) for (const tx of [target.left, target.right]) {
+    const s = { x: sx, y: a.y }, t = { x: tx, y: b.y };
+    const gx = sx + (sx === source.left ? -clearance : clearance);
+    const hx = tx + (tx === target.left ? -clearance : clearance);
+    for (const y of [a.y, b.y, ...ys]) {
+      const points = [s, { x: gx, y: a.y }, { x: gx, y }, { x: hx, y }, { x: hx, y: b.y }, t];
+      const length = points.slice(1).reduce((sum, p, i) => sum + Math.abs(p.x - points[i].x) + Math.abs(p.y - points[i].y), 0);
+      if (length >= bestLength || points.slice(1).some((p, i) => boxes.some(r => segmentHits(points[i], p, r)))) continue;
+      best = points; bestLength = length;
+    }
+  }
+  // Valid grid nodes always leave an outer channel. For overlapping custom
+  // borders, omit the route instead of knowingly drawing through a node.
+  if (!best) return { start, end, d: '' };
+  const points = best.filter((p, i) => i === 0 || p.x !== best![i - 1].x || p.y !== best![i - 1].y);
+  return { start: points[0], end: points[points.length - 1], points, d: points.map((p, i) => `${i ? 'L' : 'M'} ${pointText(p)}`).join(' ') };
+}
