@@ -1,0 +1,11 @@
+{
+  "version": "roadmap/v1",
+  "direction": "down",
+  "columns": 3,
+  "nodes": [
+    { "id": "a", "column": "center", "order": 0, "kind": "topic", "label": "A" },
+    { "id": "b", "column": "center", "order": 1, "kind": "topic", "label": "B" }
+  ],
+  "edges": [{ "id": "e1", "source": "a", "target": "nowhere" }],
+  "groups": []
+}

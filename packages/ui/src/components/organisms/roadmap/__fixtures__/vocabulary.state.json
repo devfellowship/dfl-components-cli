@@ -1,0 +1,17 @@
+{
+  "version": "roadmap-state/v1",
+  "nodes": {
+    "net": "done",
+    "how": "done",
+    "dns": "skipped",
+    "http": "done",
+    "html": "done",
+    "js": "learning",
+    "css": "learning",
+    "chk": "todo",
+    "ok": "locked",
+    "note": "locked",
+    "warn": "skipped",
+    "this-node-does-not-exist": "done"
+  }
+}

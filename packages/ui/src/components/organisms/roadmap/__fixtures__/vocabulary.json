@@ -1,0 +1,160 @@
+{
+  "version": "roadmap/v1",
+  "title": "Front-end",
+  "direction": "down",
+  "columns": 3,
+  "meta": {
+    "source": "authored by DevFellowship",
+    "note": "The compact example of the plan. It exercises every vocabulary item once: sequence, 1-n fan-out, a titled group, a dark-toned group, all eight node tones, an edge with a label, an edge without one, dashed, dotted, an icon on the left and on the right with different tones, a node with text and a button, and a legend. The matching progress overlay is vocabulary.state.json."
+  },
+  "legend": {
+    "placement": "top",
+    "entries": [
+      { "id": "rec", "label": "Recommended", "tone": "info", "icon": "check" },
+      { "id": "alt", "label": "Alternative", "tone": "success", "icon": "shuffle" }
+    ]
+  },
+  "groups": [
+    { "id": "g-basics", "title": "Internet basics", "tone": "neutral", "from": 1, "to": 3 },
+    {
+      "id": "g-check",
+      "title": "Checkpoint",
+      "tone": "accent",
+      "from": 5,
+      "to": 5,
+      "columns": ["center"]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "t",
+      "kind": "title",
+      "column": "center",
+      "order": 0,
+      "span": 3,
+      "label": "Front-end Developer"
+    },
+    { "id": "net", "kind": "topic", "column": "center", "order": 1, "label": "Internet" },
+    {
+      "id": "how",
+      "kind": "subtopic",
+      "column": "right",
+      "order": 1,
+      "label": "How does the internet work?",
+      "badge": "rec"
+    },
+    { "id": "dns", "kind": "subtopic", "column": "left", "order": 2, "label": "DNS", "badge": "alt" },
+    {
+      "id": "http",
+      "kind": "subtopic",
+      "column": "right",
+      "order": 2,
+      "label": "What is HTTP?",
+      "icon": { "name": "globe", "side": "left", "tone": "success" }
+    },
+    { "id": "html", "kind": "topic", "column": "center", "order": 3, "label": "HTML" },
+    {
+      "id": "js",
+      "kind": "subtopic",
+      "column": "right",
+      "order": 3,
+      "label": "JavaScript",
+      "icon": { "name": "check", "side": "right", "tone": "info" }
+    },
+    {
+      "id": "css",
+      "kind": "topic",
+      "column": "center",
+      "order": 4,
+      "label": "CSS",
+      "state": "learning"
+    },
+    {
+      "id": "chk",
+      "kind": "topic",
+      "column": "center",
+      "order": 5,
+      "label": "Checkpoint — Static page",
+      "tone": "accent"
+    },
+    {
+      "id": "go",
+      "kind": "paragraph",
+      "column": "left",
+      "order": 5,
+      "label": "Continue with",
+      "description": "The Node.js map picks up from here.",
+      "action": { "label": "Open Node.js", "href": "/nodejs", "tone": "primary" }
+    },
+    {
+      "id": "ok",
+      "kind": "topic",
+      "column": "left",
+      "order": 6,
+      "label": "Accessibility",
+      "tone": "success"
+    },
+    {
+      "id": "note",
+      "kind": "topic",
+      "column": "center",
+      "order": 6,
+      "label": "Web APIs",
+      "tone": "info"
+    },
+    {
+      "id": "warn",
+      "kind": "topic",
+      "column": "right",
+      "order": 6,
+      "label": "jQuery (legacy)",
+      "tone": "danger"
+    },
+    {
+      "id": "refs",
+      "kind": "label",
+      "column": "left",
+      "order": 7,
+      "label": "Related roadmaps",
+      "links": [
+        { "label": "JavaScript", "href": "https://roadmap.sh/javascript" },
+        { "label": "React", "href": "https://roadmap.sh/react" }
+      ]
+    },
+    {
+      "id": "opt",
+      "kind": "subtopic",
+      "column": "center",
+      "order": 7,
+      "label": "Optional detour",
+      "tone": "muted"
+    },
+    {
+      "id": "next",
+      "kind": "button",
+      "column": "right",
+      "order": 7,
+      "label": "Start the track",
+      "href": "https://iterahq.dev/start"
+    }
+  ],
+  "edges": [
+    { "id": "e1", "source": "net", "target": "html", "style": "solid" },
+    { "id": "e2", "source": "html", "target": "css", "style": "solid", "label": "then" },
+    { "id": "e3", "source": "css", "target": "chk", "style": "solid" },
+    { "id": "e4", "source": "net", "target": "how" },
+    { "id": "e5", "source": "net", "target": "http" },
+    {
+      "id": "e6",
+      "source": "net",
+      "target": "dns",
+      "style": "dotted",
+      "route": "elbow",
+      "arrow": "end"
+    },
+    { "id": "e7", "source": "html", "target": "js" },
+    { "id": "e8", "source": "chk", "target": "note", "style": "solid", "route": "straight" },
+    { "id": "e9", "source": "chk", "target": "ok", "route": "curve" },
+    { "id": "e10", "source": "chk", "target": "warn", "route": "curve", "tone": "danger" }
+  ]
+}
