@@ -25,7 +25,7 @@ function Edge({ edge, path, instance, prefix }: MeasuredEdge & { instance: strin
     <path ref={pathRef} data-testid={`${prefix}-edge`} data-edge-id={edge.id} data-source={edge.source} data-target={edge.target}
       d={path.d} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
       strokeDasharray={style === 'solid' ? undefined : style === 'dotted' ? '0.8 4' : '0.8 8'}
-      className="[stroke-width:2px] md:[stroke-width:3px]"
+      className="[stroke-width:var(--c-roadmap-edge-width,2px)]"
       markerStart={arrow === 'both' ? `url(#${marker})` : undefined} markerEnd={arrow !== 'none' ? `url(#${marker})` : undefined} />
     {edge.label && midpoint && <foreignObject data-testid={`${prefix}-edge-label`} data-edge-id={edge.id} x={midpoint.x} y={midpoint.y} width="1" height="1" overflow="visible">
       <div className="w-max max-w-[160px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--c-roadmap-edge-label-bg)] px-2 py-0.5 text-center text-xs leading-normal text-[var(--c-roadmap-edge-label-fg)] [overflow-wrap:anywhere]"
@@ -90,7 +90,7 @@ export function RoadmapEdgeLayer({ containerRef, document: documentModel, testId
       fonts?.removeEventListener('loadingdone', schedule);
     };
   }, [containerRef, documentModel, debugPerf]);
-  return <svg data-testid={`${testIdPrefix}-edges`} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible">
+  return <svg data-testid={`${testIdPrefix}-edges`} aria-hidden="true" className="pointer-events-none print:hidden absolute inset-0 z-[1] h-full w-full overflow-visible">
     {measured.map(item => <Edge key={item.edge.id} {...item} instance={instance} prefix={testIdPrefix} />)}
   </svg>;
 }

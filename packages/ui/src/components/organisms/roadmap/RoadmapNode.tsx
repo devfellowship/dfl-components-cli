@@ -5,9 +5,9 @@ import type { RoadmapNode as Node, RoadmapNodeState, RoadmapLegendEntry } from "
 import { resolveNodeTone } from "./contract";
 import { RoadmapBadge } from "./RoadmapLegend";
 import { focusClass, toneStyle } from "./appearance";
-const nodeVariants = cva("relative flex min-w-0 flex-col justify-center rounded-[var(--radius)] border-2 px-2 py-3 text-center text-xs leading-normal md:px-4 md:text-base text-[var(--c-roadmap-node-fg)]", {
+const nodeVariants = cva("relative flex min-w-0 flex-col justify-center rounded-[var(--radius)] border-2 px-1 py-3 text-center text-[length:var(--c-roadmap-font,12px)] leading-normal text-[var(--c-roadmap-node-fg)]", {
   variants: {
-    kind: { topic: "min-h-[49px] border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", subtopic: "min-h-[49px] border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", button: "min-h-[49px] border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", label: "border-transparent bg-transparent", title: "border-transparent bg-transparent font-semibold md:text-[28px]", paragraph: "text-left border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", legend: "border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]" },
+    kind: { topic: "min-h-[49px] border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", subtopic: "min-h-[49px] border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", button: "min-h-[49px] border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", label: "border-transparent bg-transparent", title: "border-transparent bg-transparent font-semibold text-[length:var(--c-roadmap-title-font,18px)]", paragraph: "text-left border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]", legend: "border-[var(--c-roadmap-border)] bg-[var(--c-roadmap-node-bg)]" },
     state: { todo: "", done: "[--c-roadmap-node-bg:var(--c-roadmap-done-bg)] [--c-roadmap-node-fg:var(--c-roadmap-done-fg)]", learning: "[--c-roadmap-node-bg:var(--c-roadmap-learning-bg)] [--c-roadmap-node-fg:var(--c-roadmap-learning-fg)]", skipped: "[--c-roadmap-node-bg:var(--c-roadmap-skipped-bg)] [--c-roadmap-node-fg:var(--c-roadmap-skipped-fg)]", locked: "opacity-60" },
   },
 });
@@ -28,7 +28,7 @@ export function RoadmapNodeView({ node, state, badge, testIdPrefix, onNodeClick,
   const icon = node.icon ?? (badge ? { name: badge.icon ?? "check", side: "right" as const, tone: badge.tone } : undefined);
   return <div style={toneStyle(nodeTone)} className="min-w-0">
     {/* The theme's unlayered universal border reset beats utility layers. */}
-    <Box style={{ borderColor: node.kind === "title" || node.kind === "label" ? "transparent" : "var(--c-roadmap-border)" }} data-roadmap-node-box={node.id} href={Box === "a" ? node.href : undefined} type={Box === "button" ? "button" : undefined} onClick={Box !== "div" ? () => onNodeClick?.(node) : undefined} className={`${nodeVariants({ kind: node.kind, state })} w-full ${Box !== "div" ? focusClass : ""}`} aria-disabled={locked || undefined} title={node.kind === "topic" || node.kind === "subtopic" ? node.description : undefined}>
+    <Box style={{ borderColor: node.kind === "title" || node.kind === "label" ? "transparent" : "var(--c-roadmap-border)" }} data-roadmap-node-box={node.id} href={Box === "a" ? node.href : undefined} type={Box === "button" ? "button" : undefined} onClick={Box !== "div" ? () => onNodeClick?.(node) : undefined} className={`${nodeVariants({ kind: node.kind, state })} w-full ${icon ? (icon.side === "left" ? "pl-3" : "pr-3") : ""} ${Box !== "div" ? focusClass : ""}`} aria-disabled={locked || undefined} title={node.kind === "topic" || node.kind === "subtopic" ? node.description : undefined}>
       {icon && <RoadmapBadge name={icon.name} tone={icon.tone ?? nodeTone} label={badge?.label ?? icon.name} className={`absolute top-1/2 -translate-y-1/2 ${icon.side === "left" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2"}`} />}
       {primary}
       {node.description && node.kind === "paragraph" && <p className="mt-2 [overflow-wrap:anywhere]">{node.description}</p>}

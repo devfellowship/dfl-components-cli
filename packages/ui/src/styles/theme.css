@@ -56,3 +56,32 @@ body {
 .dark {
   /* All tokens already render dark at :root. Intentionally empty. */
 }
+
+/* Roadmap sizes follow container width, including narrow embedded panels.
+ * Plain CSS supports Tailwind 3 and 4. Row spacing remains compact:
+ * 8px gap + two 8px node insets = 24px between node borders. */
+.dfl-roadmap-body {
+  --c-roadmap-edge-width: 2px;
+  --c-roadmap-font: 12px;
+  --c-roadmap-title-font: 18px;
+  --c-roadmap-column-gap: 8px;
+  --c-roadmap-padding: 8px;
+}
+@container roadmap (min-width: 360px) {
+  .dfl-roadmap-body { --c-roadmap-padding: 12px; }
+}
+@container roadmap (min-width: 390px) {
+  .dfl-roadmap-body { --c-roadmap-font: 13px; --c-roadmap-title-font: 20px; --c-roadmap-column-gap: 12px; }
+}
+@container roadmap (min-width: 768px) {
+  .dfl-roadmap-body { --c-roadmap-edge-width: 3px; --c-roadmap-font: 15px; --c-roadmap-title-font: 22px; --c-roadmap-column-gap: 24px; --c-roadmap-padding: 16px; }
+}
+@container roadmap (min-width: 1024px) {
+  .dfl-roadmap-body { --c-roadmap-font: 17px; --c-roadmap-title-font: 24px; --c-roadmap-column-gap: 32px; --c-roadmap-padding: 24px; }
+}
+/* The map stops at 1120px; the outer viewport selects the wide rhythm. */
+@media (min-width: 1280px) {
+  @container roadmap (min-width: 1120px) {
+    .dfl-roadmap-body { --c-roadmap-title-font: 28px; --c-roadmap-column-gap: 48px; }
+  }
+}
