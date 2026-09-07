@@ -1,5 +1,11 @@
 # @devfellowship/components
 
+## 3.5.2
+
+### Patch Changes
+
+- [#132](https://github.com/devfellowship/dfl-components-cli/pull/132) [`c27369e`](https://github.com/devfellowship/dfl-components-cli/commit/c27369e0a49819b4dc916c2dcfdbade72e86d95c) Thanks [@taigfs](https://github.com/taigfs)! - Add permanent browser checks for Roadmap mobile density, group containment, edge anchors, long maps, and resize performance.
+
 ## 3.5.1
 
 ### Patch Changes
