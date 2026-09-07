@@ -1,0 +1,10 @@
+{
+  "version": "roadmap/v1",
+  "direction": "down",
+  "columns": 3,
+  "nodes": [
+    { "id": "a", "column": "center", "order": 0, "kind": "topic", "label": "A", "tone": "#fdff00" }
+  ],
+  "edges": [],
+  "groups": []
+}

@@ -1,0 +1,2369 @@
+{
+  "version": "roadmap/v1",
+  "direction": "down",
+  "columns": 3,
+  "nodes": [
+    {
+      "id": "qN-6iiXWgn5qSzK3o0Tjo",
+      "column": "left",
+      "order": 0,
+      "kind": "legend",
+      "label": "Legend",
+      "meta": {
+        "roadmapsh": {
+          "id": "qN-6iiXWgn5qSzK3o0Tjo",
+          "type": "legend"
+        }
+      }
+    },
+    {
+      "id": "yHmHXymPNWwu8p1vvqD3o",
+      "column": "right",
+      "order": 0,
+      "kind": "paragraph",
+      "label": "Find the detailed version of this roadmap along with other similar roadmaps",
+      "tone": "neutral",
+      "action": {
+        "label": "roadmap.sh",
+        "href": "https://roadmap.sh"
+      },
+      "meta": {
+        "roadmapsh": {
+          "id": "yHmHXymPNWwu8p1vvqD3o",
+          "type": "paragraph"
+        }
+      }
+    },
+    {
+      "id": "MfErpYwkJ0wiWJZEUVfrb",
+      "column": "left",
+      "order": 1,
+      "kind": "button",
+      "label": "Visit Beginner Friendly Version",
+      "href": "/frontend?r=frontend-beginner",
+      "meta": {
+        "roadmapsh": {
+          "id": "MfErpYwkJ0wiWJZEUVfrb",
+          "type": "button"
+        }
+      }
+    },
+    {
+      "id": "jJebnKe4JftMXZ1lCsipq",
+      "column": "center",
+      "order": 2,
+      "kind": "title",
+      "label": "Front-end",
+      "meta": {
+        "roadmapsh": {
+          "id": "jJebnKe4JftMXZ1lCsipq",
+          "type": "title"
+        }
+      }
+    },
+    {
+      "id": "yCnn-NfSxIybUQ2iTuUGq",
+      "column": "right",
+      "order": 2,
+      "kind": "subtopic",
+      "label": "How does the internet work?",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "yCnn-NfSxIybUQ2iTuUGq",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "LdhFo8UrT6EBs6IE42uLx",
+      "column": "left",
+      "order": 3,
+      "kind": "paragraph",
+      "label": "Related Roadmaps",
+      "links": [
+        {
+          "label": "JavaScript Roadmap",
+          "href": "https://roadmap.sh/javascript"
+        },
+        {
+          "label": "React Roadmap",
+          "href": "https://roadmap.sh/react"
+        },
+        {
+          "label": "TypeScript Roadmap",
+          "href": "https://roadmap.sh/typescript"
+        },
+        {
+          "label": "Node.js Roadmap",
+          "href": "https://roadmap.sh/nodejs"
+        }
+      ],
+      "meta": {
+        "roadmapsh": {
+          "id": "LdhFo8UrT6EBs6IE42uLx",
+          "type": "linksgroup"
+        }
+      }
+    },
+    {
+      "id": "R12sArWVpbIs_PHxBqVaR",
+      "column": "right",
+      "order": 3,
+      "kind": "subtopic",
+      "label": "What is HTTP?",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "R12sArWVpbIs_PHxBqVaR",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "ZhSuu2VArnzPDp6dPQQSC",
+      "column": "right",
+      "order": 4,
+      "kind": "subtopic",
+      "label": "What is Domain Name?",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "ZhSuu2VArnzPDp6dPQQSC",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "VlNNwIEDWqQXtqkHWJYzC",
+      "column": "center",
+      "order": 5,
+      "kind": "topic",
+      "label": "Internet",
+      "meta": {
+        "roadmapsh": {
+          "id": "VlNNwIEDWqQXtqkHWJYzC",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "aqMaEY8gkKMikiqleV5EP",
+      "column": "right",
+      "order": 5,
+      "kind": "subtopic",
+      "label": "What is hosting?",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "aqMaEY8gkKMikiqleV5EP",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "hkxw9jPGYphmjhTjw8766",
+      "column": "right",
+      "order": 6,
+      "kind": "subtopic",
+      "label": "DNS and how it works?",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "hkxw9jPGYphmjhTjw8766",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "yWG2VUkaF5IJVVut6AiSy",
+      "column": "center",
+      "order": 7,
+      "kind": "topic",
+      "label": "HTML",
+      "meta": {
+        "roadmapsh": {
+          "id": "yWG2VUkaF5IJVVut6AiSy",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "P82WFaTPgQEPNp5IIuZ1Y",
+      "column": "right",
+      "order": 7,
+      "kind": "subtopic",
+      "label": "Browsers and how they work?",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "P82WFaTPgQEPNp5IIuZ1Y",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "yObLj-GcXY9bv2isJPCjs",
+      "column": "left",
+      "order": 8,
+      "kind": "paragraph",
+      "label": "HTML, CSS and JavaScript are the backbone of web development. Make sure to practice by building lots of projects.",
+      "tone": "neutral",
+      "action": {
+        "label": "Beginner Project Ideas",
+        "href": "https://roadmap.sh/frontend/projects?difficulty=beginner"
+      },
+      "meta": {
+        "roadmapsh": {
+          "id": "yObLj-GcXY9bv2isJPCjs",
+          "type": "paragraph"
+        }
+      }
+    },
+    {
+      "id": "ZhJhf1M2OphYbEmduFq-9",
+      "column": "center",
+      "order": 8,
+      "kind": "topic",
+      "label": "CSS",
+      "meta": {
+        "roadmapsh": {
+          "id": "ZhJhf1M2OphYbEmduFq-9",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "ODcfFEorkfJNupoQygM53",
+      "column": "center",
+      "order": 9,
+      "kind": "topic",
+      "label": "JavaScript",
+      "meta": {
+        "roadmapsh": {
+          "id": "ODcfFEorkfJNupoQygM53",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "ib_FHinhrw8VuSet-xMF7",
+      "column": "right",
+      "order": 9,
+      "kind": "subtopic",
+      "label": "npm",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "ib_FHinhrw8VuSet-xMF7",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "yrq3nOwFREzl-9EKnpU-e",
+      "column": "right",
+      "order": 10,
+      "kind": "subtopic",
+      "label": "yarn",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "yrq3nOwFREzl-9EKnpU-e",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "j2H1qGosbveayviOCVkUs",
+      "column": "right",
+      "order": 11,
+      "kind": "subtopic",
+      "label": "Bun",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "j2H1qGosbveayviOCVkUs",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "SLxA5qJFp_28TRzr1BjxZ",
+      "column": "right",
+      "order": 12,
+      "kind": "subtopic",
+      "label": "pnpm",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "SLxA5qJFp_28TRzr1BjxZ",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "R_I4SGYqLk5zze5I1zS_E",
+      "column": "left",
+      "order": 11,
+      "kind": "subtopic",
+      "label": "Git",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "R_I4SGYqLk5zze5I1zS_E",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "NIY7c4TQEEHx0hATu-k5C",
+      "column": "center",
+      "order": 11,
+      "kind": "topic",
+      "label": "Version Control",
+      "meta": {
+        "roadmapsh": {
+          "id": "NIY7c4TQEEHx0hATu-k5C",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "qmTVMJDsEhNIkiwE_UTYu",
+      "column": "left",
+      "order": 12,
+      "kind": "subtopic",
+      "label": "GitHub",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "qmTVMJDsEhNIkiwE_UTYu",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "zIoSJMX3cuzCgDYHjgbEh",
+      "column": "left",
+      "order": 13,
+      "kind": "subtopic",
+      "label": "GitLab",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "zIoSJMX3cuzCgDYHjgbEh",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "MXnFhZlNB1zTsBFDyni9H",
+      "column": "center",
+      "order": 12,
+      "kind": "topic",
+      "label": "VCS Hosting",
+      "meta": {
+        "roadmapsh": {
+          "id": "MXnFhZlNB1zTsBFDyni9H",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "IqvS1V-98cxko3e9sBQgP",
+      "column": "right",
+      "order": 13,
+      "kind": "topic",
+      "label": "Package Managers",
+      "meta": {
+        "roadmapsh": {
+          "id": "IqvS1V-98cxko3e9sBQgP",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "tG5v3O4lNIFc2uCnacPak",
+      "column": "left",
+      "order": 14,
+      "kind": "subtopic",
+      "label": "React",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "tG5v3O4lNIFc2uCnacPak",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "XDTD8el6OwuQ55wC-X4iV",
+      "column": "right",
+      "order": 14,
+      "kind": "topic",
+      "label": "CSS Frameworks",
+      "meta": {
+        "roadmapsh": {
+          "id": "XDTD8el6OwuQ55wC-X4iV",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "ERAdwL1G9M1bnx-fOm5ZA",
+      "column": "left",
+      "order": 15,
+      "kind": "subtopic",
+      "label": "Vue.js",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "ERAdwL1G9M1bnx-fOm5ZA",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "DI8pvEosrUU7lcaGa7-Kc",
+      "column": "center",
+      "order": 14,
+      "kind": "paragraph",
+      "label": "At this point, you should be able to build modern vanilla JS frontend applications.",
+      "tone": "neutral",
+      "action": {
+        "label": "Intermediate Project Ideas",
+        "href": "https://roadmap.sh/frontend/projects?difficulty=intermediate"
+      },
+      "meta": {
+        "roadmapsh": {
+          "id": "DI8pvEosrUU7lcaGa7-Kc",
+          "type": "paragraph"
+        }
+      }
+    },
+    {
+      "id": "-bHFIiXnoUQSov64WI9yo",
+      "column": "left",
+      "order": 16,
+      "kind": "subtopic",
+      "label": "Angular",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "-bHFIiXnoUQSov64WI9yo",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "eghnfG4p7i-EDWfp3CQXC",
+      "column": "right",
+      "order": 15,
+      "kind": "subtopic",
+      "label": "Tailwind",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "eghnfG4p7i-EDWfp3CQXC",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "ZR-qZ2Lcbu3FtqaMd3wM4",
+      "column": "left",
+      "order": 17,
+      "kind": "subtopic",
+      "label": "Svelte",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "ZR-qZ2Lcbu3FtqaMd3wM4",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "DxOSKnqAjZOPP-dq_U7oP",
+      "column": "left",
+      "order": 18,
+      "kind": "subtopic",
+      "label": "Solid JS",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "DxOSKnqAjZOPP-dq_U7oP",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "eXezX7CVNyC1RuyU_I4yP",
+      "column": "center",
+      "order": 17,
+      "kind": "topic",
+      "label": "Learn a Framework",
+      "meta": {
+        "roadmapsh": {
+          "id": "eXezX7CVNyC1RuyU_I4yP",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "M56-ufyFSwaQYPISuwUcj",
+      "column": "right",
+      "order": 17,
+      "kind": "label",
+      "label": "AI in Development",
+      "meta": {
+        "roadmapsh": {
+          "id": "M56-ufyFSwaQYPISuwUcj",
+          "type": "label"
+        }
+      }
+    },
+    {
+      "id": "RcC1fVuePQZ59AsJfeTdR",
+      "column": "left",
+      "order": 19,
+      "kind": "subtopic",
+      "label": "Claude Code",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "RcC1fVuePQZ59AsJfeTdR",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "CKlkVK_7GZ7xzIUHJqZr8",
+      "column": "left",
+      "order": 20,
+      "kind": "subtopic",
+      "label": "Cursor",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "CKlkVK_7GZ7xzIUHJqZr8",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "UTupdqjOyLh7-56_0SXJ8",
+      "column": "right",
+      "order": 19,
+      "kind": "topic",
+      "label": "Learn the Basics",
+      "meta": {
+        "roadmapsh": {
+          "id": "UTupdqjOyLh7-56_0SXJ8",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "ipcNHz8KbfpE57kNP15hP",
+      "column": "center",
+      "order": 20,
+      "kind": "topic",
+      "label": "AI Assisted Coding",
+      "meta": {
+        "roadmapsh": {
+          "id": "ipcNHz8KbfpE57kNP15hP",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "HQrxxDxKN8gizvXRU5psW",
+      "column": "left",
+      "order": 21,
+      "kind": "subtopic",
+      "label": "Copilot",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "HQrxxDxKN8gizvXRU5psW",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "E7-LveK7jO2npxVTLUDfw",
+      "column": "left",
+      "order": 22,
+      "kind": "subtopic",
+      "label": "Antigravity",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "E7-LveK7jO2npxVTLUDfw",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "yKNdBbahm_h81xdMDT-qx",
+      "column": "right",
+      "order": 22,
+      "kind": "subtopic",
+      "label": "How LLMs work",
+      "meta": {
+        "roadmapsh": {
+          "id": "yKNdBbahm_h81xdMDT-qx",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "IZKl6PxbvgNkryAkdy3-p",
+      "column": "right",
+      "order": 23,
+      "kind": "subtopic",
+      "label": "AI vs Traditional Coding",
+      "meta": {
+        "roadmapsh": {
+          "id": "IZKl6PxbvgNkryAkdy3-p",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "k4hMVVBMatedUq5EKiMo4",
+      "column": "left",
+      "order": 24,
+      "kind": "button",
+      "label": "Prompt Engineering",
+      "href": "https://roadmap.sh/prompt-engineering",
+      "meta": {
+        "roadmapsh": {
+          "id": "k4hMVVBMatedUq5EKiMo4",
+          "type": "button"
+        }
+      }
+    },
+    {
+      "id": "Gv_g4gK6pZK6l_0xAn34X",
+      "column": "center",
+      "order": 24,
+      "kind": "topic",
+      "label": "Prompting Techniques",
+      "meta": {
+        "roadmapsh": {
+          "id": "Gv_g4gK6pZK6l_0xAn34X",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "Nx7mjvYgqLpmJ0_iSx5of",
+      "column": "right",
+      "order": 24,
+      "kind": "subtopic",
+      "label": "Applications",
+      "meta": {
+        "roadmapsh": {
+          "id": "Nx7mjvYgqLpmJ0_iSx5of",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "vpimgXt10UQFBDVHR21IU",
+      "column": "left",
+      "order": 25,
+      "kind": "button",
+      "label": "AI Agents Roadmap",
+      "href": "https://roadmap.sh/ai-agents",
+      "meta": {
+        "roadmapsh": {
+          "id": "vpimgXt10UQFBDVHR21IU",
+          "type": "button"
+        }
+      }
+    },
+    {
+      "id": "e4j6u0e_WqK1vfrUwJJ4M",
+      "column": "center",
+      "order": 25,
+      "kind": "topic",
+      "label": "Agents",
+      "meta": {
+        "roadmapsh": {
+          "id": "e4j6u0e_WqK1vfrUwJJ4M",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "0TMdly8yiqnNR8sx36iqc",
+      "column": "right",
+      "order": 25,
+      "kind": "subtopic",
+      "label": "Code Reviews",
+      "meta": {
+        "roadmapsh": {
+          "id": "0TMdly8yiqnNR8sx36iqc",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "XFy2gj7DmXeaCoc6MZo_j",
+      "column": "center",
+      "order": 26,
+      "kind": "topic",
+      "label": "MCP",
+      "meta": {
+        "roadmapsh": {
+          "id": "XFy2gj7DmXeaCoc6MZo_j",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "EYT2rTLZ8tUW2u8DOnAWF",
+      "column": "right",
+      "order": 26,
+      "kind": "subtopic",
+      "label": "Refactoring",
+      "meta": {
+        "roadmapsh": {
+          "id": "EYT2rTLZ8tUW2u8DOnAWF",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "Bic4PHhz-YqzPWRimJO83",
+      "column": "left",
+      "order": 27,
+      "kind": "subtopic",
+      "label": "Gemini",
+      "meta": {
+        "roadmapsh": {
+          "id": "Bic4PHhz-YqzPWRimJO83",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "xL8d-uHMpJKwUvT8z-Jia",
+      "column": "center",
+      "order": 27,
+      "kind": "topic",
+      "label": "Skills",
+      "meta": {
+        "roadmapsh": {
+          "id": "xL8d-uHMpJKwUvT8z-Jia",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "q7NpwqQXUp4wt2to-yFiP",
+      "column": "right",
+      "order": 27,
+      "kind": "subtopic",
+      "label": "Docs Generation",
+      "meta": {
+        "roadmapsh": {
+          "id": "q7NpwqQXUp4wt2to-yFiP",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "-ye5ZtYFDoYGpj-UJaBP8",
+      "column": "left",
+      "order": 28,
+      "kind": "subtopic",
+      "label": "OpenAI",
+      "meta": {
+        "roadmapsh": {
+          "id": "-ye5ZtYFDoYGpj-UJaBP8",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "Lw2nR7x8PYgq1P5CxPAxi",
+      "column": "left",
+      "order": 29,
+      "kind": "subtopic",
+      "label": "Anthropic",
+      "meta": {
+        "roadmapsh": {
+          "id": "Lw2nR7x8PYgq1P5CxPAxi",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "MdYPIf_9ezbIp6Dm5Fyme",
+      "column": "center",
+      "order": 29,
+      "kind": "topic",
+      "label": "Implementing AI",
+      "meta": {
+        "roadmapsh": {
+          "id": "MdYPIf_9ezbIp6Dm5Fyme",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "flwf3QbJioovtOpMw4obo",
+      "column": "right",
+      "order": 29,
+      "kind": "label",
+      "label": "Advanced Frontend",
+      "meta": {
+        "roadmapsh": {
+          "id": "flwf3QbJioovtOpMw4obo",
+          "type": "label"
+        }
+      }
+    },
+    {
+      "id": "U5mD5FmVx7VWeKxDpQxB5",
+      "column": "left",
+      "order": 30,
+      "kind": "topic",
+      "label": "Auth Strategies",
+      "meta": {
+        "roadmapsh": {
+          "id": "U5mD5FmVx7VWeKxDpQxB5",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "hkSc_1x09m7-7BO7WzlDT",
+      "column": "center",
+      "order": 30,
+      "kind": "topic",
+      "label": "Module Bundlers",
+      "meta": {
+        "roadmapsh": {
+          "id": "hkSc_1x09m7-7BO7WzlDT",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "9VcGfDBBD8YcKatj4VcH1",
+      "column": "right",
+      "order": 30,
+      "kind": "topic",
+      "label": "Linters & Formatters",
+      "meta": {
+        "roadmapsh": {
+          "id": "9VcGfDBBD8YcKatj4VcH1",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "0Awx3zEI5_gYEIrD7IVX6",
+      "column": "center",
+      "order": 31,
+      "kind": "subtopic",
+      "label": "Vite",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "0Awx3zEI5_gYEIrD7IVX6",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "UvCVChB6NZ_yUg0RdIJ2o",
+      "column": "right",
+      "order": 31,
+      "kind": "subtopic",
+      "label": "Biome",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "UvCVChB6NZ_yUg0RdIJ2o",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "4W7UXfdKIUsm1bUrjdTVT",
+      "column": "center",
+      "order": 32,
+      "kind": "subtopic",
+      "label": "esbuild",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "4W7UXfdKIUsm1bUrjdTVT",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "h26uS3muFCabe6ekElZcI",
+      "column": "center",
+      "order": 33,
+      "kind": "subtopic",
+      "label": "SWC",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "h26uS3muFCabe6ekElZcI",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "zbkpu_gvQ4mgCiZKzS1xv",
+      "column": "right",
+      "order": 32,
+      "kind": "subtopic",
+      "label": "Prettier",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "zbkpu_gvQ4mgCiZKzS1xv",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "hE-DbpBpYrfB8tmBEjTnG",
+      "column": "center",
+      "order": 34,
+      "kind": "subtopic",
+      "label": "Rolldown",
+      "meta": {
+        "roadmapsh": {
+          "id": "hE-DbpBpYrfB8tmBEjTnG",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "sCjErk7rfWAUvhl8Kfm3n",
+      "column": "center",
+      "order": 35,
+      "kind": "subtopic",
+      "label": "Rollup",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "sCjErk7rfWAUvhl8Kfm3n",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "NFjsI712_qP0IOmjuqXar",
+      "column": "right",
+      "order": 33,
+      "kind": "subtopic",
+      "label": "ESLint",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "NFjsI712_qP0IOmjuqXar",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "NS-hwaWa5ebSmNNRoxFDp",
+      "column": "center",
+      "order": 36,
+      "kind": "subtopic",
+      "label": "Parcel",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "NS-hwaWa5ebSmNNRoxFDp",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "AfH2zCbqzw0Nisg1yyISS",
+      "column": "right",
+      "order": 35,
+      "kind": "subtopic",
+      "label": "CORS",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "AfH2zCbqzw0Nisg1yyISS",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "igg4_hb3XE3vuvY8ufV-4",
+      "column": "left",
+      "order": 36,
+      "kind": "topic",
+      "label": "Testing",
+      "meta": {
+        "roadmapsh": {
+          "id": "igg4_hb3XE3vuvY8ufV-4",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "uum7vOhOUR38vLuGZy8Oa",
+      "column": "right",
+      "order": 36,
+      "kind": "subtopic",
+      "label": "HTTPS",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "uum7vOhOUR38vLuGZy8Oa",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "ydZRVWQrJUl3LZfjhR8QT",
+      "column": "center",
+      "order": 37,
+      "kind": "paragraph",
+      "label": "At this point you should have the expertise of an intermediate level frontend developer. Keep practicing and sharpening your skills.",
+      "tone": "neutral",
+      "action": {
+        "label": "Advanced Project Ideas",
+        "href": "https://roadmap.sh/frontend/projects?difficulty=advanced"
+      },
+      "meta": {
+        "roadmapsh": {
+          "id": "ydZRVWQrJUl3LZfjhR8QT",
+          "type": "paragraph"
+        }
+      }
+    },
+    {
+      "id": "rmcm0CZbtNVC9LZ14-H6h",
+      "column": "right",
+      "order": 37,
+      "kind": "subtopic",
+      "label": "CSP",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "rmcm0CZbtNVC9LZ14-H6h",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "hVQ89f6G0LXEgHIOKHDYq",
+      "column": "left",
+      "order": 38,
+      "kind": "subtopic",
+      "label": "Vitest",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "hVQ89f6G0LXEgHIOKHDYq",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "JanR7I_lNnUCXhCMGLdn-",
+      "column": "right",
+      "order": 38,
+      "kind": "subtopic",
+      "label": "OWASP Risks",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "JanR7I_lNnUCXhCMGLdn-",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "jramLk8FGuaEH4YpHIyZT",
+      "column": "left",
+      "order": 39,
+      "kind": "subtopic",
+      "label": "Playwright",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "jramLk8FGuaEH4YpHIyZT",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "DaynCz5RR26gjT6N6gTDL",
+      "column": "left",
+      "order": 40,
+      "kind": "subtopic",
+      "label": "Cypress",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "DaynCz5RR26gjT6N6gTDL",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "g5itUjgRXd9vs9ujHezFl",
+      "column": "left",
+      "order": 41,
+      "kind": "subtopic",
+      "label": "Jest",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "g5itUjgRXd9vs9ujHezFl",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "3HgiMfqihjWceSxd6ei8s",
+      "column": "center",
+      "order": 41,
+      "kind": "topic",
+      "label": "Web APIs",
+      "meta": {
+        "roadmapsh": {
+          "id": "3HgiMfqihjWceSxd6ei8s",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "RDWbG3Iui6IPgp0shvXtg",
+      "column": "right",
+      "order": 41,
+      "kind": "topic",
+      "label": "Web Security",
+      "meta": {
+        "roadmapsh": {
+          "id": "RDWbG3Iui6IPgp0shvXtg",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "k6rp6Ua9qUEW_DA_fOg5u",
+      "column": "center",
+      "order": 42,
+      "kind": "subtopic",
+      "label": "Angular",
+      "tone": "secondary",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "k6rp6Ua9qUEW_DA_fOg5u",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "SGDf_rbfmFSHlxI-Czzlz",
+      "column": "center",
+      "order": 43,
+      "kind": "topic",
+      "label": "React",
+      "tone": "secondary",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "SGDf_rbfmFSHlxI-Czzlz",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "vpzh9bNXCxgdDFQLsot2_",
+      "column": "left",
+      "order": 43,
+      "kind": "subtopic",
+      "label": "GitHub Pages",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "vpzh9bNXCxgdDFQLsot2_",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "3TE_iYvbklXK0be-5f2M7",
+      "column": "center",
+      "order": 44,
+      "kind": "topic",
+      "label": "Vue.js",
+      "tone": "secondary",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "3TE_iYvbklXK0be-5f2M7",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "zNFYAJaSq0YZXL5Rpx1NX",
+      "column": "center",
+      "order": 45,
+      "kind": "subtopic",
+      "label": "Next.js",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "zNFYAJaSq0YZXL5Rpx1NX",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "kPJ0jZo5AbOzvZgv0zwp0",
+      "column": "left",
+      "order": 44,
+      "kind": "subtopic",
+      "label": "Vercel",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "kPJ0jZo5AbOzvZgv0zwp0",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "o8GstE5gxcGByh-D7lwqT",
+      "column": "left",
+      "order": 45,
+      "kind": "subtopic",
+      "label": "Netlify",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "o8GstE5gxcGByh-D7lwqT",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "BBsXxkbbEG-gnbM1xXKrj",
+      "column": "center",
+      "order": 46,
+      "kind": "subtopic",
+      "label": "Nuxt.js",
+      "meta": {
+        "roadmapsh": {
+          "id": "BBsXxkbbEG-gnbM1xXKrj",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "f9zlP6lGhfe6HBHVYiySu",
+      "column": "center",
+      "order": 47,
+      "kind": "subtopic",
+      "label": "Tanstack Start",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "f9zlP6lGhfe6HBHVYiySu",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "Cxspmb14_0i1tfw-ZLxEu",
+      "column": "right",
+      "order": 44,
+      "kind": "topic",
+      "label": "SSR",
+      "meta": {
+        "roadmapsh": {
+          "id": "Cxspmb14_0i1tfw-ZLxEu",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "_Uh-UFNe2wP2TV0x2lKY_",
+      "column": "left",
+      "order": 46,
+      "kind": "subtopic",
+      "label": "Cloudflare",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "_Uh-UFNe2wP2TV0x2lKY_",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "P4st_telfCwKLSAU2WsQP",
+      "column": "center",
+      "order": 48,
+      "kind": "topic",
+      "label": "SvelteKit",
+      "tone": "secondary",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "P4st_telfCwKLSAU2WsQP",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "wA2fSYsbBYU02VJXAvUz8",
+      "column": "center",
+      "order": 49,
+      "kind": "subtopic",
+      "label": "Astro",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "wA2fSYsbBYU02VJXAvUz8",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "PJRsqg5Vx9gQTodxaeZfz",
+      "column": "left",
+      "order": 47,
+      "kind": "subtopic",
+      "label": "Railway",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "PJRsqg5Vx9gQTodxaeZfz",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "wfGz8pshGQARZ7qStGoSD",
+      "column": "left",
+      "order": 48,
+      "kind": "subtopic",
+      "label": "Render",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "wfGz8pshGQARZ7qStGoSD",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "KJRkrFZIihCUBrOf579EU",
+      "column": "center",
+      "order": 50,
+      "kind": "subtopic",
+      "label": "react-router",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "KJRkrFZIihCUBrOf579EU",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "OL8I6nOZ8hGGWmtxg_Mv8",
+      "column": "center",
+      "order": 51,
+      "kind": "subtopic",
+      "label": "Svelte",
+      "meta": {
+        "roadmapsh": {
+          "id": "OL8I6nOZ8hGGWmtxg_Mv8",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "A1ZUy16cVRYqmHxoCtUb0",
+      "column": "left",
+      "order": 49,
+      "kind": "topic",
+      "label": "Deployment",
+      "meta": {
+        "roadmapsh": {
+          "id": "A1ZUy16cVRYqmHxoCtUb0",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "NQ95TJCe3E1IwEuBa__D6",
+      "column": "center",
+      "order": 52,
+      "kind": "topic",
+      "label": "Type Checkers",
+      "meta": {
+        "roadmapsh": {
+          "id": "NQ95TJCe3E1IwEuBa__D6",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "n0q32YhWEIAUwbGXexoqV",
+      "column": "right",
+      "order": 47,
+      "kind": "topic",
+      "label": "SSG",
+      "meta": {
+        "roadmapsh": {
+          "id": "n0q32YhWEIAUwbGXexoqV",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "6kWlgayUZQnr9z88fUOkk",
+      "column": "center",
+      "order": 53,
+      "kind": "button",
+      "label": "TypeScript",
+      "href": "https://roadmap.sh/typescript",
+      "meta": {
+        "roadmapsh": {
+          "id": "6kWlgayUZQnr9z88fUOkk",
+          "type": "button"
+        }
+      }
+    },
+    {
+      "id": "iUxXq7beg55y76dkwhM13",
+      "column": "right",
+      "order": 48,
+      "kind": "subtopic",
+      "label": "Astro",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "iUxXq7beg55y76dkwhM13",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "ap4h4v5Sr4jBH3GwWSH8x",
+      "column": "left",
+      "order": 50,
+      "kind": "topic",
+      "label": "Design Systems",
+      "meta": {
+        "roadmapsh": {
+          "id": "ap4h4v5Sr4jBH3GwWSH8x",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "dz7_QXoO7X0WmS5xuAhhJ",
+      "column": "center",
+      "order": 54,
+      "kind": "subtopic",
+      "label": "Lighthouse",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "dz7_QXoO7X0WmS5xuAhhJ",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "V70884VcuXkfrfHyLGtUg",
+      "column": "right",
+      "order": 50,
+      "kind": "subtopic",
+      "label": "Next.js",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "V70884VcuXkfrfHyLGtUg",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "JWU9jc12_ewaIKt3qWLcp",
+      "column": "center",
+      "order": 55,
+      "kind": "subtopic",
+      "label": "DevTools Usage",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "JWU9jc12_ewaIKt3qWLcp",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "CMrss8E2W0eA6DVEqtPjT",
+      "column": "right",
+      "order": 51,
+      "kind": "subtopic",
+      "label": "Vuepress",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "CMrss8E2W0eA6DVEqtPjT",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "6d8cjWZ4BuUjwT0seiuzJ",
+      "column": "left",
+      "order": 52,
+      "kind": "topic",
+      "label": "Performance",
+      "meta": {
+        "roadmapsh": {
+          "id": "6d8cjWZ4BuUjwT0seiuzJ",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "66ya3WdtlkjQyBTc3Lein",
+      "column": "center",
+      "order": 56,
+      "kind": "subtopic",
+      "label": "Service Workers",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "66ya3WdtlkjQyBTc3Lein",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "io0RHJWIcVxDhcYkV9d38",
+      "column": "right",
+      "order": 52,
+      "kind": "subtopic",
+      "label": "Eleventy",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "io0RHJWIcVxDhcYkV9d38",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "tWDmeXItfQDxB8Jij_V4L",
+      "column": "center",
+      "order": 57,
+      "kind": "subtopic",
+      "label": "Cache-Control",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "tWDmeXItfQDxB8Jij_V4L",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "XWJxV42Dpu2D3xDK10Pn3",
+      "column": "right",
+      "order": 53,
+      "kind": "subtopic",
+      "label": "Nuxt.js",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "XWJxV42Dpu2D3xDK10Pn3",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "FyNXhHq1VIASNq-LI7JIu",
+      "column": "center",
+      "order": 58,
+      "kind": "subtopic",
+      "label": "Streamed Responses",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "FyNXhHq1VIASNq-LI7JIu",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "ruoFa3M4bUE3Dg6GXSiUI",
+      "column": "left",
+      "order": 55,
+      "kind": "topic",
+      "label": "Web Components",
+      "meta": {
+        "roadmapsh": {
+          "id": "ruoFa3M4bUE3Dg6GXSiUI",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "L7AllJfKvClaam3y-u6DP",
+      "column": "center",
+      "order": 59,
+      "kind": "topic",
+      "label": "GraphQL",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "L7AllJfKvClaam3y-u6DP",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "e-k6EhoxYG9h0x6vWOrDh",
+      "column": "right",
+      "order": 55,
+      "kind": "topic",
+      "label": "Accessibility",
+      "meta": {
+        "roadmapsh": {
+          "id": "e-k6EhoxYG9h0x6vWOrDh",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "Hk8AVonOd693_y1sykPqd",
+      "column": "left",
+      "order": 56,
+      "kind": "subtopic",
+      "label": "HTML Templates",
+      "badge": "R9WLhURhPdVNXP7AUTDvR",
+      "meta": {
+        "roadmapsh": {
+          "id": "Hk8AVonOd693_y1sykPqd",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "5eUbDdOTOfaOhUlZAmmXW",
+      "column": "center",
+      "order": 60,
+      "kind": "subtopic",
+      "label": "Apollo",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "5eUbDdOTOfaOhUlZAmmXW",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "VxiQPgcYDFAT6WgSRWpIA",
+      "column": "left",
+      "order": 57,
+      "kind": "subtopic",
+      "label": "Custom Elements",
+      "badge": "R9WLhURhPdVNXP7AUTDvR",
+      "meta": {
+        "roadmapsh": {
+          "id": "VxiQPgcYDFAT6WgSRWpIA",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "0moPO23ol33WsjVXSpTGf",
+      "column": "center",
+      "order": 61,
+      "kind": "subtopic",
+      "label": "Relay Modern",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "0moPO23ol33WsjVXSpTGf",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "PoM77O2OtxPELxfrW1wtl",
+      "column": "right",
+      "order": 57,
+      "kind": "topic",
+      "label": "PWAs",
+      "badge": "R9WLhURhPdVNXP7AUTDvR",
+      "meta": {
+        "roadmapsh": {
+          "id": "PoM77O2OtxPELxfrW1wtl",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "-SpsNeOZBkQfDA-rwzgPg",
+      "column": "left",
+      "order": 58,
+      "kind": "subtopic",
+      "label": "Shadow DOM",
+      "badge": "R9WLhURhPdVNXP7AUTDvR",
+      "meta": {
+        "roadmapsh": {
+          "id": "-SpsNeOZBkQfDA-rwzgPg",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "mQHpSyMR4Rra4mqAslgiS",
+      "column": "left",
+      "order": 59,
+      "kind": "subtopic",
+      "label": "Electron",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "mQHpSyMR4Rra4mqAslgiS",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "KMA7NkxFbPoUDtFnGBFnj",
+      "column": "center",
+      "order": 62,
+      "kind": "topic",
+      "label": "Desktop Apps",
+      "meta": {
+        "roadmapsh": {
+          "id": "KMA7NkxFbPoUDtFnGBFnj",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "VOGKiG2EZVfCBAaa7Df0W",
+      "column": "right",
+      "order": 59,
+      "kind": "topic",
+      "label": "Mobile Apps",
+      "badge": "R9WLhURhPdVNXP7AUTDvR",
+      "meta": {
+        "roadmapsh": {
+          "id": "VOGKiG2EZVfCBAaa7Df0W",
+          "type": "topic"
+        }
+      }
+    },
+    {
+      "id": "GJctl0tVXe4B70s35RkLT",
+      "column": "left",
+      "order": 60,
+      "kind": "subtopic",
+      "label": "Tauri",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "GJctl0tVXe4B70s35RkLT",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "2MRvAK9G9RGM_auWytcKh",
+      "column": "left",
+      "order": 61,
+      "kind": "subtopic",
+      "label": "Flutter",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "2MRvAK9G9RGM_auWytcKh",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "dsTegXTyupjS8iU6I7Xiv",
+      "column": "right",
+      "order": 61,
+      "kind": "subtopic",
+      "label": "React Native",
+      "badge": "NJhQIvMyMD1Cu-JA1UCmJ",
+      "meta": {
+        "roadmapsh": {
+          "id": "dsTegXTyupjS8iU6I7Xiv",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "dIQXjFEUAJAGxxfAYceHU",
+      "column": "right",
+      "order": 62,
+      "kind": "subtopic",
+      "label": "Flutter",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "dIQXjFEUAJAGxxfAYceHU",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "Pxyk3nBlWbgmMjsA93E70",
+      "column": "right",
+      "order": 63,
+      "kind": "subtopic",
+      "label": "Ionic",
+      "badge": "DMx7rAjVBWMbzjSde-tvp",
+      "meta": {
+        "roadmapsh": {
+          "id": "Pxyk3nBlWbgmMjsA93E70",
+          "type": "subtopic"
+        }
+      }
+    },
+    {
+      "id": "slf6jmim4p9ti6ZRHOZe_",
+      "column": "left",
+      "order": 64,
+      "kind": "button",
+      "label": "Fullstack",
+      "href": "https://roadmap.sh/full-stack",
+      "meta": {
+        "roadmapsh": {
+          "id": "slf6jmim4p9ti6ZRHOZe_",
+          "type": "button"
+        }
+      }
+    },
+    {
+      "id": "-sFboM4eFUMVq1tlPl-fV",
+      "column": "center",
+      "order": 64,
+      "kind": "button",
+      "label": "Design System",
+      "href": "https://roadmap.sh/design-system",
+      "meta": {
+        "roadmapsh": {
+          "id": "-sFboM4eFUMVq1tlPl-fV",
+          "type": "button"
+        }
+      }
+    },
+    {
+      "id": "0vLaVNJaJSHZ_bHli6Qzs",
+      "column": "center",
+      "order": 65,
+      "kind": "paragraph",
+      "label": "Continue Learning with following relevant tracks",
+      "tone": "neutral",
+      "action": {
+        "label": "Nodejs",
+        "href": "https://roadmap.sh/nodejs"
+      },
+      "meta": {
+        "roadmapsh": {
+          "id": "0vLaVNJaJSHZ_bHli6Qzs",
+          "type": "paragraph"
+        }
+      }
+    },
+    {
+      "id": "Df3nTlTvSQkMGzpufRo9q",
+      "column": "center",
+      "order": 66,
+      "kind": "button",
+      "label": "Backend",
+      "href": "https://roadmap.sh/backend",
+      "meta": {
+        "roadmapsh": {
+          "id": "Df3nTlTvSQkMGzpufRo9q",
+          "type": "button"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "source": "jJebnKe4JftMXZ1lCsipq",
+      "target": "VlNNwIEDWqQXtqkHWJYzC",
+      "style": "solid"
+    },
+    {
+      "id": "e1",
+      "source": "VlNNwIEDWqQXtqkHWJYzC",
+      "target": "yCnn-NfSxIybUQ2iTuUGq",
+      "style": "dashed"
+    },
+    {
+      "id": "e2",
+      "source": "VlNNwIEDWqQXtqkHWJYzC",
+      "target": "R12sArWVpbIs_PHxBqVaR",
+      "style": "dashed"
+    },
+    {
+      "id": "e3",
+      "source": "VlNNwIEDWqQXtqkHWJYzC",
+      "target": "ZhSuu2VArnzPDp6dPQQSC",
+      "style": "dashed"
+    },
+    {
+      "id": "e4",
+      "source": "VlNNwIEDWqQXtqkHWJYzC",
+      "target": "aqMaEY8gkKMikiqleV5EP",
+      "style": "dashed"
+    },
+    {
+      "id": "e5",
+      "source": "VlNNwIEDWqQXtqkHWJYzC",
+      "target": "hkxw9jPGYphmjhTjw8766",
+      "style": "dashed"
+    },
+    {
+      "id": "e6",
+      "source": "VlNNwIEDWqQXtqkHWJYzC",
+      "target": "P82WFaTPgQEPNp5IIuZ1Y",
+      "style": "dashed"
+    },
+    {
+      "id": "e7",
+      "source": "ruoFa3M4bUE3Dg6GXSiUI",
+      "target": "Hk8AVonOd693_y1sykPqd",
+      "style": "dashed"
+    },
+    {
+      "id": "e8",
+      "source": "VlNNwIEDWqQXtqkHWJYzC",
+      "target": "yWG2VUkaF5IJVVut6AiSy",
+      "style": "solid"
+    },
+    {
+      "id": "e9",
+      "source": "ODcfFEorkfJNupoQygM53",
+      "target": "NIY7c4TQEEHx0hATu-k5C",
+      "style": "solid"
+    },
+    {
+      "id": "e10",
+      "source": "NIY7c4TQEEHx0hATu-k5C",
+      "target": "R_I4SGYqLk5zze5I1zS_E",
+      "style": "dashed"
+    },
+    {
+      "id": "e11",
+      "source": "MXnFhZlNB1zTsBFDyni9H",
+      "target": "qmTVMJDsEhNIkiwE_UTYu",
+      "style": "dashed"
+    },
+    {
+      "id": "e12",
+      "source": "MXnFhZlNB1zTsBFDyni9H",
+      "target": "IqvS1V-98cxko3e9sBQgP",
+      "style": "solid"
+    },
+    {
+      "id": "e13",
+      "source": "IqvS1V-98cxko3e9sBQgP",
+      "target": "XDTD8el6OwuQ55wC-X4iV",
+      "style": "solid"
+    },
+    {
+      "id": "e14",
+      "source": "XDTD8el6OwuQ55wC-X4iV",
+      "target": "eghnfG4p7i-EDWfp3CQXC",
+      "style": "dashed"
+    },
+    {
+      "id": "e15",
+      "source": "DI8pvEosrUU7lcaGa7-Kc",
+      "target": "eXezX7CVNyC1RuyU_I4yP",
+      "style": "solid"
+    },
+    {
+      "id": "e16",
+      "source": "hkSc_1x09m7-7BO7WzlDT",
+      "target": "0Awx3zEI5_gYEIrD7IVX6",
+      "style": "dashed"
+    },
+    {
+      "id": "e17",
+      "source": "RDWbG3Iui6IPgp0shvXtg",
+      "target": "JanR7I_lNnUCXhCMGLdn-",
+      "style": "dashed"
+    },
+    {
+      "id": "e18",
+      "source": "RDWbG3Iui6IPgp0shvXtg",
+      "target": "Cxspmb14_0i1tfw-ZLxEu",
+      "style": "solid"
+    },
+    {
+      "id": "e20",
+      "source": "Cxspmb14_0i1tfw-ZLxEu",
+      "target": "n0q32YhWEIAUwbGXexoqV",
+      "style": "solid"
+    },
+    {
+      "id": "e21",
+      "source": "n0q32YhWEIAUwbGXexoqV",
+      "target": "iUxXq7beg55y76dkwhM13",
+      "style": "dashed"
+    },
+    {
+      "id": "e22",
+      "source": "6d8cjWZ4BuUjwT0seiuzJ",
+      "target": "JWU9jc12_ewaIKt3qWLcp",
+      "style": "dashed"
+    },
+    {
+      "id": "e23",
+      "source": "6d8cjWZ4BuUjwT0seiuzJ",
+      "target": "dz7_QXoO7X0WmS5xuAhhJ",
+      "style": "dashed"
+    },
+    {
+      "id": "e24",
+      "source": "6d8cjWZ4BuUjwT0seiuzJ",
+      "target": "66ya3WdtlkjQyBTc3Lein",
+      "style": "dashed"
+    },
+    {
+      "id": "e25",
+      "source": "6d8cjWZ4BuUjwT0seiuzJ",
+      "target": "FyNXhHq1VIASNq-LI7JIu",
+      "style": "dashed"
+    },
+    {
+      "id": "e26",
+      "source": "ruoFa3M4bUE3Dg6GXSiUI",
+      "target": "L7AllJfKvClaam3y-u6DP",
+      "style": "solid"
+    },
+    {
+      "id": "e27",
+      "source": "PoM77O2OtxPELxfrW1wtl",
+      "target": "VOGKiG2EZVfCBAaa7Df0W",
+      "style": "solid"
+    },
+    {
+      "id": "e28",
+      "source": "NQ95TJCe3E1IwEuBa__D6",
+      "target": "6kWlgayUZQnr9z88fUOkk",
+      "style": "dashed"
+    },
+    {
+      "id": "e29",
+      "source": "6d8cjWZ4BuUjwT0seiuzJ",
+      "target": "tWDmeXItfQDxB8Jij_V4L",
+      "style": "dashed"
+    },
+    {
+      "id": "e30",
+      "source": "VOGKiG2EZVfCBAaa7Df0W",
+      "target": "dsTegXTyupjS8iU6I7Xiv",
+      "style": "dashed"
+    },
+    {
+      "id": "e31",
+      "source": "KMA7NkxFbPoUDtFnGBFnj",
+      "target": "VOGKiG2EZVfCBAaa7Df0W",
+      "style": "solid"
+    },
+    {
+      "id": "e32",
+      "source": "MdYPIf_9ezbIp6Dm5Fyme",
+      "target": "Bic4PHhz-YqzPWRimJO83",
+      "style": "dashed"
+    },
+    {
+      "id": "e33",
+      "source": "MdYPIf_9ezbIp6Dm5Fyme",
+      "target": "-ye5ZtYFDoYGpj-UJaBP8",
+      "style": "dashed"
+    },
+    {
+      "id": "e34",
+      "source": "MdYPIf_9ezbIp6Dm5Fyme",
+      "target": "Lw2nR7x8PYgq1P5CxPAxi",
+      "style": "dashed"
+    },
+    {
+      "id": "e35",
+      "source": "xL8d-uHMpJKwUvT8z-Jia",
+      "target": "MdYPIf_9ezbIp6Dm5Fyme",
+      "style": "solid"
+    },
+    {
+      "id": "e36",
+      "source": "Gv_g4gK6pZK6l_0xAn34X",
+      "target": "e4j6u0e_WqK1vfrUwJJ4M",
+      "style": "solid"
+    },
+    {
+      "id": "e37",
+      "source": "eXezX7CVNyC1RuyU_I4yP",
+      "target": "M56-ufyFSwaQYPISuwUcj",
+      "style": "solid"
+    },
+    {
+      "id": "e38",
+      "source": "UTupdqjOyLh7-56_0SXJ8",
+      "target": "yKNdBbahm_h81xdMDT-qx",
+      "style": "dashed"
+    },
+    {
+      "id": "e39",
+      "source": "M56-ufyFSwaQYPISuwUcj",
+      "target": "UTupdqjOyLh7-56_0SXJ8",
+      "style": "solid"
+    },
+    {
+      "id": "e40",
+      "source": "Nx7mjvYgqLpmJ0_iSx5of",
+      "target": "0TMdly8yiqnNR8sx36iqc",
+      "style": "dashed"
+    },
+    {
+      "id": "e41",
+      "source": "ipcNHz8KbfpE57kNP15hP",
+      "target": "CKlkVK_7GZ7xzIUHJqZr8",
+      "style": "dashed"
+    },
+    {
+      "id": "e42",
+      "source": "ipcNHz8KbfpE57kNP15hP",
+      "target": "E7-LveK7jO2npxVTLUDfw",
+      "style": "dashed"
+    },
+    {
+      "id": "e43",
+      "source": "ipcNHz8KbfpE57kNP15hP",
+      "target": "RcC1fVuePQZ59AsJfeTdR",
+      "style": "dashed"
+    },
+    {
+      "id": "e44",
+      "source": "ipcNHz8KbfpE57kNP15hP",
+      "target": "HQrxxDxKN8gizvXRU5psW",
+      "style": "dashed"
+    },
+    {
+      "id": "e45",
+      "source": "eXezX7CVNyC1RuyU_I4yP",
+      "target": "ipcNHz8KbfpE57kNP15hP",
+      "style": "solid"
+    },
+    {
+      "id": "e46",
+      "source": "ipcNHz8KbfpE57kNP15hP",
+      "target": "Gv_g4gK6pZK6l_0xAn34X",
+      "style": "solid"
+    },
+    {
+      "id": "e47",
+      "source": "Gv_g4gK6pZK6l_0xAn34X",
+      "target": "k4hMVVBMatedUq5EKiMo4",
+      "style": "dashed"
+    },
+    {
+      "id": "e48",
+      "source": "vpimgXt10UQFBDVHR21IU",
+      "target": "e4j6u0e_WqK1vfrUwJJ4M",
+      "style": "dashed"
+    },
+    {
+      "id": "e49",
+      "source": "MdYPIf_9ezbIp6Dm5Fyme",
+      "target": "flwf3QbJioovtOpMw4obo",
+      "style": "solid"
+    },
+    {
+      "id": "e50",
+      "source": "9VcGfDBBD8YcKatj4VcH1",
+      "target": "UvCVChB6NZ_yUg0RdIJ2o",
+      "style": "dashed"
+    },
+    {
+      "id": "e51",
+      "source": "flwf3QbJioovtOpMw4obo",
+      "target": "9VcGfDBBD8YcKatj4VcH1",
+      "style": "solid"
+    },
+    {
+      "id": "e52",
+      "source": "9VcGfDBBD8YcKatj4VcH1",
+      "target": "hkSc_1x09m7-7BO7WzlDT",
+      "style": "solid"
+    },
+    {
+      "id": "e53",
+      "source": "hkSc_1x09m7-7BO7WzlDT",
+      "target": "U5mD5FmVx7VWeKxDpQxB5",
+      "style": "solid"
+    },
+    {
+      "id": "e54",
+      "source": "U5mD5FmVx7VWeKxDpQxB5",
+      "target": "igg4_hb3XE3vuvY8ufV-4",
+      "style": "solid"
+    },
+    {
+      "id": "e55",
+      "source": "igg4_hb3XE3vuvY8ufV-4",
+      "target": "hVQ89f6G0LXEgHIOKHDYq",
+      "style": "dashed"
+    },
+    {
+      "id": "e56",
+      "source": "ydZRVWQrJUl3LZfjhR8QT",
+      "target": "3HgiMfqihjWceSxd6ei8s",
+      "style": "solid"
+    },
+    {
+      "id": "e57",
+      "source": "3HgiMfqihjWceSxd6ei8s",
+      "target": "RDWbG3Iui6IPgp0shvXtg",
+      "style": "solid"
+    },
+    {
+      "id": "e58",
+      "source": "n0q32YhWEIAUwbGXexoqV",
+      "target": "NQ95TJCe3E1IwEuBa__D6",
+      "style": "solid"
+    },
+    {
+      "id": "e59",
+      "source": "NQ95TJCe3E1IwEuBa__D6",
+      "target": "A1ZUy16cVRYqmHxoCtUb0",
+      "style": "solid"
+    },
+    {
+      "id": "e60",
+      "source": "A1ZUy16cVRYqmHxoCtUb0",
+      "target": "ap4h4v5Sr4jBH3GwWSH8x",
+      "style": "solid"
+    },
+    {
+      "id": "e61",
+      "source": "ap4h4v5Sr4jBH3GwWSH8x",
+      "target": "6d8cjWZ4BuUjwT0seiuzJ",
+      "style": "solid"
+    },
+    {
+      "id": "e62",
+      "source": "L7AllJfKvClaam3y-u6DP",
+      "target": "5eUbDdOTOfaOhUlZAmmXW",
+      "style": "dashed"
+    },
+    {
+      "id": "e63",
+      "source": "KMA7NkxFbPoUDtFnGBFnj",
+      "target": "mQHpSyMR4Rra4mqAslgiS",
+      "style": "dashed"
+    },
+    {
+      "id": "e64",
+      "source": "KMA7NkxFbPoUDtFnGBFnj",
+      "target": "GJctl0tVXe4B70s35RkLT",
+      "style": "dashed"
+    },
+    {
+      "id": "e65",
+      "source": "KMA7NkxFbPoUDtFnGBFnj",
+      "target": "2MRvAK9G9RGM_auWytcKh",
+      "style": "dashed"
+    },
+    {
+      "id": "e66",
+      "source": "6d8cjWZ4BuUjwT0seiuzJ",
+      "target": "ruoFa3M4bUE3Dg6GXSiUI",
+      "style": "solid"
+    },
+    {
+      "id": "e67",
+      "source": "L7AllJfKvClaam3y-u6DP",
+      "target": "e-k6EhoxYG9h0x6vWOrDh",
+      "style": "solid"
+    },
+    {
+      "id": "e68",
+      "source": "e-k6EhoxYG9h0x6vWOrDh",
+      "target": "PoM77O2OtxPELxfrW1wtl",
+      "style": "solid"
+    }
+  ],
+  "groups": [
+    {
+      "id": "a8oOlkyM_C8vHuHqeiOAK",
+      "tone": "neutral",
+      "from": 43,
+      "to": 50,
+      "columns": [
+        "center"
+      ]
+    }
+  ],
+  "legend": {
+    "entries": [
+      {
+        "id": "NJhQIvMyMD1Cu-JA1UCmJ",
+        "label": "Personal Recommendation",
+        "tone": "info",
+        "icon": "check"
+      },
+      {
+        "id": "DMx7rAjVBWMbzjSde-tvp",
+        "label": "Alternative Option",
+        "tone": "success",
+        "icon": "check"
+      },
+      {
+        "id": "R9WLhURhPdVNXP7AUTDvR",
+        "label": "Order not strict on roadmap",
+        "tone": "muted",
+        "icon": "check"
+      }
+    ],
+    "placement": "inline"
+  },
+  "meta": {
+    "source": "https://roadmap.sh/frontend.json",
+    "license": "roadmap.sh map content, licence NOASSERTION. Committed as a rendering fidelity fixture only. Not published in `dist`; see plan ADR-9 and question Q4.",
+    "converter": "convert/fromRoadmapSh.ts (roadmap/v1)",
+    "fetchedAt": "2026-09-07"
+  }
+}
