@@ -28,3 +28,7 @@ dist-ssr
 .env.local
 packages/ui/storybook-static/
 .npmrc
+
+# Playwright browser evidence
+packages/ui/test-results/
+packages/ui/playwright-report/

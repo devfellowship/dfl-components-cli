@@ -58,14 +58,15 @@
     "build:lib": "tsup",
     "build:cli": "tsup --config tsup.cli.config.ts",
     "build:watch": "tsup --watch",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --project tsconfig.e2e.json",
     "test": "vitest run",
     "prepublishOnly": "npm run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint:no-docs": "node scripts/check-no-storybook-docs.mjs",
     "check:cli-offline": "node scripts/check-cli-bundle-offline.mjs",
-    "check:canvas-isolated": "node scripts/check-canvas-entry-isolated.mjs"
+    "check:canvas-isolated": "node scripts/check-canvas-entry-isolated.mjs",
+    "test:e2e": "playwright test"
   },
   "peerDependencies": {
     "@dagrejs/dagre": ">=3.0.0",
@@ -94,6 +95,7 @@
     "@changesets/cli": "^2.31.0",
     "@dagrejs/dagre": "^3.1.1",
     "@devfellowship/ux-paths-capture": "^0.1.1",
+    "@playwright/test": "^1.63.0",
     "@storybook/addon-a11y": "^9.1.20",
     "@storybook/addon-themes": "^9.1.20",
     "@storybook/react": "^9.1.20",
