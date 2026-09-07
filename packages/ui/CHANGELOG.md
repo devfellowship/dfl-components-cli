@@ -1,5 +1,28 @@
 # @devfellowship/components
 
+## 3.5.3
+
+### Patch Changes
+
+- [#134](https://github.com/devfellowship/dfl-components-cli/pull/134) [`c9a8f00`](https://github.com/devfellowship/dfl-components-cli/commit/c9a8f005db80c6079d30ffc673ae57efc8a50113) Thanks [@taigfs](https://github.com/taigfs)! - fix(select): ignore the empty bubble-input echo before the options register
+
+  `Select` no longer clears a controlled value that is set asynchronously.
+
+  Radix keeps a hidden native `<select>` so the component works in a form. When
+  the Radix value changes, that input assigns `select.value` and dispatches a real
+  `change` event, and reports `event.target.value` back through `onValueChange`.
+  The `<option>` list only registers a render later, so the browser resolves the
+  assignment to `""`. That empty string reached the consumer and wiped a value the
+  app had just set from a fetch or a hydration effect.
+
+  The DS `Select` now drops an `onValueChange("")` call when the component is
+  controlled, the current `value` is not empty, and `allowEmptyValue` is not set.
+  A user selection can never produce `""`, because Radix requires every
+  `SelectItem` to carry a non-empty value.
+
+  Pass the new `allowEmptyValue` prop to opt out and receive every value,
+  including `""`. Uncontrolled usage is unchanged.
+
 ## 3.5.2
 
 ### Patch Changes
