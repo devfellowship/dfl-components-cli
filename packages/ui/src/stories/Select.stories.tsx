@@ -15,6 +15,7 @@
  *   WithLabel  — field composition: Label ↑, trigger, helper text ↓ (default resting state)
  */
 
+import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   Select,
@@ -228,4 +229,59 @@ export const WithLabel: Story = {
       </span>
     </div>
   ),
+};
+
+/* ── 9. AsyncHydratedValue — controlled value that lands after mount ────
+ *  Regression surface for the bubble-input empty-value echo (see the block
+ *  comment on `Select` in `src/components/select.tsx`).
+ *
+ *  Radix keeps a hidden native <select> for form support. When the Radix value
+ *  changes it assigns `select.value` AND dispatches a real `change` event. The
+ *  <option> list registers a render later, so the browser resolves that
+ *  assignment to "" and the empty string comes back through `onValueChange` —
+ *  clearing a controlled value that was set asynchronously. The DS `Select`
+ *  drops that echo.
+ *
+ *  This story loads BOTH the value and the options after a delay, inside a
+ *  <form> (Radix renders the bubble input only for a form control). The trigger
+ *  must settle on "Opção 2 — Avançado" and must NOT fall back to the
+ *  placeholder. Pass `allowEmptyValue` to opt out of the guard.
+ * ─────────────────────────────────────────────────────────────────────── */
+const AsyncHydratedDemo = () => {
+  const [value, setValue] = React.useState("");
+  const [options, setOptions] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    // The record arrives first…
+    const a = setTimeout(() => setValue("avancado"), 400);
+    // …and the option list one tick later, as two queries usually settle.
+    const b = setTimeout(() => setOptions(["basico", "avancado", "expert"]), 500);
+    return () => {
+      clearTimeout(a);
+      clearTimeout(b);
+    };
+  }, []);
+
+  return (
+    <form>
+      <Select value={value} onValueChange={setValue}>
+        <SelectTrigger style={{ width: "240px" }}>
+          <SelectValue placeholder="Selecione uma opção" />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option} value={option}>
+              {option === "basico" ? "Opção 1 — Básico" : null}
+              {option === "avancado" ? "Opção 2 — Avançado" : null}
+              {option === "expert" ? "Opção 3 — Expert" : null}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </form>
+  );
+};
+
+export const AsyncHydratedValue: Story = {
+  render: () => <AsyncHydratedDemo />,
 };
