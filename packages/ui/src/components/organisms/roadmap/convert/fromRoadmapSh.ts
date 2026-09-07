@@ -568,7 +568,7 @@ export function fromRoadmapSh(
     edges.push(out);
   });
 
-  // 11. Sections become groups: an order range plus the columns its members use.
+  // 11. Sections become groups: an order range plus the columns covered by the source rect (Q5).
   const nodeById = new Map(nodes.map((n) => [n.id, n]));
   const candidateGroups: RoadmapGroup[] = [];
   sections.forEach((section, index) => {
@@ -578,10 +578,15 @@ export function fromRoadmapSh(
       return;
     }
     const orders = members.map((m) => nodeById.get(m.id)?.order ?? m.order);
-    const columns = new Set<RoadmapColumn>();
-    for (const member of members) {
-      const node = nodeById.get(member.id);
-      if (node) for (const column of columnsCovered(node)) columns.add(column);
+    // Origin: agent — use the rect extent, not a member's expanded grid span.
+    const columns = ROADMAP_COLUMNS.filter((_, column) => {
+      const trackCenter = minX + ((column + 0.5) * bboxW) / 3;
+      return section.rect.x <= trackCenter && section.rect.x + section.rect.w >= trackCenter;
+    });
+    // A narrow rect between track centres belongs to its own centre's band.
+    if (columns.length === 0) {
+      const band = Math.floor(((section.rect.cx - minX) / bboxW) * 3);
+      columns.push(ROADMAP_COLUMNS[Math.min(2, Math.max(0, band))]);
     }
     const fill =
       section.node.data?.style?.backgroundColor ??
@@ -591,7 +596,7 @@ export function fromRoadmapSh(
       id: uniqueId(sanitiseId(section.node.id) || `g${index}`, usedIds),
       from: Math.min(...orders),
       to: Math.max(...orders),
-      columns: ROADMAP_COLUMNS.filter((c) => columns.has(c)),
+      columns,
       tone: toneFromFill(fill) ?? "neutral",
     };
     const title = sectionTitleFor.get(section.node);

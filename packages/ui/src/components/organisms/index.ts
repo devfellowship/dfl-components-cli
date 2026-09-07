@@ -148,3 +148,6 @@ export type {
   RoadmapOverlap,
   RoadmapPlacement,
 } from "./roadmap";
+
+export { Roadmap } from "./roadmap";
+export type { RoadmapProps } from "./roadmap";
