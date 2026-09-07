@@ -1,5 +1,11 @@
 # @devfellowship/components
 
+## 3.5.1
+
+### Patch Changes
+
+- [#130](https://github.com/devfellowship/dfl-components-cli/pull/130) [`e324bf0`](https://github.com/devfellowship/dfl-components-cli/commit/e324bf0c987f8facd6c06c183c16c773e6c42016) Thanks [@taigfs](https://github.com/taigfs)! - Make Roadmap responsive to its container with three weighted tracks and a 12px font floor. Collapse empty columns by default. Preserve compact mobile spacing and group containment. Hide SVG edges for print. Plain CSS container queries and Tailwind v3-compatible utilities support embedded maps.
+
 ## 3.5.0
 
 ### Minor Changes
