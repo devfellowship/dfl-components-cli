@@ -80,5 +80,22 @@ export default defineConfig({
     // so it is a separate sheet rather than part of theme.css.
     copyFileSync('src/styles/canvas.css', 'dist/styles/canvas.css');
     console.log('CSS files copied to dist/styles/');
+
+    // Brand icons — the fleet's single favicon source. Apps install them with
+    // `npx dfl-components favicon`, which reads this directory out of the
+    // installed package; they are also reachable as `…/components/brand/*`
+    // subpath exports. Keep in sync with FAVICON_ASSETS in
+    // src/cli/favicon/patch-html.ts.
+    mkdirSync('dist/brand', { recursive: true });
+    for (const asset of [
+      'favicon.svg',
+      'favicon.ico',
+      'apple-touch-icon.png',
+      'icon-192.png',
+      'icon-512.png',
+    ]) {
+      copyFileSync(`src/brand/${asset}`, `dist/brand/${asset}`);
+    }
+    console.log('Brand icons copied to dist/brand/');
   },
 });

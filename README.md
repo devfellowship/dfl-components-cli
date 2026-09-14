@@ -26,8 +26,12 @@ a single published npm package. Components are consumed as **library imports**
 - **Hooks, utils & providers** — `useToast`, `useAuth`, `useIsMobile`, `cn`,
   `formatCurrency`, `formatDate`, `AuthProvider`, `FeatureFlagProvider`, …
 - **The `dfl-components` CLI** — map/validate each app's UX paths (`ux-paths`),
-  folding the former `dfl-ux-paths` CLI into one bin. (Components themselves are
-  used as library imports, not scaffolded.)
+  folding the former `dfl-ux-paths` CLI into one bin, and install the shared
+  brand icons (`favicon`). (Components themselves are used as library imports,
+  not scaffolded.)
+- **The brand icons** — one favicon for the whole fleet, shipped as
+  `@devfellowship/components/brand/*` and installed with
+  [`npx dfl-components favicon`](#favicon--the-fleets-icon-installed-from-the-ds).
 - **`FlowCanvas`** — a shared, auto-laid-out graph canvas behind its own
   `@devfellowship/components/canvas` entry. One canvas, N lenses: see
   [The canvas — one canvas, N lenses](#the-canvas--one-canvas-n-lenses).
@@ -262,7 +266,7 @@ pnpm add -g @devfellowship/components && dfl-components <command>
 > scaffolding commands were **removed**. Components are consumed as **library
 > imports** (`import { Button } from "@devfellowship/components"`) — see [Usage](#usage)
 > above. The CLI now exists purely for `ux-paths` (plus the `check-style-imports`
-> guard).
+> guard and the `favicon` installer).
 
 ### Top-level commands
 
@@ -270,6 +274,47 @@ pnpm add -g @devfellowship/components && dfl-components <command>
 | --- | --- |
 | `ux-paths <cmd>` | Versioned, schema-validated per-app UX-path mapping (below) |
 | `check-style-imports` | Guard against importing both `/styles` and `/shadcn` |
+| `favicon` | Install the shared DFL brand icons into an app (below) |
+
+### `favicon` — the fleet's icon, installed from the DS
+
+The DFL favicon is **one artifact, versioned here** (`packages/ui/src/brand/`,
+published as `dist/brand/`). Before this, every app drew its own or pointed
+`<link rel="icon">` at an S3 upload nobody could replace, so the fleet showed
+four different marks.
+
+```bash
+# from the app repo, after installing/bumping @devfellowship/components
+npx dfl-components favicon
+```
+
+It copies `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`
+and `icon-512.png` into the app's public directory, then replaces **every** icon
+`<link>` in `index.html` with a managed block:
+
+```html
+<!-- dfl-favicon:start — managed by @devfellowship/components -->
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<!-- dfl-favicon:end -->
+```
+
+| Flag | Default | Meaning |
+| --- | --- | --- |
+| `--public-dir <dir>` | `public` | Directory served at the site root |
+| `--html <file>` | `index.html` | HTML entry to rewrite |
+| `--base <path>` | `/` | URL prefix the icons are served under |
+| `--check` | — | Write nothing; exit 1 on drift (CI gate) |
+
+The command is idempotent — re-running it is how an app picks up a brand
+refresh, and `--check` in CI keeps it from drifting back. The icons are also
+importable directly as `@devfellowship/components/brand/favicon.svg` (and the
+other four) for apps that bundle them instead.
+
+The mark itself is DS-native: an `--p-sand-900` plate at `--p-radius-lg`, the
+`DFL` wordmark in Barlow Condensed Bold (`--p-sand-50`) and the brand `/` in
+`--p-amber-500`.
 
 ### `ux-paths` subcommands
 
@@ -345,7 +390,8 @@ a person actually runs, was the permissive one.
 │       │   ├── testing/        # e2e assertion helpers (dependency-free)
 │       │   ├── styles/         # tokens.css, theme, shadcn bridge, tailwind preset
 │       │   ├── stories/        # Storybook (one-state-per-story)
-│       │   └── cli/            # dfl-components CLI (ux-paths, check-style-imports)
+│       │   ├── brand/          # favicon + app icons — the fleet's single source
+│       │   └── cli/            # dfl-components CLI (ux-paths, check-style-imports, favicon)
 │       └── package.json        # published package manifest + `dfl-components` bin
 ├── scripts/                    # release + guard scripts
 └── .github/workflows/          # CI, publish-npm, deploy-storybook, guards
