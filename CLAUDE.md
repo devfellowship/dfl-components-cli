@@ -65,6 +65,15 @@ registry/                     # JSON component registry
 <!-- END GENERATED:claude/base -->
 
 <!-- BEGIN MANUAL:repo/local-notes -->
+## Brand icons
+
+`packages/ui/src/brand/` is the fleet's ONLY favicon source; apps install it with
+`npx dfl-components favicon`. Changing the mark = edit `favicon.svg`, regenerate
+the rasters, bump the package — never re-upload to S3 and paste a URL into an
+app's `index.html`. The asset list is declared twice and must stay in sync:
+`FAVICON_ASSETS` (`src/cli/favicon/patch-html.ts`) and the `tsup.config.ts`
+`onSuccess` copy loop. Details: README → "`favicon` — the fleet's icon".
+
 ## Adding a New Component or Hook
 
 > **Note (v3.0.0):** the shadcn-style component **registry** and the `add`/`init`
