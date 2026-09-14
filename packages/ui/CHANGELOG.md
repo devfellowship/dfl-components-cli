@@ -1,5 +1,21 @@
 # @devfellowship/components
 
+## 3.6.0
+
+### Minor Changes
+
+- [#136](https://github.com/devfellowship/dfl-components-cli/pull/136) [`102b4bc`](https://github.com/devfellowship/dfl-components-cli/commit/102b4bcf7254c1f9cba576c1c153a02573f7c021) Thanks [@SamuelStefano](https://github.com/SamuelStefano)! - Ship the DFL favicon from the design system.
+
+  The brand icons (`favicon.svg`, `favicon.ico`, `apple-touch-icon.png`,
+  `icon-192.png`, `icon-512.png`) now live in the package as `dist/brand/*`,
+  reachable as `@devfellowship/components/brand/<file>` subpath exports.
+
+  New CLI command: `npx dfl-components favicon [dir]` copies them into the app's
+  public directory and rewrites the icon `<link>` block in `index.html`. It is
+  idempotent, and `--check` exits 1 on drift so CI can hold an app to the current
+  mark. Apps stop hard-coding an S3 URL or a hand-made `.ico`; a brand refresh is
+  a DS bump plus a re-run.
+
 ## 3.5.3
 
 ### Patch Changes
