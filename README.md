@@ -312,9 +312,13 @@ refresh, and `--check` in CI keeps it from drifting back. The icons are also
 importable directly as `@devfellowship/components/brand/favicon.svg` (and the
 other four) for apps that bundle them instead.
 
-The mark itself is DS-native: an `--p-sand-900` plate at `--p-radius-lg`, the
-`DFL` wordmark in Barlow Condensed Bold (`--p-sand-50`) and the brand `/` in
-`--p-amber-500`.
+The mark itself is DS-native: an `--p-sand-900` plate, the `DFL` wordmark in
+Barlow Condensed Bold (`--p-sand-50`) and the brand `/` in `--p-amber-500`.
+
+Its corners are rounded at **18.75% of the side** (`rx="12"` on a 64 viewBox) —
+the same ratio as the **Itera** (`rx=12` on 64) and **Revera** (`rx=6` on 32)
+app icons. The three marks are one family: dark plate, condensed wordmark, a
+single accent `/`. A test asserts the ratio so a redraw cannot drift out of it.
 
 ### `ux-paths` subcommands
 

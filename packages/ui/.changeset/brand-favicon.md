@@ -8,6 +8,9 @@ The brand icons (`favicon.svg`, `favicon.ico`, `apple-touch-icon.png`,
 `icon-192.png`, `icon-512.png`) now live in the package as `dist/brand/*`,
 reachable as `@devfellowship/components/brand/<file>` subpath exports.
 
+The mark is a sibling of the Itera and Revera app icons: dark plate, condensed
+wordmark, one accent `/`, corners rounded at 18.75% of the side.
+
 New CLI command: `npx dfl-components favicon [dir]` copies them into the app's
 public directory and rewrites the icon `<link>` block in `index.html`. It is
 idempotent, and `--check` exits 1 on drift so CI can hold an app to the current

@@ -96,6 +96,15 @@ describe('brand assets shipped with the package', () => {
     expect(svg).toContain('#141210'); // --p-sand-900
     expect(svg).toContain('#F6F1E7'); // --p-sand-50
     expect(svg).toContain('#E07A4A'); // --p-amber-500, the brand accent
-    expect(svg).toMatch(/rx="10"/); // --p-radius-lg, the DS rounded corner
+  });
+
+  it('rounds its corners at the ratio the Itera and Revera app icons use', () => {
+    // Itera ships rx=12 on a 64 viewBox, Revera rx=6 on 32 — both 18.75% of the
+    // side. The DFL mark is a sibling of those two, so it matches, and this
+    // test is what stops a redraw from quietly leaving the family.
+    const svg = readFileSync(resolve(resolveBrandDir(), 'favicon.svg'), 'utf8');
+    const side = Number(/viewBox="0 0 (\d+) \d+"/.exec(svg)?.[1]);
+    const rx = Number(/rx="([\d.]+)"/.exec(svg)?.[1]);
+    expect(rx / side).toBeCloseTo(0.1875, 4);
   });
 });
