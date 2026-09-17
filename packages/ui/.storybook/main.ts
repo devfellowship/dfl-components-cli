@@ -8,7 +8,10 @@ const config: StorybookConfig = {
   // requests to a REAL 404 instead of the SPA-fallback HTML that once
   // amplified a single 404 into an infinite fetch loop (see public/_redirects
   // and src/styles/fonts.css for the full incident write-up).
-  staticDirs: ["../public"],
+  // `src/brand` is served at the root too, so the Component Hub's own tab
+  // carries the DFL mark this package ships to every app — from the same files,
+  // not a copy that drifts.
+  staticDirs: ["../public", { from: "../src/brand", to: "/" }],
   // 🚫 NO Docs pages. storybook.devfellowship.com must have ZERO Docs entries.
   // Storybook 9 consolidated the old "essentials" bundle (controls, actions,
   // viewport, backgrounds, toolbars, measure, outline, highlight) into the
@@ -42,6 +45,12 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
+  // Storybook would find `favicon.svg` on its own, but spelling the block out
+  // keeps it identical to what `dfl-components favicon` writes into every app.
+  managerHead: (head) => `${head}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />`,
   async viteFinal(config) {
     const { mergeConfig } = await import("vite");
     return mergeConfig(config, {
