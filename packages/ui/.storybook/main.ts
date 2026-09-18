@@ -1,6 +1,20 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
 
+// Umami (analytics.devfellowship.com) page-view tag for
+// storybook.devfellowship.com — config-driven, read at BUILD time from
+// VITE_UMAMI_WEBSITE_ID (the deploy workflow passes the GitHub repo variable
+// of the same name). Unset or empty → the manager head gets NO tag.
+// Only the MANAGER (the top-level page) carries it: the preview iframe would
+// count every story switch a second time. Plan
+// 20260918-umami-traffic-report-and-tracking-coverage (P4).
+function umamiTag(websiteId: string | undefined): string {
+  const id = (websiteId ?? "").trim();
+  if (!id) return "";
+  return `
+    <script defer src="https://analytics.devfellowship.com/script.js" data-website-id="${id}"></script>`;
+}
+
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   // `../public` is copied verbatim into the build output. It ships the
@@ -50,7 +64,9 @@ const config: StorybookConfig = {
   managerHead: (head) => `${head}
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />`,
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />${umamiTag(
+      process.env.VITE_UMAMI_WEBSITE_ID,
+    )}`,
   async viteFinal(config) {
     const { mergeConfig } = await import("vite");
     return mergeConfig(config, {
