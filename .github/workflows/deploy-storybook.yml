@@ -54,6 +54,11 @@ jobs:
 
       - name: Build Storybook
         working-directory: packages/ui
+        # Umami website id for storybook.devfellowship.com (GitHub repo
+        # variable). Empty when unset, and then the build emits NO Umami tag.
+        # See umamiTag() in packages/ui/.storybook/main.ts.
+        env:
+          VITE_UMAMI_WEBSITE_ID: ${{ vars.VITE_UMAMI_WEBSITE_ID }}
         run: npm run build-storybook
 
       - name: Publish to Cloudflare Pages
