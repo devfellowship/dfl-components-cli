@@ -85,6 +85,16 @@ export interface AppNavbarProps {
    * unified 56px topbar, replacing the redundant 48px trigger strip above it.
    */
   leftSlot?: ReactNode;
+  /**
+   * Optional content rendered in the RIGHT-hand cluster, immediately before
+   * the theme toggle button (which stays the fixed trailing anchor, followed
+   * only by the user menu). Use this for app-level actions that must sit
+   * flush at the true right edge of the navbar — e.g. a GitHub link or a
+   * "Sign in" CTA — since `actions` renders next to the breadcrumb on the
+   * LEFT and has no way to reach the right edge on its own (the left group
+   * does not stretch to fill the navbar).
+   */
+  endSlot?: ReactNode;
   /** Custom CSS class for the navbar wrapper. */
   className?: string;
 }
@@ -108,6 +118,7 @@ export function AppNavbar({
   onSignOut,
   actions,
   leftSlot,
+  endSlot,
   className,
 }: AppNavbarProps) {
   const isDark = theme === "dark";
@@ -171,8 +182,11 @@ export function AppNavbar({
         )}
       </div>
 
-      {/* Right: Theme toggle + User menu */}
+      {/* Right: optional endSlot + Theme toggle + User menu */}
       <div className="flex items-center gap-1 shrink-0">
+        {endSlot && (
+          <div className="flex items-center gap-2 mr-1">{endSlot}</div>
+        )}
         {/* Theme toggle — icon-sm ghost button with DS uniform focus ring */}
         <Button
           variant="ghost"

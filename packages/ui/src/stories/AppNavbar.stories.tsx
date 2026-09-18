@@ -111,6 +111,28 @@ export const WithActions: Story = {
 };
 
 /**
+ * WithEndSlot — GitHub link + "Sign in" CTA rendered flush against the
+ * theme toggle via the `endSlot` prop (no breadcrumbs, no `actions`).
+ * Confirms endSlot content sits in the right-hand cluster, immediately
+ * before the toggle, rather than next to the breadcrumb on the left.
+ */
+export const WithEndSlot: Story = {
+  args: {
+    breadcrumbs: [],
+    theme: "dark",
+    onThemeToggle: () => {},
+    endSlot: (
+      <>
+        <Button size="sm" variant="outline">
+          GitHub
+        </Button>
+        <Button size="sm">Sign in with DFL</Button>
+      </>
+    ),
+  },
+};
+
+/**
  * UserMenuOpen — static render with dropdown visible.
  * Verifies: bg --s-surface-raised, border --s-border-strong, shadow,
  * sign-out row text --s-danger-fg + hover bg --s-danger-subtle (not text-destructive).
