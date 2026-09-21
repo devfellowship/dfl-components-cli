@@ -1,0 +1,82 @@
+name: Storybook Preview
+
+# Publishes a PREVIEW of every PR to the Cloudflare Pages project `dfl-storybook`,
+# under the branch alias `pr-<n>` (https://pr-<n>.dfl-storybook.pages.dev).
+# `main` stays with deploy-storybook.yml (custom domain storybook.devfellowship.com).
+#
+# Why: a PR that touches packages/ui/src/design-playground/ becomes a design card through
+# dfl-github-webhook (dfl-schema, work.design_task_routes). The card links the BEFORE
+# (main) and the AFTER (this preview). The alias is derived from the PR number, so the
+# webhook composes the AFTER link without waiting for this build — same pattern as
+# iterahq/itera-player's storybook.yml.
+#
+# Public repo: ubuntu-latest (self-hosted dfl-runner is blocked on public repos).
+# `pull_request`, never `pull_request_target`: fork PRs get no secrets, and the job is
+# skipped for them instead of failing on a missing token.
+
+on:
+  pull_request:
+    paths:
+      - "packages/ui/**"
+      - ".github/workflows/storybook-preview.yml"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: storybook-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/ui/package-lock.json
+
+      - name: Install dependencies
+        working-directory: packages/ui
+        run: npm ci
+
+      - name: Build Storybook
+        working-directory: packages/ui
+        run: npm run build-storybook
+
+      - name: Deploy PR preview to Cloudflare Pages
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy packages/ui/storybook-static --project-name=dfl-storybook --branch=pr-${{ github.event.pull_request.number }}
+
+      - name: Comment preview link on the PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          preview="https://pr-${PR}.dfl-storybook.pages.dev"
+          body=$(printf '%s\n' \
+            '<!-- storybook-preview -->' \
+            '### Storybook for this PR' \
+            '' \
+            '| | |' \
+            '|---|---|' \
+            "| **After** (this PR) | ${preview} |" \
+            '| **Before** (main) | https://storybook.devfellowship.com |')
+          # Edit the existing comment instead of stacking one per push.
+          id=$(gh pr view "$PR" --json comments \
+                 --jq '.comments[] | select(.body | startswith("<!-- storybook-preview -->")) | .url' \
+               | tail -1 | sed 's|.*#issuecomment-||')
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${id}" -f body="$body"
+          else
+            gh pr comment "$PR" --body "$body"
+          fi
