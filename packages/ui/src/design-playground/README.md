@@ -39,3 +39,6 @@ distributed by the `dfl-components add <name>` CLI.
 - `ButtonLab` — prototyping button treatments not yet in the shared cva
   (e.g. the fleet's bespoke `rounded` / `toolbar` / `kanban` / `recording` flavours).
 - `ThemeTokens` — eyeballing the shared surface tokens across the 3 themes.
+- `TaskModalLab` — rebalancing the dashboard "Update Task" modal for Design Ops ↔
+  Dev Ops: highlighted origin (PR + Storybook story), linked resources (stories,
+  Figma, PRs, task-to-task links), compact attachments, structured description.
