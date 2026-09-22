@@ -156,6 +156,15 @@ two top-level sections and they mean very different things:
   module leaks into the public export surface or the
   tsup build entries — and if any non-story/non-README module is added under
   `src/design-playground/`.
+- **Design route (esteira) — this repo HAS one.** A same-repo PR that touches
+  `packages/ui/src/design-playground/` creates its design card by itself
+  (`work.design_task_routes`, stage `decision`, epic "Design ↔ implementation flow").
+  Do not create the card by hand first; if a card already exists, put its
+  `DFL-xxx` in the PR so the webhook links it instead of opening a second one.
+  Method: skill `storybook-design-pr`.
+  - Storybook (main): `https://storybook.devfellowship.com`
+  - PR preview: `https://pr-<n>.dfl-storybook.pages.dev`
+    (`.github/workflows/storybook-preview.yml`, commented on the PR)
 
 ### `Templates/<Name>` — page-level compositions of Components
 
