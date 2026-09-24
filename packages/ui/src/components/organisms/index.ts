@@ -47,6 +47,7 @@ export {
   parseTags,
   filterPublishableAccounts,
   validatePublishForm,
+  DEFAULT_THUMBNAIL_RENDER_URL,
 } from "./PublishDrawer";
 export type {
   PublishDrawerProps,
