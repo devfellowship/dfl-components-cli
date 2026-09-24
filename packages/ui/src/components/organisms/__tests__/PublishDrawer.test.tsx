@@ -9,7 +9,10 @@ import {
   parseTags,
   filterPublishableAccounts,
   validatePublishForm,
+  renderThumbnail,
+  DEFAULT_THUMBNAIL_RENDER_URL,
   type PublisherAccount,
+  type PublishDrawerSupabase,
 } from "../PublishDrawer";
 
 describe("parseTags", () => {
@@ -82,5 +85,90 @@ describe("validatePublishForm", () => {
 
   it("flags missing account", () => {
     expect(validatePublishForm({ ...valid, accountId: null })).toBe("account_required");
+  });
+});
+
+describe("renderThumbnail (service first, one edge fallback)", () => {
+  const body = { template_id: "tpl-1", render_params: { title: "T" } };
+  const SERVICE = "https://services.example/thumbify/render";
+
+  function makeSupabase() {
+    const calls: Array<{ name: string; options?: { body?: unknown } }> = [];
+    const supabase: PublishDrawerSupabase = {
+      functions: {
+        invoke: async (name, options) => {
+          calls.push({ name, options });
+          return { data: { output_url: "https://edge/out.png" }, error: null };
+        },
+      },
+    };
+    return { supabase, calls };
+  }
+
+  function jsonResponse(status: number, payload: unknown): Response {
+    return new Response(JSON.stringify(payload), {
+      status,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  it("calls the service URL first and does not touch the edge fn on success", async () => {
+    const { supabase, calls } = makeSupabase();
+    const fetchCalls: Array<{ url: string; init?: RequestInit }> = [];
+    const fetchImpl = (async (url: string, init?: RequestInit) => {
+      fetchCalls.push({ url, init });
+      return jsonResponse(200, { output_url: "https://svc/out.png" });
+    }) as unknown as typeof fetch;
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: () => {} });
+
+    expect(fetchCalls).toHaveLength(1);
+    expect(fetchCalls[0].url).toBe(SERVICE);
+    expect(fetchCalls[0].init?.method).toBe("POST");
+    expect(JSON.parse(String(fetchCalls[0].init?.body))).toEqual(body);
+    expect(calls).toHaveLength(0);
+    expect(r).toEqual({ data: { output_url: "https://svc/out.png" }, error: null, via: "service" });
+  });
+
+  it("falls back ONCE to the edge fn on a network error", async () => {
+    const { supabase, calls } = makeSupabase();
+    const warnings: string[] = [];
+    const fetchImpl = (async () => {
+      throw new TypeError("Failed to fetch");
+    }) as unknown as typeof fetch;
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: (m) => warnings.push(m) });
+
+    expect(calls).toEqual([{ name: "render-design-template", options: { body } }]);
+    expect(r.via).toBe("edge-fallback");
+    expect(r.data).toEqual({ output_url: "https://edge/out.png" });
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain("render-design-template");
+  });
+
+  it.each([500, 502, 503])("falls back ONCE to the edge fn on HTTP %i", async (status) => {
+    const { supabase, calls } = makeSupabase();
+    const fetchImpl = (async () => jsonResponse(status, { error: "busy" })) as unknown as typeof fetch;
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: () => {} });
+
+    expect(calls).toHaveLength(1);
+    expect(r.via).toBe("edge-fallback");
+  });
+
+  it.each([400, 404])("does NOT fall back on HTTP %i and returns an error", async (status) => {
+    const { supabase, calls } = makeSupabase();
+    const fetchImpl = (async () => jsonResponse(status, { error: "template_not_found" })) as unknown as typeof fetch;
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: () => {} });
+
+    expect(calls).toHaveLength(0);
+    expect(r.via).toBe("service");
+    expect(r.data).toBeNull();
+    expect(r.error?.message).toContain(`thumbify_render_http_${status}`);
+  });
+
+  it("defaults to the public dfl-services endpoint", () => {
+    expect(DEFAULT_THUMBNAIL_RENDER_URL).toBe("https://services.devfellowship.com/thumbify/render");
   });
 });
