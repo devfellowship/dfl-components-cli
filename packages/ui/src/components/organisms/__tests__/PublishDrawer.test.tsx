@@ -10,6 +10,7 @@ import {
   filterPublishableAccounts,
   validatePublishForm,
   renderThumbnail,
+  sessionAccessToken,
   DEFAULT_THUMBNAIL_RENDER_URL,
   type PublisherAccount,
   type PublishDrawerSupabase,
@@ -173,6 +174,45 @@ describe("renderThumbnail (service only, no fallback)", () => {
     await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: () => {}, ...({ supabase } as object) });
 
     expect(invoked).toEqual([]);
+  });
+
+  it("sends the access token as a Bearer, and no Authorization without one", async () => {
+    const { fetchImpl, fetchCalls } = makeFetch(() => jsonResponse(200, { output_url: "https://svc/out.png" }));
+
+    await renderThumbnail({ serviceUrl: SERVICE, body, accessToken: "user-jwt", fetchImpl, warn: () => {} });
+    await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: () => {} });
+
+    const h0 = fetchCalls[0].init?.headers as Record<string, string>;
+    const h1 = fetchCalls[1].init?.headers as Record<string, string>;
+    expect(h0.Authorization).toBe("Bearer user-jwt");
+    expect(h1.Authorization).toBeUndefined();
+  });
+
+  it("surfaces a 401 (no session) as an error", async () => {
+    const { fetchImpl } = makeFetch(() => jsonResponse(401, { error: "Authentication required" }));
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: () => {} });
+
+    expect(r.error?.message).toContain("thumbify_render_http_401");
+  });
+
+  it("sessionAccessToken reads the injected client's session", async () => {
+    const withSession = {
+      auth: { getSession: async () => ({ data: { session: { access_token: "tok" } } }) },
+    };
+    const noSession = { auth: { getSession: async () => ({ data: { session: null } }) } };
+    const throwing = {
+      auth: {
+        getSession: async (): Promise<{ data: { session: { access_token: string } | null } }> => {
+          throw new Error("boom");
+        },
+      },
+    };
+
+    expect(await sessionAccessToken(withSession)).toBe("tok");
+    expect(await sessionAccessToken(noSession)).toBeUndefined();
+    expect(await sessionAccessToken({})).toBeUndefined();
+    expect(await sessionAccessToken(throwing)).toBeUndefined();
   });
 
   it("defaults to the public dfl-services endpoint", () => {

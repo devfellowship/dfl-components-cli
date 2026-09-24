@@ -20,8 +20,11 @@
  *
  * Thumbify renderer (plan `20260924-thumbify-renderer-to-dfl-services`):
  * the renderer lives in dfl-services (`services/dfl-thumbify-render`) at
- * `POST https://services.devfellowship.com/thumbify/render` → { output_url },
- * no auth required. "Generate thumbnail" calls ONLY this service
+ * `POST https://services.devfellowship.com/thumbify/render` → { output_url }.
+ * A template render needs the caller's user JWT (plan Q "auth" = A): the
+ * drawer reads it from the injected client (`supabase.auth.getSession()`) and
+ * sends `Authorization: Bearer <access_token>`; without a session the service
+ * answers 401. "Generate thumbnail" calls ONLY this service
  * (`thumbnailRenderUrl` prop). A network error or any non-2xx answer is a
  * normal render error. There is no fallback: the old Supabase edge function
  * was removed from this caller (plan task T12, 2026-09-24).
@@ -72,6 +75,23 @@ export interface PublishDrawerSupabase {
       options?: { body?: unknown; method?: string },
     ) => Promise<{ data: unknown; error: { message: string } | null }>;
   };
+  /** The session source for the Thumbify render (a real SupabaseClient has it).
+   * Optional so a narrow test double still type-checks. */
+  auth?: {
+    getSession: () => Promise<{ data: { session: { access_token: string } | null } }>;
+  };
+}
+
+/** The caller's access_token from the injected client, or undefined. */
+export async function sessionAccessToken(
+  supabase: Pick<PublishDrawerSupabase, "auth">,
+): Promise<string | undefined> {
+  try {
+    const { data } = (await supabase.auth?.getSession()) ?? { data: { session: null } };
+    return data.session?.access_token || undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 /** A connected platform account, as returned by dfl-publisher-list-accounts. */
@@ -177,20 +197,25 @@ export interface RenderThumbnailResult {
 /**
  * Render a Thumbify template with ONE call to the dfl-services renderer. A
  * network error or any non-2xx answer (4xx or 5xx) is returned as an error.
- * There is no retry and no fallback.
+ * There is no retry and no fallback. `accessToken` (the user's Supabase
+ * session) goes in `Authorization: Bearer`; the service requires it for a
+ * template render and writes the user's id on the render row.
  */
 export async function renderThumbnail(input: {
   serviceUrl: string;
   body: unknown;
+  accessToken?: string;
   fetchImpl?: typeof fetch;
   warn?: (message: string) => void;
 }): Promise<RenderThumbnailResult> {
   const doFetch = input.fetchImpl ?? globalThis.fetch.bind(globalThis);
   const warn = input.warn ?? ((m: string) => console.warn(m));
   try {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (input.accessToken) headers.Authorization = `Bearer ${input.accessToken}`;
     const res = await doFetch(input.serviceUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(input.body),
     });
     if (!res.ok) {
@@ -316,6 +341,7 @@ export function PublishDrawer({
     const { data, error } = await renderThumbnail({
       serviceUrl: thumbnailRenderUrl,
       body: { template_id: thumbnailTemplateId, render_params: { title } },
+      accessToken: await sessionAccessToken(supabase),
     });
     if (error) {
       fail("Falha ao gerar a thumbnail via Thumbify.");
