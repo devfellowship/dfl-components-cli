@@ -88,22 +88,9 @@ describe("validatePublishForm", () => {
   });
 });
 
-describe("renderThumbnail (service first, one edge fallback)", () => {
+describe("renderThumbnail (service only, no fallback)", () => {
   const body = { template_id: "tpl-1", render_params: { title: "T" } };
   const SERVICE = "https://services.example/thumbify/render";
-
-  function makeSupabase() {
-    const calls: Array<{ name: string; options?: { body?: unknown } }> = [];
-    const supabase: PublishDrawerSupabase = {
-      functions: {
-        invoke: async (name, options) => {
-          calls.push({ name, options });
-          return { data: { output_url: "https://edge/out.png" }, error: null };
-        },
-      },
-    };
-    return { supabase, calls };
-  }
 
   function jsonResponse(status: number, payload: unknown): Response {
     return new Response(JSON.stringify(payload), {
@@ -112,60 +99,80 @@ describe("renderThumbnail (service first, one edge fallback)", () => {
     });
   }
 
-  it("calls the service URL first and does not touch the edge fn on success", async () => {
-    const { supabase, calls } = makeSupabase();
+  function makeFetch(respond: () => Response | Promise<Response>) {
     const fetchCalls: Array<{ url: string; init?: RequestInit }> = [];
     const fetchImpl = (async (url: string, init?: RequestInit) => {
       fetchCalls.push({ url, init });
-      return jsonResponse(200, { output_url: "https://svc/out.png" });
+      return respond();
     }) as unknown as typeof fetch;
+    return { fetchImpl, fetchCalls };
+  }
 
-    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: () => {} });
+  it("calls the service URL once and returns its answer", async () => {
+    const { fetchImpl, fetchCalls } = makeFetch(() => jsonResponse(200, { output_url: "https://svc/out.png" }));
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: () => {} });
 
     expect(fetchCalls).toHaveLength(1);
     expect(fetchCalls[0].url).toBe(SERVICE);
     expect(fetchCalls[0].init?.method).toBe("POST");
     expect(JSON.parse(String(fetchCalls[0].init?.body))).toEqual(body);
-    expect(calls).toHaveLength(0);
-    expect(r).toEqual({ data: { output_url: "https://svc/out.png" }, error: null, via: "service" });
+    expect(r).toEqual({ data: { output_url: "https://svc/out.png" }, error: null });
   });
 
-  it("falls back ONCE to the edge fn on a network error", async () => {
-    const { supabase, calls } = makeSupabase();
-    const warnings: string[] = [];
-    const fetchImpl = (async () => {
-      throw new TypeError("Failed to fetch");
-    }) as unknown as typeof fetch;
+  it.each([400, 404])("surfaces HTTP %i as an error", async (status) => {
+    const { fetchImpl, fetchCalls } = makeFetch(() => jsonResponse(status, { error: "template_not_found" }));
 
-    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: (m) => warnings.push(m) });
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: () => {} });
 
-    expect(calls).toEqual([{ name: "render-design-template", options: { body } }]);
-    expect(r.via).toBe("edge-fallback");
-    expect(r.data).toEqual({ output_url: "https://edge/out.png" });
-    expect(warnings).toHaveLength(1);
-    expect(warnings[0]).toContain("render-design-template");
-  });
-
-  it.each([500, 502, 503])("falls back ONCE to the edge fn on HTTP %i", async (status) => {
-    const { supabase, calls } = makeSupabase();
-    const fetchImpl = (async () => jsonResponse(status, { error: "busy" })) as unknown as typeof fetch;
-
-    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: () => {} });
-
-    expect(calls).toHaveLength(1);
-    expect(r.via).toBe("edge-fallback");
-  });
-
-  it.each([400, 404])("does NOT fall back on HTTP %i and returns an error", async (status) => {
-    const { supabase, calls } = makeSupabase();
-    const fetchImpl = (async () => jsonResponse(status, { error: "template_not_found" })) as unknown as typeof fetch;
-
-    const r = await renderThumbnail({ serviceUrl: SERVICE, body, supabase, fetchImpl, warn: () => {} });
-
-    expect(calls).toHaveLength(0);
-    expect(r.via).toBe("service");
+    expect(fetchCalls).toHaveLength(1);
     expect(r.data).toBeNull();
     expect(r.error?.message).toContain(`thumbify_render_http_${status}`);
+  });
+
+  it.each([500, 502, 503])("surfaces HTTP %i as an error with exactly one fetch", async (status) => {
+    const warnings: string[] = [];
+    const { fetchImpl, fetchCalls } = makeFetch(() => jsonResponse(status, { error: "busy" }));
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: (m) => warnings.push(m) });
+
+    expect(fetchCalls).toHaveLength(1);
+    expect(r.data).toBeNull();
+    expect(r.error?.message).toContain(`thumbify_render_http_${status}`);
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain(`HTTP ${status}`);
+  });
+
+  it("surfaces a network error with exactly one fetch", async () => {
+    const warnings: string[] = [];
+    const { fetchImpl, fetchCalls } = makeFetch(() => {
+      throw new TypeError("Failed to fetch");
+    });
+
+    const r = await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: (m) => warnings.push(m) });
+
+    expect(fetchCalls).toHaveLength(1);
+    expect(r.data).toBeNull();
+    expect(r.error?.message).toContain("thumbify_render_network_error");
+    expect(warnings).toHaveLength(1);
+  });
+
+  it("does not call any Supabase edge function (no fallback path exists)", async () => {
+    const { fetchImpl } = makeFetch(() => jsonResponse(503, { error: "busy" }));
+    const invoked: string[] = [];
+    const supabase: PublishDrawerSupabase = {
+      functions: {
+        invoke: async (name) => {
+          invoked.push(name);
+          return { data: null, error: null };
+        },
+      },
+    };
+
+    // A stray client in the input must be ignored.
+    await renderThumbnail({ serviceUrl: SERVICE, body, fetchImpl, warn: () => {}, ...({ supabase } as object) });
+
+    expect(invoked).toEqual([]);
   });
 
   it("defaults to the public dfl-services endpoint", () => {

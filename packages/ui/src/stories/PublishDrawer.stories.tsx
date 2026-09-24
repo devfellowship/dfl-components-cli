@@ -49,11 +49,8 @@ const resolvedMock: PublishDrawerSupabase = {
       if (name === "dfl-publisher-list-accounts") {
         return { data: { ok: true, accounts: [DFL_CHANNEL] }, error: null };
       }
-      // Edge fn = the fallback path only; the primary render goes to the
-      // dfl-services Thumbify renderer via fetch (see PublishDrawer header).
-      if (name === "render-design-template") {
-        return { data: { output_url: "https://placehold.co/1280x720/png?text=Thumbnail" }, error: null };
-      }
+      // Thumbify renders go to the dfl-services renderer via fetch, not through
+      // this client (see PublishDrawer header).
       if (name === "dfl-publisher-create-post") {
         return { data: { ok: true, ...STORY_RESULT }, error: null };
       }
