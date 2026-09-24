@@ -1,5 +1,16 @@
 # @devfellowship/components
 
+## 3.8.2
+
+### Patch Changes
+
+- [#150](https://github.com/devfellowship/dfl-components-cli/pull/150) [`99dda91`](https://github.com/devfellowship/dfl-components-cli/commit/99dda91e919a2b3472babf055a4e4313f360fba3) Thanks [@taigfs](https://github.com/taigfs)! - PublishDrawer: "Generate thumbnail" now sends the caller's user JWT
+  (`Authorization: Bearer <access_token>`, read from the injected client's
+  `supabase.auth.getSession()`) to the Thumbify renderer. The renderer requires
+  it for a template render (plan `20260924-thumbify-renderer-to-dfl-services`,
+  Q "auth" = A) and writes the user's id on the render row.
+  `PublishDrawerSupabase.auth` is optional.
+
 ## 3.8.1
 
 ### Patch Changes
