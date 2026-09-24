@@ -1,5 +1,15 @@
 # @devfellowship/components
 
+## 3.8.1
+
+### Patch Changes
+
+- [#148](https://github.com/devfellowship/dfl-components-cli/pull/148) [`67dafa5`](https://github.com/devfellowship/dfl-components-cli/commit/67dafa531b64d7412f5a81528197a4b0d4617db4) Thanks [@taigfs](https://github.com/taigfs)! - PublishDrawer: "Generate thumbnail" now calls ONLY the Thumbify renderer in
+  dfl-services (`POST https://services.devfellowship.com/thumbify/render`). The
+  fallback call to the old Supabase edge function is removed. A network error or
+  an HTTP >= 500 answer is now a normal render error, the same as a 4xx. The
+  `thumbnailRenderUrl` prop and `DEFAULT_THUMBNAIL_RENDER_URL` do not change.
+
 ## 3.8.0
 
 ### Minor Changes
