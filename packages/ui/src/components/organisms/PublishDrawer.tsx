@@ -17,16 +17,14 @@
  *
  * Edge-fn contracts (dfl-schema/supabase/functions):
  *   - dfl-publisher-list-accounts   GET  → { ok, accounts: PublisherAccount[] }
- *   - render-design-template        POST → { output_url }            (Thumbify, FALLBACK only)
  *
  * Thumbify renderer (plan `20260924-thumbify-renderer-to-dfl-services`):
- * the renderer now lives in dfl-services (`services/dfl-thumbify-render`) at
- * `POST https://services.devfellowship.com/thumbify/render` — same request and
- * response body as the `render-design-template` edge fn, no auth required.
- * "Generate thumbnail" calls the service first (`thumbnailRenderUrl` prop).
- * On a network error or HTTP >= 500 (incl. 503 queue-full) it makes ONE
- * fallback call to the edge fn via `supabase.functions.invoke`. A 4xx is a real
- * answer and does NOT fall back.
+ * the renderer lives in dfl-services (`services/dfl-thumbify-render`) at
+ * `POST https://services.devfellowship.com/thumbify/render` → { output_url },
+ * no auth required. "Generate thumbnail" calls ONLY this service
+ * (`thumbnailRenderUrl` prop). A network error or any non-2xx answer is a
+ * normal render error. There is no fallback: the old Supabase edge function
+ * was removed from this caller (plan task T12, 2026-09-24).
  *   - dfl-publisher-create-post     POST → { ok, zernio_post_id, post_url, status, log_id }
  *   - dfl-publisher-register-lesson POST → { ok, lesson_id, ... }
  *
@@ -171,60 +169,44 @@ export function validatePublishForm(input: {
 /** Public Thumbify renderer in dfl-services (`services/dfl-thumbify-render`). */
 export const DEFAULT_THUMBNAIL_RENDER_URL = "https://services.devfellowship.com/thumbify/render";
 
-/** Edge fn kept as a fallback during the migration period. */
-export const THUMBNAIL_RENDER_EDGE_FN = "render-design-template";
-
 export interface RenderThumbnailResult {
   data: unknown;
   error: { message: string } | null;
-  /** Which backend produced the answer. */
-  via: "service" | "edge-fallback";
 }
 
 /**
- * Render a Thumbify template. Calls the dfl-services renderer first. On a
- * network error or HTTP >= 500 it makes ONE call to the edge fn with the same
- * body. A 4xx answer is returned as an error, with no fallback.
+ * Render a Thumbify template with ONE call to the dfl-services renderer. A
+ * network error or any non-2xx answer (4xx or 5xx) is returned as an error.
+ * There is no retry and no fallback.
  */
 export async function renderThumbnail(input: {
   serviceUrl: string;
   body: unknown;
-  supabase: PublishDrawerSupabase;
   fetchImpl?: typeof fetch;
   warn?: (message: string) => void;
 }): Promise<RenderThumbnailResult> {
   const doFetch = input.fetchImpl ?? globalThis.fetch.bind(globalThis);
   const warn = input.warn ?? ((m: string) => console.warn(m));
-  let fallbackReason: string;
   try {
     const res = await doFetch(input.serviceUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input.body),
     });
-    if (res.status < 500) {
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        return {
-          data: null,
-          error: { message: `thumbify_render_http_${res.status}${text ? `: ${text}` : ""}` },
-          via: "service",
-        };
-      }
-      return { data: await res.json(), error: null, via: "service" };
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      warn(`[PublishDrawer] Thumbify service ${input.serviceUrl} failed (HTTP ${res.status})`);
+      return {
+        data: null,
+        error: { message: `thumbify_render_http_${res.status}${text ? `: ${text}` : ""}` },
+      };
     }
-    fallbackReason = `HTTP ${res.status}`;
+    return { data: await res.json(), error: null };
   } catch (err) {
-    fallbackReason = `network error: ${err instanceof Error ? err.message : String(err)}`;
+    const message = err instanceof Error ? err.message : String(err);
+    warn(`[PublishDrawer] Thumbify service ${input.serviceUrl} failed (network error: ${message})`);
+    return { data: null, error: { message: `thumbify_render_network_error: ${message}` } };
   }
-  // TODO(20260924-thumbify-renderer-to-dfl-services T12): remove the edge fallback after the edge function is removed
-  warn(
-    `[PublishDrawer] Thumbify service ${input.serviceUrl} failed (${fallbackReason}); falling back to edge fn ${THUMBNAIL_RENDER_EDGE_FN}`,
-  );
-  const { data, error } = await input.supabase.functions.invoke(THUMBNAIL_RENDER_EDGE_FN, {
-    body: input.body,
-  });
-  return { data, error, via: "edge-fallback" };
 }
 
 const ERROR_LABELS: Record<string, string> = {
@@ -334,7 +316,6 @@ export function PublishDrawer({
     const { data, error } = await renderThumbnail({
       serviceUrl: thumbnailRenderUrl,
       body: { template_id: thumbnailTemplateId, render_params: { title } },
-      supabase,
     });
     if (error) {
       fail("Falha ao gerar a thumbnail via Thumbify.");
