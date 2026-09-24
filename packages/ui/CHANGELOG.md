@@ -1,5 +1,17 @@
 # @devfellowship/components
 
+## 3.8.0
+
+### Minor Changes
+
+- [#146](https://github.com/devfellowship/dfl-components-cli/pull/146) [`13873c1`](https://github.com/devfellowship/dfl-components-cli/commit/13873c1051df9077c767580650acaa616d238298) Thanks [@taigfs](https://github.com/taigfs)! - PublishDrawer: "Generate thumbnail" now calls the Thumbify renderer in
+  dfl-services (`POST https://services.devfellowship.com/thumbify/render`, same
+  contract as the `render-design-template` edge function) first. On a network
+  error or HTTP >= 500 it makes one fallback call to the edge function via the
+  injected Supabase client; a 4xx answer does not fall back. New optional prop
+  `thumbnailRenderUrl` overrides the endpoint, and `DEFAULT_THUMBNAIL_RENDER_URL`
+  is exported. Existing consumers need no change.
+
 ## 3.7.0
 
 ### Minor Changes
