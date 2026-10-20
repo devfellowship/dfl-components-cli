@@ -88,15 +88,15 @@ jobs:
         id: pack
         run: node scripts/pack-capture-build.mjs --out-dir "$RUNNER_TEMP/capture"
 
-      # Always available, even for a dispatch with no release: 90-day retention,
-      # and it needs a token to download, so it is not a distribution channel on
-      # its own — it is the evidence for this run.
+      # Temporary output for the no-tag manual operator. GitHub Release assets
+      # remain the durable channel for the UX Paths capture operator.
       - name: Upload as a workflow artifact
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag == ''
         uses: actions/upload-artifact@v4
         with:
           name: components-capture-build
           path: ${{ runner.temp }}/capture/*-capture.tgz
-          retention-days: 90
+          retention-days: 7
 
       - name: Attach to the release
         if: github.event_name == 'release' || inputs.release_tag != ''

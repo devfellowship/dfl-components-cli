@@ -30,11 +30,13 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-      - uses: actions/upload-artifact@v4
-        if: always()
+      # Keep a short-lived diagnostic for the roadmap E2E incident responder.
+      - name: Upload roadmap Playwright report after failure
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
           name: roadmap-playwright-report
           path: |
             packages/ui/playwright-report/
             packages/ui/test-results/
-          retention-days: 14
+          retention-days: 3
