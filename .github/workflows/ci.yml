@@ -136,6 +136,16 @@ jobs:
         working-directory: packages/ui
         run: node scripts/check-canvas-entry-isolated.mjs
 
+      # ── Consumer install: ONE copy of sonner, toasts show on both paths ───
+      #
+      # A unit test in this workspace cannot see the bug: here `sonner` resolves
+      # to one copy by construction. In a consumer that pins another sonner
+      # major, npm nested a second copy under this package. This guard installs
+      # the packed tarball into a throw-away app with sonner@1.7.4 and renders.
+      - name: Guard — consumer install shares one sonner
+        working-directory: packages/ui
+        run: node scripts/check-consumer-single-copy.mjs
+
       # NOTE: there is deliberately no eslint step. This package has no eslint
       # config and no eslint dependency. The step that used to sit here wrote
       # `[]` to eslint-report.json and reported success, which claimed a lint
