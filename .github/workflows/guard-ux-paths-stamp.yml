@@ -120,13 +120,15 @@ jobs:
       - name: Assert the stamped paths are REPOSITORY-relative
         run: |
           set -euo pipefail
-          if ! grep -q 'data-source": "packages/ui/src/' dist/index.js; then
+          # dist/*.js, not dist/index.js: with `splitting: true` the stamped
+          # elements of a shared module live in a chunk, not in the entry file.
+          if ! grep -q 'data-source": "packages/ui/src/' dist/*.js; then
             echo "::error::stamped paths are not repository-relative."
             echo "::error::Expected packages/ui/src/…; found:"
-            grep -oE '"data-source": *"[^"]+"' dist/index.js | head -5 || true
+            grep -ohE '"data-source": *"[^"]+"' dist/*.js | head -5 || true
             exit 1
           fi
-          echo "✅ $(grep -oE '"data-source": *"packages/ui/src/[^"]+"' dist/index.js | wc -l) repository-relative stamps"
+          echo "✅ $(grep -ohE '"data-source": *"packages/ui/src/[^"]+"' dist/*.js | wc -l) repository-relative stamps"
 
   capture-tarball-is-packable:
     name: the capture tarball packs, and refuses to be a release tarball

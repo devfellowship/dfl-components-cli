@@ -35,7 +35,12 @@ export default defineConfig({
   target: 'es2020',
   clean: true,
   dts: true,
-  splitting: false,
+  // One shared chunk per module that two entries import. With `false`, a module
+  // reachable from several entries was INLINED into each, so module-level state
+  // (use-toast listeners, AuthContext, FeatureFlag context) existed once per
+  // entry: `toast()` from `/hooks` reached no `<Toaster>` of the root entry.
+  // Guarded by src/__tests__/entry-shared-state.test.tsx.
+  splitting: true,
   sourcemap: false,
   // @xyflow/react and @dagrejs/dagre are OPTIONAL PEERS of the canvas entry —
   // externalising them keeps them out of the bundle and out of every consumer
