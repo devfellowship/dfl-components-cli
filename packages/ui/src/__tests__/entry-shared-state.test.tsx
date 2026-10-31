@@ -14,7 +14,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import * as React from "react";
 import { act, render } from "@testing-library/react";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -60,5 +60,16 @@ describe("built entries share one store", () => {
     }
     // A name that two entries export as different values is a duplicated module.
     expect(split).toEqual([]);
+  });
+
+  it("keeps sonner a PEER dependency, so the app and the package share one sonner store", () => {
+    // As a regular dependency (^2) next to an app that pins another sonner major, npm nests a
+    // second copy: <SonnerToaster> renders with it, and `toast` from the app's sonner shows
+    // nothing. Proven end to end by scripts/check-consumer-single-copy.mjs (real install).
+    const pkg = JSON.parse(readFileSync(join(dist, "..", "package.json"), "utf8"));
+    expect(pkg.dependencies?.sonner).toBeUndefined();
+    expect(pkg.peerDependencies?.sonner).toBeTruthy();
+    // and the bundle must import it, not inline it
+    expect(readFileSync(join(dist, "index.js"), "utf8")).toMatch(/from ["']sonner["']/);
   });
 });
