@@ -80,6 +80,8 @@ export default defineConfig({
     copyFileSync('src/styles/shadcn.css', 'dist/styles/shadcn.css');
     copyFileSync('src/styles/tailwind.css', 'dist/styles/tailwind.css');
     copyFileSync('src/styles/tokens.css', 'dist/styles/tokens.css');
+    // Opt-in generated mirror of the published brand DS v2 (scripts/sync-brand-tokens.mjs).
+    copyFileSync('src/styles/tokens.v2.css', 'dist/styles/tokens.v2.css');
     copyFileSync('src/styles/fonts.css', 'dist/styles/fonts.css');
     // Canvas chrome skin — only meaningful on a page that renders <FlowCanvas>,
     // so it is a separate sheet rather than part of theme.css.
