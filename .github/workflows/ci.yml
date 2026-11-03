@@ -85,6 +85,27 @@ jobs:
       - name: Guard — design tokens (orphaned/self-ref/duplicate vars)
         run: node scripts/lint-tokens.mjs packages/ui/src/styles/*.css
 
+      # Opt-in tokens.v2.css is a generated MIRROR of the published brand DS v2.
+      # Offline: the file must match brand.lock.json and keep its MIRROR header, so a
+      # hand edit turns CI red. No dependencies, so it runs BEFORE install.
+      - name: Guard — brand token mirror (offline)
+        run: |
+          node packages/ui/scripts/sync-brand-tokens.mjs --check
+          node scripts/lint-tokens.mjs packages/ui/src/styles/tokens.v2.css --strict
+
+      # Online parity: the published file must still hash to the lock. Exit 1 (drift)
+      # fails. Exit 2 (network, could not verify) only warns: it is not a proof of drift.
+      - name: Guard — brand token mirror (online parity)
+        run: |
+          set +e
+          node packages/ui/scripts/sync-brand-tokens.mjs --check --online
+          rc=$?
+          if [ "$rc" = "2" ]; then
+            echo "::warning title=Brand token mirror::could not verify the upstream (network or non-200). Parity not checked on this run."
+            exit 0
+          fi
+          exit "$rc"
+
       - name: Install dependencies
         working-directory: packages/ui
         run: npm ci

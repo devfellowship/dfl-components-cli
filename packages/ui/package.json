@@ -41,6 +41,7 @@
     "./styles": "./dist/styles/theme.css",
     "./shadcn": "./dist/styles/shadcn.css",
     "./tokens": "./dist/styles/tokens.css",
+    "./tokens.v2": "./dist/styles/tokens.v2.css",
     "./tailwind": "./dist/styles/tailwind.css",
     "./brand/*": "./dist/brand/*"
   },
@@ -66,6 +67,8 @@
     "build-storybook": "storybook build",
     "lint:no-docs": "node scripts/check-no-storybook-docs.mjs",
     "check:cli-offline": "node scripts/check-cli-bundle-offline.mjs",
+    "sync:brand-tokens": "node scripts/sync-brand-tokens.mjs --write",
+    "check:brand-tokens": "node scripts/sync-brand-tokens.mjs --check && node ../../scripts/lint-tokens.mjs src/styles/tokens.v2.css --strict",
     "check:canvas-isolated": "node scripts/check-canvas-entry-isolated.mjs",
     "check:consumer-single-copy": "node scripts/check-consumer-single-copy.mjs",
     "test:e2e": "playwright test"

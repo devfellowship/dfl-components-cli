@@ -1,0 +1,11 @@
+{
+  "brand": "dfl",
+  "version": 2,
+  "files": {
+    "src/styles/tokens.v2.css": "42b5a376f1056dd19aa62abc7b0f7007458f3168e0124e4c899a5016a9fcde68"
+  },
+  "upstream": {
+    "url": "https://brand.devfellowship.com/design-system/dfl/v2/tokens.css",
+    "sha256": "c302468c64ab6212700a1cc0384b26f9c2d32e5c2e830bb40a4961202a03b575"
+  }
+}
