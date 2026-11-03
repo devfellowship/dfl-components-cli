@@ -240,8 +240,12 @@ export function fabStyle(
 ): React.CSSProperties {
   const x = offset.x ?? 24;
   const y = offset.y ?? 24;
-  const [vertical, horizontal] = position.split("-") as ["top" | "bottom", "left" | "right"];
-  return { position: "fixed", zIndex: 50, [vertical]: y, [horizontal]: x };
+  const style: React.CSSProperties = { position: "fixed", zIndex: 50 };
+  if (position.startsWith("top")) style.top = y;
+  else style.bottom = y;
+  if (position.endsWith("left")) style.left = x;
+  else style.right = x;
+  return style;
 }
 
 export interface ImprovementsLauncherProps
