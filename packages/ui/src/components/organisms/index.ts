@@ -152,3 +152,39 @@ export type {
 
 export { Roadmap } from "./roadmap";
 export type { RoadmapProps } from "./roadmap";
+
+export {
+  ImprovementsDialog,
+  ImprovementsLauncher,
+  createImprovementsMenuItem,
+  fabStyle as improvementsFabStyle,
+  DEFAULT_IMPROVEMENTS_LABELS,
+} from "./Improvements";
+export type {
+  ImprovementsDialogProps,
+  ImprovementsLauncherProps,
+  ImprovementsLabels,
+  ImprovementsFabPosition,
+} from "./Improvements";
+export {
+  createImprovementsClient,
+  validateImprovementDraft,
+  extractPastedImages,
+  buildImprovementContext,
+  buildImprovementPayload,
+  isAllowedMediaUrl,
+  compressImage as compressImprovementImage,
+  IMPROVEMENT_MAX_CHARS,
+  IMPROVEMENT_MAX_IMAGES,
+  IMPROVEMENT_MEDIA_HOST,
+} from "../../lib/improvements";
+export type {
+  ImprovementsClient,
+  ImprovementsClientOptions,
+  ImprovementsSupabase,
+  ImprovementRequestPayload,
+  ImprovementSubmitResult,
+  ImprovementContext,
+  ImprovementDraftError,
+  ClipboardLike,
+} from "../../lib/improvements";
