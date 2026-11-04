@@ -1,5 +1,13 @@
 # @devfellowship/components
 
+## 3.10.0
+
+### Minor Changes
+
+- [#157](https://github.com/devfellowship/dfl-components-cli/pull/157) [`0defc09`](https://github.com/devfellowship/dfl-components-cli/commit/0defc095ec081474bfb61999e69a43f0f5a95c66) Thanks [@taigfs](https://github.com/taigfs)! - Add the opt-in `@devfellowship/components/tokens.v2` export: a generated mirror of the published DFL brand design system v2.
+
+- [#159](https://github.com/devfellowship/dfl-components-cli/pull/159) [`2c145ae`](https://github.com/devfellowship/dfl-components-cli/commit/2c145ae8df1e509326fdcc5ddc070cdfeaee453a) Thanks [@taigfs](https://github.com/taigfs)! - Add the "Melhorias" (in-app improvements) UI: `ImprovementsLauncher` (floating button + dialog, superadmin-gated by the app), `ImprovementsDialog` (text + Ctrl+V screenshot paste, up to 3 images), `createImprovementsMenuItem` for `UserMenu`, `createImprovementsClient` (upload-file members tier + dfl-improvements service), and the `usePasteImageUpload` hook.
+
 ## 3.9.0
 
 ### Minor Changes
