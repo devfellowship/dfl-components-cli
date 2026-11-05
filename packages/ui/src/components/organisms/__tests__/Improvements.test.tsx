@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 /**
  * Improvements ("Melhorias") — launcher gate, entry points, Ctrl+V paste,
- * submit payload, and the default client.
+ * submit payload, the "Minhas melhorias" list (T11), and the default client.
  *
  * Plan 20261103-in-app-improvements-melhorias, Verification row 6: a pasted
  * PNG gives one thumbnail while the dialog is open; with the dialog closed
@@ -19,6 +19,7 @@ import {
   createImprovementsMenuItem,
   fabStyle,
 } from "../Improvements";
+import type { ImprovementRequestSummary } from "../../../lib/improvements";
 import {
   createImprovementsClient,
   extractPastedImages,
@@ -182,6 +183,132 @@ describe("submit", () => {
   });
 });
 
+const openReq: ImprovementRequestSummary = {
+  thread_id: "th-open",
+  subject: "Mover o botão Salvar",
+  thread_status: "open",
+  created_at: "2026-11-05T10:00:00Z",
+  closed_at: null,
+  task: { id: "t1", identifier: "DFL-101", status: "in_progress" },
+  app_slug: "bmcanvas",
+  result_url: null,
+};
+const doneReq: ImprovementRequestSummary = {
+  thread_id: "th-done",
+  subject: "Trocar a cor do header",
+  thread_status: "closed",
+  created_at: "2026-11-04T10:00:00Z",
+  closed_at: "2026-11-04T12:00:00Z",
+  task: { id: "t2", identifier: "DFL-100", status: "done" },
+  app_slug: "bmcanvas",
+  result_url: "https://github.com/devfellowship/dfl-bmcanvas/pull/1",
+};
+
+describe("Minhas melhorias list", () => {
+  it("hides the tab when no listMine is given", () => {
+    render(<ImprovementsDialog open onOpenChange={() => {}} appSlug="t" uploadImage={noop} onSubmit={async () => ({})} />);
+    expect(screen.queryByTestId("improvements-tab-mine")).toBeNull();
+    expect(screen.getByTestId("improvements-text")).toBeTruthy();
+  });
+
+  it("lists the caller's requests with thread status, task status and the result link of a done one", async () => {
+    const listMine = vi.fn(async () => [openReq, doneReq]);
+    render(
+      <ImprovementsDialog open onOpenChange={() => {}} appSlug="t" uploadImage={noop} onSubmit={async () => ({})} listMine={listMine} />,
+    );
+    expect(listMine).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByTestId("improvements-tab-mine"));
+    await waitFor(() => expect(screen.getAllByTestId("improvements-mine-item")).toHaveLength(2));
+    expect(listMine).toHaveBeenCalledTimes(1);
+    const [first, second] = screen.getAllByTestId("improvements-mine-item");
+    expect(first.textContent).toContain("Mover o botão Salvar");
+    expect(first.textContent).toContain("DFL-101");
+    expect(first.getAttribute("data-thread-status")).toBe("open");
+    expect(first.getAttribute("data-task-status")).toBe("in_progress");
+    expect(first.querySelector('[data-testid="improvements-mine-result"]')).toBeNull();
+    const link = second.querySelector('[data-testid="improvements-mine-result"]') as HTMLAnchorElement;
+    expect(link).toBeTruthy();
+    expect(link.getAttribute("href")).toBe(doneReq.result_url);
+    expect(screen.getAllByTestId("improvements-mine-result")).toHaveLength(1);
+  });
+
+  it("shows the empty state", async () => {
+    render(
+      <ImprovementsDialog
+        open
+        onOpenChange={() => {}}
+        appSlug="t"
+        uploadImage={noop}
+        onSubmit={async () => ({})}
+        listMine={async () => []}
+        initialView="mine"
+      />,
+    );
+    await waitFor(() => expect(screen.getByTestId("improvements-mine-empty")).toBeTruthy());
+    expect(screen.queryByTestId("improvements-mine-list")).toBeNull();
+  });
+
+  it("shows the error and retries", async () => {
+    const listMine = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("boom"))
+      .mockResolvedValueOnce([openReq]);
+    render(
+      <ImprovementsDialog
+        open
+        onOpenChange={() => {}}
+        appSlug="t"
+        uploadImage={noop}
+        onSubmit={async () => ({})}
+        listMine={listMine}
+        initialView="mine"
+      />,
+    );
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("boom"));
+    fireEvent.click(screen.getByText("Tentar de novo"));
+    await waitFor(() => expect(screen.getAllByTestId("improvements-mine-item")).toHaveLength(1));
+  });
+
+  it("does not link a result URL that is not http(s)", async () => {
+    render(
+      <ImprovementsDialog
+        open
+        onOpenChange={() => {}}
+        appSlug="t"
+        uploadImage={noop}
+        onSubmit={async () => ({})}
+        listMine={async () => [{ ...doneReq, result_url: "javascript:alert(1)" }]}
+        initialView="mine"
+      />,
+    );
+    await waitFor(() => expect(screen.getAllByTestId("improvements-mine-item")).toHaveLength(1));
+    expect(screen.queryByTestId("improvements-mine-result")).toBeNull();
+  });
+
+  it("refetches right after a submit, so the new request shows in the list", async () => {
+    const store: ImprovementRequestSummary[] = [doneReq];
+    const listMine = vi.fn(async () => [...store]);
+    const onSubmit = vi.fn(async () => {
+      store.unshift(openReq);
+      return { thread_id: openReq.thread_id };
+    });
+    render(
+      <ImprovementsLauncher enabled fab={false} open onOpenChange={() => {}} appSlug="t" uploadImage={noop} onSubmit={onSubmit} listMine={listMine} />,
+    );
+    // The launcher passes listMine through: the tab is there.
+    fireEvent.click(screen.getByTestId("improvements-tab-mine"));
+    await waitFor(() => expect(screen.getAllByTestId("improvements-mine-item")).toHaveLength(1));
+    fireEvent.click(screen.getByTestId("improvements-tab-new"));
+    fireEvent.change(screen.getByTestId("improvements-text"), { target: { value: "Mover o botão Salvar" } });
+    fireEvent.click(screen.getByTestId("improvements-submit"));
+    await waitFor(() => expect(screen.getByTestId("improvements-sent")).toBeTruthy());
+    await waitFor(() => expect(listMine).toHaveBeenCalledTimes(2));
+    fireEvent.click(screen.getByTestId("improvements-tab-mine"));
+    await waitFor(() => expect(screen.getAllByTestId("improvements-mine-item")).toHaveLength(2));
+    expect(screen.getAllByTestId("improvements-mine-item")[0].textContent).toContain("Mover o botão Salvar");
+  });
+});
+
 describe("pure helpers", () => {
   it("extractPastedImages takes image files only", () => {
     const f = png();
@@ -279,5 +406,52 @@ describe("createImprovementsClient", () => {
     expect(await client.submit(payload)).toEqual({ thread_id: "th" });
     expect((fetchImpl.mock.calls[0] as unknown[])[0]).toBe("https://improvements.example/v1/requests");
     await expect(client.submit(payload)).rejects.toThrow(/superadmins/);
+  });
+
+  it("listMine sends the bearer to GET /v1/requests?mine=1 and parses the body", async () => {
+    const fetchImpl = vi.fn(async () => new Response(JSON.stringify({ requests: [openReq, doneReq] }), { status: 200 }));
+    const client = createImprovementsClient({
+      supabase,
+      supabaseUrl: "https://ref.supabase.co",
+      supabaseAnonKey: "anon",
+      serviceUrl: "https://improvements.example/",
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    expect(await client.listMine()).toEqual([openReq, doneReq]);
+    const [url, init] = fetchImpl.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe("https://improvements.example/v1/requests?mine=1");
+    expect(init.method).toBe("GET");
+    expect((init.headers as Record<string, string>).Authorization).toBe("Bearer jwt-1");
+  });
+
+  it("listMine throws a readable error on a non-2xx answer or a bad body", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ error: "list_failed" }), { status: 502 }))
+      .mockResolvedValueOnce(new Response("not json", { status: 500 }))
+      .mockResolvedValueOnce(new Response("{}", { status: 403 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ nope: 1 }), { status: 200 }));
+    const client = createImprovementsClient({
+      supabase,
+      supabaseUrl: "https://ref.supabase.co",
+      supabaseAnonKey: "anon",
+      serviceUrl: "https://improvements.example",
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+    await expect(client.listMine()).rejects.toThrow("list_failed");
+    await expect(client.listMine()).rejects.toThrow(/Falha ao carregar melhorias \(500\)/);
+    await expect(client.listMine()).rejects.toThrow(/superadmins/);
+    await expect(client.listMine()).rejects.toThrow(/Resposta inválida/);
+  });
+
+  it("listMine refuses without a session", async () => {
+    const client = createImprovementsClient({
+      supabase: { auth: { getSession: async () => ({ data: { session: null } }) } },
+      supabaseUrl: "https://ref.supabase.co",
+      supabaseAnonKey: "anon",
+      serviceUrl: "https://improvements.example",
+      fetchImpl: vi.fn() as unknown as typeof fetch,
+    });
+    await expect(client.listMine()).rejects.toThrow(/Sessão expirada/);
   });
 });

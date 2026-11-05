@@ -159,12 +159,14 @@ export {
   createImprovementsMenuItem,
   fabStyle as improvementsFabStyle,
   DEFAULT_IMPROVEMENTS_LABELS,
+  improvementStatusLabel,
 } from "./Improvements";
 export type {
   ImprovementsDialogProps,
   ImprovementsLauncherProps,
   ImprovementsLabels,
   ImprovementsFabPosition,
+  ImprovementsView,
 } from "./Improvements";
 export {
   createImprovementsClient,
@@ -184,6 +186,7 @@ export type {
   ImprovementsSupabase,
   ImprovementRequestPayload,
   ImprovementSubmitResult,
+  ImprovementRequestSummary,
   ImprovementContext,
   ImprovementDraftError,
   ClipboardLike,

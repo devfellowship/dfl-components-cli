@@ -51,6 +51,24 @@ export interface ImprovementSubmitResult {
   thread_url?: string;
 }
 
+/**
+ * One of the caller's own requests, as `GET /v1/requests?mine=1` returns it
+ * (dfl-improvements `MyRequest`). Newest first.
+ */
+export interface ImprovementRequestSummary {
+  thread_id: string;
+  subject: string;
+  /** Status of the comms thread, e.g. "open" or "closed". */
+  thread_status: string;
+  created_at: string;
+  closed_at: string | null;
+  /** The work task the request created; null when the service has none. */
+  task: { id: string; identifier: string | null; status: string } | null;
+  app_slug: string | null;
+  /** URL of the delivered result (a PR, a page), when an agent posted one. */
+  result_url: string | null;
+}
+
 export interface ImprovementDraftError {
   field: "text" | "images";
   message: string;
@@ -239,6 +257,8 @@ export interface ImprovementsClient {
   uploadImage: (file: File) => Promise<string>;
   /** Submit the request to the service. */
   submit: (payload: ImprovementRequestPayload) => Promise<ImprovementSubmitResult>;
+  /** The caller's own requests, newest first (`GET /v1/requests?mine=1`). */
+  listMine: () => Promise<ImprovementRequestSummary[]>;
 }
 
 async function accessToken(supabase: ImprovementsSupabase): Promise<string> {
@@ -260,7 +280,8 @@ async function errorMessage(res: Response, fallback: string): Promise<string> {
 /**
  * The default client: screenshots go to `upload-file` with
  * `visibility=members` (a DFL session is needed to read them, ADR-3), and the
- * request goes to `POST <serviceUrl>/v1/requests`. Both carry the caller's JWT.
+ * request goes to `POST <serviceUrl>/v1/requests`. `listMine` reads
+ * `GET <serviceUrl>/v1/requests?mine=1`. All carry the caller's JWT.
  */
 export function createImprovementsClient(opts: ImprovementsClientOptions): ImprovementsClient {
   const doFetch = opts.fetchImpl ?? ((...args: Parameters<typeof fetch>) => fetch(...args));
@@ -300,6 +321,26 @@ export function createImprovementsClient(opts: ImprovementsClientOptions): Impro
       } catch {
         return {};
       }
+    },
+
+    async listMine(): Promise<ImprovementRequestSummary[]> {
+      const token = await accessToken(opts.supabase);
+      const res = await doFetch(`${base}/v1/requests?mine=1`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.status === 403) throw new Error("Apenas superadmins podem ver melhorias.");
+      if (!res.ok) throw new Error(await errorMessage(res, `Falha ao carregar melhorias (${res.status})`));
+      let body: { requests?: unknown };
+      try {
+        body = (await res.json()) as { requests?: unknown };
+      } catch {
+        throw new Error("Resposta inválida do serviço de melhorias.");
+      }
+      if (!Array.isArray(body?.requests)) {
+        throw new Error("Resposta inválida do serviço de melhorias.");
+      }
+      return body.requests as ImprovementRequestSummary[];
     },
   };
 }
