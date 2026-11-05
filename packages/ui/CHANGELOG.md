@@ -1,5 +1,11 @@
 # @devfellowship/components
 
+## 3.11.0
+
+### Minor Changes
+
+- [#160](https://github.com/devfellowship/dfl-components-cli/pull/160) [`2defeff`](https://github.com/devfellowship/dfl-components-cli/commit/2defeffe6a8ee59ee47030f091195119e365034b) Thanks [@taigfs](https://github.com/taigfs)! - Add the "Minhas melhorias" tab to `ImprovementsDialog` / `ImprovementsLauncher`: pass `listMine` (new `createImprovementsClient().listMine`, `GET /v1/requests?mine=1`) to list the caller's requests with thread status, task status and the result URL. The list refreshes when the tab opens and right after a submit. Without `listMine` the tab stays hidden. New exports: `ImprovementRequestSummary`, `ImprovementsView`, `improvementStatusLabel`.
+
 ## 3.10.0
 
 ### Minor Changes
