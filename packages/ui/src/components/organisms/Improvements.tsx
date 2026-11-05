@@ -11,15 +11,18 @@
  *
  * Behaviour-agnostic like UserMenu: the app injects `uploadImage` and
  * `onSubmit` (use `createImprovementsClient` for the default DFL wiring).
+ * Pass `listMine` (client.listMine) to show the "Minhas melhorias" tab (T11):
+ * the caller's requests with thread status, task status and result URL.
  *
  *   const [open, setOpen] = useState(false);
  *   <UserMenu items={[createImprovementsMenuItem(() => setOpen(true)), ...]} />
  *   <ImprovementsLauncher appSlug="bmcanvas" enabled={isSuperadmin}
  *     open={open} onOpenChange={setOpen}
- *     uploadImage={client.uploadImage} onSubmit={client.submit} />
+ *     uploadImage={client.uploadImage} onSubmit={client.submit}
+ *     listMine={client.listMine} />
  */
 import * as React from "react";
-import { ImagePlus, Lightbulb, Loader2, X } from "lucide-react";
+import { ExternalLink, ImagePlus, Lightbulb, Loader2, X } from "lucide-react";
 
 import { cn } from "../../lib/utils";
 import {
@@ -29,6 +32,7 @@ import {
   buildImprovementPayload,
   validateImprovementDraft,
   type ImprovementRequestPayload,
+  type ImprovementRequestSummary,
   type ImprovementSubmitResult,
 } from "../../lib/improvements";
 import { usePasteImageUpload } from "../../hooks/use-paste-image-upload";
@@ -54,6 +58,16 @@ export interface ImprovementsLabels {
   cancel: string;
   sent: string;
   removeImage: string;
+  tabNew: string;
+  tabMine: string;
+  mineLoading: string;
+  mineEmpty: string;
+  mineError: string;
+  mineRetry: string;
+  mineThread: string;
+  mineTask: string;
+  mineNoTask: string;
+  mineResult: string;
 }
 
 export const DEFAULT_IMPROVEMENTS_LABELS: ImprovementsLabels = {
@@ -66,7 +80,54 @@ export const DEFAULT_IMPROVEMENTS_LABELS: ImprovementsLabels = {
   cancel: "Cancelar",
   sent: "Melhoria enviada. Um agente vai responder no thread.",
   removeImage: "Remover imagem",
+  tabNew: "Nova melhoria",
+  tabMine: "Minhas melhorias",
+  mineLoading: "Carregando suas melhorias…",
+  mineEmpty: "Você ainda não pediu nenhuma melhoria.",
+  mineError: "Não foi possível carregar suas melhorias.",
+  mineRetry: "Tentar de novo",
+  mineThread: "Thread",
+  mineTask: "Tarefa",
+  mineNoTask: "sem tarefa",
+  mineResult: "Ver resultado",
 };
+
+/** Portuguese names of the thread and task statuses. Unknown values show as-is. */
+const STATUS_LABELS: Record<string, string> = {
+  open: "aberto",
+  closed: "fechado",
+  backlog: "backlog",
+  todo: "a fazer",
+  in_progress: "em andamento",
+  in_review: "em revisão",
+  blocked: "bloqueada",
+  done: "concluída",
+  cancelled: "cancelada",
+  canceled: "cancelada",
+};
+
+export function improvementStatusLabel(status: string): string {
+  return STATUS_LABELS[status] ?? status;
+}
+
+/** Only an http(s) URL becomes a link (no `javascript:` from a stored value). */
+function safeHttpUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" || u.protocol === "http:" ? u.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function formatCreated(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+}
+
+export type ImprovementsView = "new" | "mine";
 
 export type ImprovementsFabPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
 
@@ -85,7 +146,20 @@ export interface ImprovementsDialogProps {
   buildSha?: string;
   maxImages?: number;
   labels?: Partial<ImprovementsLabels>;
+  /**
+   * The caller's own requests, newest first (use `client.listMine`). When
+   * given, the dialog shows a "Minhas melhorias" tab. Without it the tab is
+   * hidden and the dialog is the plain request form.
+   */
+  listMine?: () => Promise<ImprovementRequestSummary[]>;
+  /** The tab shown when the dialog opens (default "new"). */
+  initialView?: ImprovementsView;
 }
+
+type MineState =
+  | { status: "idle" | "loading"; items: ImprovementRequestSummary[] | null; error: null }
+  | { status: "ready"; items: ImprovementRequestSummary[]; error: null }
+  | { status: "error"; items: ImprovementRequestSummary[] | null; error: string };
 
 export function ImprovementsDialog({
   open,
@@ -97,8 +171,51 @@ export function ImprovementsDialog({
   buildSha,
   maxImages = IMPROVEMENT_MAX_IMAGES,
   labels: labelsProp,
+  listMine,
+  initialView = "new",
 }: ImprovementsDialogProps) {
   const labels = { ...DEFAULT_IMPROVEMENTS_LABELS, ...labelsProp };
+  const hasMine = typeof listMine === "function";
+  const [viewState, setView] = React.useState<ImprovementsView>(initialView);
+  const view: ImprovementsView = hasMine ? viewState : "new";
+  const [mine, setMine] = React.useState<MineState>({ status: "idle", items: null, error: null });
+  // Keep the latest listMine in a ref: an inline function changes on every
+  // render and must not re-trigger the fetch effect.
+  const listMineRef = React.useRef(listMine);
+  listMineRef.current = listMine;
+  const fetchSeq = React.useRef(0);
+
+  const refreshMine = React.useCallback(async () => {
+    const fn = listMineRef.current;
+    if (!fn) return;
+    const seq = ++fetchSeq.current;
+    setMine((prev) => ({ status: "loading", items: prev.items, error: null }));
+    try {
+      const items = await fn();
+      if (seq !== fetchSeq.current) return;
+      setMine({ status: "ready", items: Array.isArray(items) ? items : [], error: null });
+    } catch (err) {
+      if (seq !== fetchSeq.current) return;
+      setMine((prev) => ({
+        status: "error",
+        items: prev.items,
+        error: err instanceof Error && err.message ? err.message : String(err),
+      }));
+    }
+  }, []);
+
+  // Refresh every time the "Minhas melhorias" tab becomes visible.
+  React.useEffect(() => {
+    if (open && view === "mine") void refreshMine();
+  }, [open, view, refreshMine]);
+
+  // Drop answers that arrive after unmount.
+  React.useEffect(
+    () => () => {
+      fetchSeq.current += 1;
+    },
+    [],
+  );
   const [text, setText] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
@@ -135,6 +252,8 @@ export function ImprovementsDialog({
       const result = await onSubmit(buildImprovementPayload(appSlug, text, paste.urls, ctx));
       setSent(result ?? {});
       onSubmitted?.(result);
+      // Refetch at once, so the new request is in the list when the tab opens.
+      if (hasMine) void refreshMine();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -150,13 +269,43 @@ export function ImprovementsDialog({
           <DialogDescription>{labels.description}</DialogDescription>
         </DialogHeader>
 
-        {sent ? (
+        {hasMine && (
+          <div role="tablist" aria-label={labels.trigger} className="flex border-b text-sm">
+            {(["new", "mine"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                role="tab"
+                aria-selected={view === v}
+                data-testid={v === "new" ? "improvements-tab-new" : "improvements-tab-mine"}
+                onClick={() => setView(v)}
+                className={cn(
+                  "-mb-px border-b-2 px-3 py-1.5 font-medium",
+                  view === v ? "border-current" : "border-transparent opacity-60 hover:opacity-100",
+                )}
+              >
+                {v === "new" ? labels.tabNew : labels.tabMine}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {view === "mine" ? (
+          <MineList state={mine} labels={labels} onRetry={() => void refreshMine()} />
+        ) : sent ? (
           <div data-testid="improvements-sent" className="text-sm">
             <p>{labels.sent}</p>
             {sent.thread_url && (
               <a className="underline" href={sent.thread_url} target="_blank" rel="noreferrer">
                 {sent.thread_url}
               </a>
+            )}
+            {hasMine && (
+              <p className="mt-2">
+                <button type="button" className="underline" onClick={() => setView("mine")}>
+                  {labels.tabMine}
+                </button>
+              </p>
             )}
           </div>
         ) : (
@@ -230,6 +379,89 @@ export function ImprovementsDialog({
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function MineList({
+  state,
+  labels,
+  onRetry,
+}: {
+  state: MineState;
+  labels: ImprovementsLabels;
+  onRetry: () => void;
+}) {
+  const items = state.items;
+  return (
+    <div role="tabpanel" data-testid="improvements-mine" data-status={state.status} className="text-sm">
+      {state.status === "error" && (
+        <div role="alert" data-testid="improvements-mine-error" className="mb-2 text-[var(--s-danger-fg,#e5484d)]">
+          <p>
+            {labels.mineError} {state.error}
+          </p>
+          <button type="button" className="underline" onClick={onRetry}>
+            {labels.mineRetry}
+          </button>
+        </div>
+      )}
+      {items === null ? (
+        state.status !== "error" && (
+          <p data-testid="improvements-mine-loading" className="flex items-center gap-2 opacity-70">
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            {labels.mineLoading}
+          </p>
+        )
+      ) : items.length === 0 ? (
+        <p data-testid="improvements-mine-empty" className="opacity-70">
+          {labels.mineEmpty}
+        </p>
+      ) : (
+        <ul data-testid="improvements-mine-list" className="flex max-h-80 flex-col gap-2 overflow-y-auto">
+          {items.map((r) => {
+            const result = safeHttpUrl(r.result_url);
+            return (
+              <li
+                key={r.thread_id}
+                data-testid="improvements-mine-item"
+                data-thread-status={r.thread_status}
+                data-task-status={r.task?.status ?? ""}
+                className="rounded border p-2"
+              >
+                <p className="font-medium">{r.subject}</p>
+                <p className="text-xs opacity-70">
+                  <time dateTime={r.created_at}>{formatCreated(r.created_at)}</time>
+                  {" · "}
+                  {labels.mineThread}: {improvementStatusLabel(r.thread_status)}
+                  {" · "}
+                  {labels.mineTask}:{" "}
+                  {r.task
+                    ? `${r.task.identifier ? `${r.task.identifier} ` : ""}${improvementStatusLabel(r.task.status)}`
+                    : labels.mineNoTask}
+                </p>
+                {result && (
+                  <a
+                    data-testid="improvements-mine-result"
+                    href={result}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-xs underline"
+                  >
+                    <ExternalLink className="h-3 w-3" aria-hidden />
+                    {labels.mineResult}
+                  </a>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {items !== null && state.status === "loading" && (
+        <p className="mt-2 flex items-center gap-1 text-xs opacity-60" aria-live="polite">
+          <Loader2 className="h-3 w-3 animate-spin" aria-hidden />
+          {labels.mineLoading}
+        </p>
+      )}
+    </div>
   );
 }
 
