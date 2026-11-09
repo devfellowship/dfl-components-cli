@@ -166,6 +166,33 @@ describe("submit", () => {
     expect(typeof payload.context.route).toBe("string");
   });
 
+  it("sent state: green check, short text, thread link in a new tab, no raw URL", async () => {
+    const onSubmit = vi.fn(async () => ({ thread_id: "th1", thread_url: "https://plans.devfellowship.com/agents/threads/th1" }));
+    render(<ImprovementsDialog open onOpenChange={() => {}} appSlug="t" uploadImage={noop} onSubmit={onSubmit} />);
+    fireEvent.change(screen.getByTestId("improvements-text"), { target: { value: "x" } });
+    fireEvent.click(screen.getByTestId("improvements-submit"));
+    await waitFor(() => expect(screen.getByTestId("improvements-sent")).toBeTruthy());
+    expect(screen.getByTestId("improvements-sent-icon").getAttribute("class")).toContain("--s-success-fg");
+    const link = screen.getByTestId("improvements-sent-thread") as HTMLAnchorElement;
+    expect(link.textContent).toContain("Abrir thread");
+    expect(link.getAttribute("href")).toBe("https://plans.devfellowship.com/agents/threads/th1");
+    expect(link.getAttribute("target")).toBe("_blank");
+    expect(link.getAttribute("rel")).toContain("noopener");
+    expect(screen.getByText("Melhoria enviada")).toBeTruthy();
+    expect(screen.getByText("Um agente vai responder no thread.")).toBeTruthy();
+    expect(screen.queryByText("Pedir uma melhoria")).toBeNull();
+    expect(screen.getByTestId("improvements-sent").textContent).not.toContain("https://");
+  });
+
+  it("sent state: no thread link when the service returns no thread_url", async () => {
+    const onSubmit = vi.fn(async () => ({ thread_id: "th1" }));
+    render(<ImprovementsDialog open onOpenChange={() => {}} appSlug="t" uploadImage={noop} onSubmit={onSubmit} />);
+    fireEvent.change(screen.getByTestId("improvements-text"), { target: { value: "x" } });
+    fireEvent.click(screen.getByTestId("improvements-submit"));
+    await waitFor(() => expect(screen.getByTestId("improvements-sent")).toBeTruthy());
+    expect(screen.queryByTestId("improvements-sent-thread")).toBeNull();
+  });
+
   it("shows the service error and keeps the draft", async () => {
     const onSubmit = vi.fn(async () => {
       throw new Error("Apenas superadmins podem enviar melhorias.");
