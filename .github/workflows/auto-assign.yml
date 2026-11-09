@@ -13,9 +13,9 @@ on:
 
 # Cancel a superseded run of the same PR. The key is the PR number; a run
 # without a PR (push, schedule, dispatch) gets its own run_id group, so it is
-# never cancelled. ADR-5 of plan 20260917-fleet-compute-rebalance-render-runners-renovate.
+# never cancelled. The event name is in the key, so a run of another trigger never cancels it. ADR-5 of plan 20260917-fleet-compute-rebalance-render-runners-renovate.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
