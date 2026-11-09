@@ -22,7 +22,7 @@
  *     listMine={client.listMine} />
  */
 import * as React from "react";
-import { ExternalLink, ImagePlus, Lightbulb, Loader2, X } from "lucide-react";
+import { CheckCircle2, ExternalLink, ImagePlus, Lightbulb, Loader2, X } from "lucide-react";
 
 import { cn } from "../../lib/utils";
 import {
@@ -57,6 +57,10 @@ export interface ImprovementsLabels {
   submit: string;
   cancel: string;
   sent: string;
+  sentTitle: string;
+  sentHint: string;
+  openThread: string;
+  close: string;
   removeImage: string;
   tabNew: string;
   tabMine: string;
@@ -79,6 +83,10 @@ export const DEFAULT_IMPROVEMENTS_LABELS: ImprovementsLabels = {
   submit: "Enviar",
   cancel: "Cancelar",
   sent: "Melhoria enviada. Um agente vai responder no thread.",
+  sentTitle: "Melhoria enviada",
+  sentHint: "Um agente vai responder no thread.",
+  openThread: "Abrir thread",
+  close: "Fechar",
   removeImage: "Remover imagem",
   tabNew: "Nova melhoria",
   tabMine: "Minhas melhorias",
@@ -235,6 +243,7 @@ export function ImprovementsDialog({
     onOpenChange(next);
   };
 
+  const showSent = view !== "mine" && sent !== null;
   const failedUpload = paste.images.find((i) => i.status === "error");
   const canSubmit = text.trim().length > 0 && !paste.uploading && !submitting && !sent;
 
@@ -264,10 +273,22 @@ export function ImprovementsDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent data-testid="improvements-dialog" className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{labels.title}</DialogTitle>
-          <DialogDescription>{labels.description}</DialogDescription>
-        </DialogHeader>
+        {showSent ? (
+          <DialogHeader className="items-center text-center sm:text-center">
+            <CheckCircle2
+              data-testid="improvements-sent-icon"
+              className="mx-auto h-12 w-12 text-[var(--s-success-fg)]"
+              aria-hidden
+            />
+            <DialogTitle>{labels.sentTitle}</DialogTitle>
+            <DialogDescription>{labels.sentHint}</DialogDescription>
+          </DialogHeader>
+        ) : (
+          <DialogHeader>
+            <DialogTitle>{labels.title}</DialogTitle>
+            <DialogDescription>{labels.description}</DialogDescription>
+          </DialogHeader>
+        )}
 
         {hasMine && (
           <div role="tablist" aria-label={labels.trigger} className="flex border-b text-sm">
@@ -293,20 +314,25 @@ export function ImprovementsDialog({
         {view === "mine" ? (
           <MineList state={mine} labels={labels} onRetry={() => void refreshMine()} />
         ) : sent ? (
-          <div data-testid="improvements-sent" className="text-sm">
-            <p>{labels.sent}</p>
-            {sent.thread_url && (
-              <a className="underline" href={sent.thread_url} target="_blank" rel="noreferrer">
-                {sent.thread_url}
-              </a>
-            )}
-            {hasMine && (
-              <p className="mt-2">
-                <button type="button" className="underline" onClick={() => setView("mine")}>
-                  {labels.tabMine}
-                </button>
-              </p>
-            )}
+          <div data-testid="improvements-sent" className="flex flex-col items-center gap-3 text-sm">
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {safeHttpUrl(sent.thread_url) && (
+                <Button asChild variant="primary">
+                  <a
+                    data-testid="improvements-sent-thread"
+                    href={safeHttpUrl(sent.thread_url) as string}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {labels.openThread}
+                    <ExternalLink className="ml-1 h-4 w-4" aria-hidden />
+                  </a>
+                </Button>
+              )}
+              <Button type="button" variant="ghost" onClick={() => handleOpenChange(false)}>
+                {labels.close}
+              </Button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
