@@ -25,6 +25,16 @@ export interface UserProfile {
   onboarding_completed_at: string | null;
 }
 
+/**
+ * The `profiles` columns the provider reads. Never `*`: on DFL prod the
+ * `authenticated` role has no SELECT on `profiles.email`, so `select("*")`
+ * fails with 42501 ("permission denied for table profiles") and `profile`
+ * stayed null in every app (measured 2026-11-10). `email` comes from the
+ * session user instead.
+ */
+export const PROFILE_COLUMNS =
+  "id, name, avatar_url, created_at, updated_at, onboarding_completed_at";
+
 export interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -43,12 +53,15 @@ export interface AuthProviderProps {
   supabase: SupabaseClient;
   /** Optional: table name for profiles. Defaults to 'profiles'. */
   profilesTable?: string;
+  /** Optional: columns to read. Defaults to PROFILE_COLUMNS (never `*`). */
+  profileColumns?: string;
 }
 
 export const AuthProvider = ({
   children,
   supabase,
   profilesTable = "profiles",
+  profileColumns = PROFILE_COLUMNS,
 }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -68,17 +81,18 @@ export const AuthProvider = ({
       try {
         const { data, error } = await (supabase as any)
           .from(profilesTable)
-          .select("*")
+          .select(profileColumns)
           .eq("id", userId)
           .single();
         if (error) throw error;
-        setProfile(data as UserProfile);
+        const email = (data as { email?: string | null }).email ?? userRef.current?.email ?? "";
+        setProfile({ ...(data as UserProfile), email });
       } catch {
         // Profile fetch failure is non-fatal
         setProfile(null);
       }
     },
-    [supabase, profilesTable]
+    [supabase, profilesTable, profileColumns]
   );
 
   const refreshProfile = useCallback(async () => {
