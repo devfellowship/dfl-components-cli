@@ -1,5 +1,11 @@
 # @devfellowship/components
 
+## 3.12.1
+
+### Patch Changes
+
+- [#165](https://github.com/devfellowship/dfl-components-cli/pull/165) [`7e903c0`](https://github.com/devfellowship/dfl-components-cli/commit/7e903c0166e1ce4c713c0a6dbd287881dbce5f29) Thanks [@taigfs](https://github.com/taigfs)! - Fix `AuthProvider`: read `profiles` with explicit columns (`PROFILE_COLUMNS`) instead of `select("*")`. On DFL prod the `authenticated` role has no SELECT on `profiles.email`, so the `*` read failed with 42501 and `profile` (with `avatar_url`) was always null: no app shell showed the user photo. `profile.email` now comes from the session user. New optional prop `profileColumns`.
+
 ## 3.12.0
 
 ### Minor Changes
