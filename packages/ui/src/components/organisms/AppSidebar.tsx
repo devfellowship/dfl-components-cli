@@ -49,6 +49,14 @@ export interface AppSidebarProps {
   userInfo?: UserInfo;
   /** Logo element or image src. Defaults to DFL logomark. */
   logo?: ReactNode | string;
+  /**
+   * How `logo` is framed. `"box"` (default) puts it in the 32px amber box.
+   * `"tile"` renders it bare (32px, rounded) for icons that are already a
+   * tile, like the mini-app icons. Ignored when `logo` is not provided.
+   * Adoption: run `npx dfl-components favicon --app <slug>`, then
+   * `<AppSidebar logo="/favicon.svg" logoMode="tile" … />`.
+   */
+  logoMode?: "box" | "tile";
   /** App name shown next to logo (collapsed in icon mode). */
   appName?: string;
   /** App sub-label (e.g. "Back Office"). */
@@ -81,6 +89,7 @@ function SidebarInner({
   navGroups,
   userInfo,
   logo,
+  logoMode = "box",
   appName = "DevFellowship",
   appLabel,
   onNavigate,
@@ -100,13 +109,26 @@ function SidebarInner({
       logo
     );
 
+  // Tile mode needs a logo; the default DFL logomark is not a tile.
+  const tile = logoMode === "tile" && logo !== undefined;
+  const tileEl =
+    typeof logo === "string" ? (
+      <img src={logo} alt={appName} className="h-8 w-8 shrink-0 rounded-lg object-contain" />
+    ) : (
+      <div className="h-8 w-8 shrink-0">{logo}</div>
+    );
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand-accent,#E07A4A)] shrink-0">
-            {logoEl}
-          </div>
+          {tile ? (
+            tileEl
+          ) : (
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--brand-accent,#E07A4A)] shrink-0">
+              {logoEl}
+            </div>
+          )}
           {!isCollapsed && (
             <div className="flex flex-col overflow-hidden">
               <span className="text-sm font-semibold truncate">{appName}</span>

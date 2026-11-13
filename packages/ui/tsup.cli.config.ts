@@ -27,13 +27,21 @@ import { defineConfig } from 'tsup';
  *    `scripts/check-cli-bundle-offline.mjs` asserts on the built artifact that
  *    the schema is present in it and that no network primitive is. Leaving the
  *    package external would satisfy neither half of that guard.
+ *  - TWO entries. `dist/favicon-remote.js` (src/cli/favicon/remote.ts) is the
+ *    ONE module allowed to use the network: `favicon --app <slug>` downloads
+ *    a mini-app icon set from brand.devfellowship.com and verifies bytes +
+ *    sha256 before writing. `dist/cli.js` loads it lazily by a computed
+ *    `import()` URL, only when `--app` is given, so `dist/cli.js` itself keeps
+ *    zero network primitives. The offline guard checks both files.
  *  - `dts: false` — a bin needs no type declarations.
  *  - ESM only + node shebang banner.
  *  - This runs as a SEPARATE tsup invocation from the library build so the
  *    library's `dts` generation never sees the CLI's Node-only code.
  */
 export default defineConfig({
-  entry: { cli: 'src/cli/index.ts' },
+  // Two entries: the bin, and the ONE module allowed to touch the network
+  // (`favicon --app`), loaded lazily — see the note above.
+  entry: { cli: 'src/cli/index.ts', 'favicon-remote': 'src/cli/favicon/remote.ts' },
   // See the note above: the schema package, and only it, is bundled in.
   noExternal: ['@devfellowship/ux-paths-spec'],
   format: ['esm'],

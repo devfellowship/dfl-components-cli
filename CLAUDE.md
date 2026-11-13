@@ -70,7 +70,9 @@ registry/                     # JSON component registry
 `packages/ui/src/brand/` is the fleet's ONLY favicon source; apps install it with
 `npx dfl-components favicon`. Changing the mark = edit `favicon.svg`, regenerate
 the rasters, bump the package — never re-upload to S3 and paste a URL into an
-app's `index.html`. The asset list is declared twice and must stay in sync:
+app's `index.html`.
+Per-app (mini-app) icons do NOT live in `src/brand/`: they come from the brand site
+(`npx dfl-components favicon --app <slug>`, sha256-verified). The asset list is declared twice and must stay in sync:
 `FAVICON_ASSETS` (`src/cli/favicon/patch-html.ts`) and the `tsup.config.ts`
 `onSuccess` copy loop. Details: README → "`favicon` — the fleet's icon".
 
