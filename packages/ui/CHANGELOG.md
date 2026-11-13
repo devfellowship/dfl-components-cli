@@ -1,5 +1,11 @@
 # @devfellowship/components
 
+## 3.13.1
+
+### Patch Changes
+
+- [#169](https://github.com/devfellowship/dfl-components-cli/pull/169) [`a33f596`](https://github.com/devfellowship/dfl-components-cli/commit/a33f596fb72318be1f0ddf736212a97828c533c8) Thanks [@taigfs](https://github.com/taigfs)! - `dfl-components favicon` now replaces a whole icon `<link>` even when an attribute value (for example an inline SVG data URI) contains `>`, and inserts the managed block after `<meta charset>` and viewport instead of before them.
+
 ## 3.13.0
 
 ### Minor Changes
