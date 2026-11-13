@@ -54,9 +54,48 @@ function escapeRe(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/** Any `<link>` that claims an icon slot — what the managed block replaces. */
-const ICON_LINK =
-  /[^\S\n]*<link\b[^>]*\brel=["']?[^"'>]*\b(?:icon|apple-touch-icon|mask-icon|shortcut icon)\b[^"'>]*["']?[^>]*>[^\S\n]*\n?/gi;
+/** A tag body that respects quoted attribute values ("..." / '...' may hold `>`). */
+const TAG_BODY = `(?:[^>"']|"[^"]*"|'[^']*')*`;
+
+/** Every `<link>` tag, with its surrounding blanks and one trailing newline. */
+const LINK_TAG = new RegExp(`[^\\S\\n]*<link\\b${TAG_BODY}>[^\\S\\n]*\\n?`, 'gi');
+
+/** `<meta>` tags, quote-aware. */
+const META_TAG = new RegExp(`<meta\\b${TAG_BODY}>`, 'gi');
+
+const ATTR = /([^\s=/"'>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g;
+
+/** Attributes of a tag, parsed quote-aware (names lower-cased). */
+function attrsOf(tag: string): Map<string, string> {
+  const body = tag.replace(/^<\w+/, '');
+  const out = new Map<string, string>();
+  for (const m of body.matchAll(ATTR)) {
+    const name = m[1].toLowerCase();
+    if (!out.has(name)) out.set(name, m[2] ?? m[3] ?? m[4] ?? '');
+  }
+  return out;
+}
+
+/** True when the tag's own `rel` attribute claims an icon slot. */
+function isIconLink(tag: string): boolean {
+  const rel = attrsOf(tag).get('rel');
+  return rel !== undefined && /\bicon\b/i.test(rel);
+}
+
+/** Index just past the last charset/viewport `<meta>` inside `<head>`, or -1. */
+function endOfHeadMeta(html: string, from: number): number {
+  const close = /<\/head\s*>/i.exec(html.slice(from));
+  const limit = close ? from + close.index : html.length;
+  let end = -1;
+  META_TAG.lastIndex = from;
+  for (let m = META_TAG.exec(html); m && m.index < limit; m = META_TAG.exec(html)) {
+    const attrs = attrsOf(m[0]);
+    if (attrs.has('charset') || attrs.get('name')?.toLowerCase() === 'viewport') {
+      end = m.index + m[0].length;
+    }
+  }
+  return end;
+}
 
 /** A previously written managed block, newline included, so rewriting is exact. */
 const MANAGED_BLOCK = new RegExp(
@@ -83,7 +122,8 @@ export function patchHtml(html: string, base = '/'): PatchResult {
   const removed: string[] = [];
 
   let next = html.replace(MANAGED_BLOCK, '');
-  next = next.replace(ICON_LINK, (match) => {
+  next = next.replace(LINK_TAG, (match) => {
+    if (!isIconLink(match)) return match;
     removed.push(match.trim());
     return '';
   });
@@ -91,7 +131,10 @@ export function patchHtml(html: string, base = '/'): PatchResult {
   const headOpen = /<head\b[^>]*>/i.exec(next);
   if (!headOpen) return { html, changed: false, removed: [] };
 
-  const at = headOpen.index + headOpen[0].length;
+  const headEnd = headOpen.index + headOpen[0].length;
+  // After <meta charset>/viewport (charset must stay in the first 1024 bytes);
+  // with neither, straight after <head>.
+  const at = Math.max(headEnd, endOfHeadMeta(next, headEnd));
   next = `${next.slice(0, at)}\n${INDENT}${renderBlock(base)}${next.slice(at)}`;
 
   return { html: next, changed: next !== html, removed };

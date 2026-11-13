@@ -84,6 +84,75 @@ describe('patchHtml — the app <head> contract', () => {
   });
 });
 
+describe('patchHtml — whole-tag replacement with ">" inside attribute values', () => {
+  it('removes an inline SVG data-URI icon link whole, leaving no fragment', () => {
+    const tag =
+      `<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='10' y='10' width='80' height='80' rx='18' fill='%233fd17f'/></svg>" />`;
+    const r = patchHtml(page(`    ${tag}\n`));
+    expect(r.removed).toEqual([tag]);
+    expect(r.html).not.toContain('</svg>"');
+    expect(r.html).not.toContain('data:image');
+    expect(r.html.match(/dfl-favicon:start/g)).toHaveLength(1);
+  });
+
+  it('handles a single-quoted attribute containing ">"', () => {
+    const tag = `<link rel='icon' href='data:image/svg+xml,<svg><path d="M0 0"/></svg>' />`;
+    const r = patchHtml(page(`    ${tag}\n`));
+    expect(r.removed).toEqual([tag]);
+    expect(r.html).not.toContain('</svg>');
+    expect(r.html).not.toContain('data:image');
+  });
+
+  it('does not treat "icon" inside another attribute value as an icon rel', () => {
+    const tag = '<link rel="stylesheet" href="/icon.css" title="icon" />';
+    const r = patchHtml(page(`    ${tag}\n`));
+    expect(r.removed).toEqual([]);
+    expect(r.html).toContain(tag);
+  });
+});
+
+describe('patchHtml — block position', () => {
+  const meta = {
+    charset: '    <meta charset="UTF-8" />\n',
+    viewport: '    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n',
+  };
+
+  it('inserts after both charset and viewport', () => {
+    const r = patchHtml(page(meta.charset + meta.viewport));
+    const at = r.html.indexOf(BLOCK_START);
+    expect(at).toBeGreaterThan(r.html.indexOf('name="viewport"'));
+    expect(at).toBeGreaterThan(r.html.indexOf('charset='));
+    expect(r.html.indexOf('charset=')).toBeLessThan(1024);
+    expect(r.html.indexOf('<title>')).toBeGreaterThan(r.html.indexOf(BLOCK_END));
+  });
+
+  it('inserts after viewport even when it precedes charset', () => {
+    const r = patchHtml(page(meta.viewport + meta.charset));
+    const at = r.html.indexOf(BLOCK_START);
+    expect(at).toBeGreaterThan(r.html.indexOf('name="viewport"'));
+    expect(at).toBeGreaterThan(r.html.indexOf('charset='));
+  });
+
+  it('inserts after charset when there is no viewport', () => {
+    const r = patchHtml(page(meta.charset));
+    expect(r.html.indexOf(BLOCK_START)).toBeGreaterThan(r.html.indexOf('charset='));
+  });
+
+  it('inserts right after <head> when there is no meta', () => {
+    const r = patchHtml(page(''));
+    expect(r.html).toContain(`<head>\n    ${BLOCK_START}`);
+  });
+
+  it('is idempotent and rewrites a stale block with meta present', () => {
+    const once = patchHtml(page(meta.charset + meta.viewport)).html;
+    expect(patchHtml(once)).toMatchObject({ changed: false, html: once });
+    const fresh = patchHtml(patchHtml(page(meta.charset + meta.viewport), '/a/').html, '/');
+    expect(fresh.changed).toBe(true);
+    expect(fresh.html.match(/dfl-favicon:start/g)).toHaveLength(1);
+    expect(fresh.html.indexOf(BLOCK_START)).toBeGreaterThan(fresh.html.indexOf('name="viewport"'));
+  });
+});
+
 describe('brand assets shipped with the package', () => {
   it('resolves every declared asset from src/brand', () => {
     const paths = brandAssetPaths(resolveBrandDir());
