@@ -7,6 +7,7 @@
  *   NavItemActive  — single item in active/selected state (brand-subtle bg, amber-fg, 3px border)
  *   NavItemHover   — single item in hover state (surface-raised bg, ink-primary text)
  *   NavItemFocus   — single item in keyboard-focus state (DS uniform 2px-gap+1px-amber ring)
+ *   TileLogo       — mini-app icon as a bare 32px tile (logoMode="tile"), no amber box
  *   NoUser         — expanded, no userInfo prop, copyright fallback at 11px ink-muted
  */
 import type { Meta, StoryObj } from "@storybook/react";
@@ -333,6 +334,37 @@ export const NoUser: Story = {
             userInfo não é fornecido).
           </p>
         </main>
+      </AppSidebar>
+    </div>
+  ),
+};
+
+/* ─── Story: TileLogo ─────────────────────────────────────────────────── */
+/**
+ * `logoMode="tile"` with a logo that is already a rounded tile (a mini-app
+ * icon from `npx dfl-components favicon --app <slug>`). No amber box.
+ */
+const TILE_ICON =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#111"/><path d="M9 22V10l7 8 7-8v12" stroke="#E07A4A" stroke-width="2.5" fill="none"/></svg>',
+  );
+
+export const TileLogo: Story = {
+  args: {
+    navGroups,
+    userInfo,
+    appName: "Mini App",
+    appLabel: "Plataforma",
+    activeUrl: "/",
+    defaultOpen: true,
+    logo: TILE_ICON,
+    logoMode: "tile",
+  },
+  render: (args) => (
+    <div style={{ height: "100vh", display: "flex" }}>
+      <AppSidebar {...args}>
+        <main style={{ flex: 1, padding: "24px" }} />
       </AppSidebar>
     </div>
   ),

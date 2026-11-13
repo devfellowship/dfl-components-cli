@@ -17,6 +17,17 @@ export const FAVICON_ASSETS = [
   'icon-512.png',
 ] as const;
 
+/**
+ * Where each installed asset comes from in a brand-site mini-app icon set
+ * (`<source>/<slug>/<name>`). Only names that differ are listed; every other
+ * asset keeps its name. Derived from FAVICON_ASSETS so there is ONE list.
+ */
+const MINI_APP_RENAMES: Record<string, string> = { 'favicon.svg': 'icon.svg' };
+
+/** Remote file name (in the mini-app set) for each installed asset. */
+export const MINI_APP_SOURCES: ReadonlyArray<{ target: string; remote: string }> =
+  FAVICON_ASSETS.map((target) => ({ target, remote: MINI_APP_RENAMES[target] ?? target }));
+
 const INDENT = '    ';
 
 /**

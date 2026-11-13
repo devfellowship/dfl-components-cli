@@ -274,7 +274,7 @@ pnpm add -g @devfellowship/components && dfl-components <command>
 | --- | --- |
 | `ux-paths <cmd>` | Versioned, schema-validated per-app UX-path mapping (below) |
 | `check-style-imports` | Guard against importing both `/styles` and `/shadcn` |
-| `favicon` | Install the shared DFL brand icons into an app (below) |
+| `favicon [--app <slug>]` | Install the shared DFL brand icons, or one mini-app's own icon set, into an app (below) |
 
 ### `favicon` — the fleet's icon, installed from the DS
 
@@ -305,12 +305,44 @@ and `icon-512.png` into the app's public directory, then replaces **every** icon
 | `--public-dir <dir>` | `public` | Directory served at the site root |
 | `--html <file>` | `index.html` | HTML entry to rewrite |
 | `--base <path>` | `/` | URL prefix the icons are served under |
+| `--app <slug>` | — | Install the icon set of one mini-app from the brand site instead of the fleet icon |
+| `--source <url>` | `https://brand.devfellowship.com/mini-apps` | Brand site base URL for `--app` (env `DFL_MINI_APPS_SOURCE` overrides the default) |
 | `--check` | — | Write nothing; exit 1 on drift (CI gate) |
 
 The command is idempotent — re-running it is how an app picks up a brand
 refresh, and `--check` in CI keeps it from drifting back. The icons are also
 importable directly as `@devfellowship/components/brand/favicon.svg` (and the
 other four) for apps that bundle them instead.
+
+#### `--app <slug>` — a mini-app's own icon
+
+Each mini-app has its own icon set, published at
+`https://brand.devfellowship.com/mini-apps/` (index: `manifest.json`).
+
+```bash
+npx dfl-components favicon --app <slug>
+```
+
+It installs the same five files and the same `<link>` block, but from the brand
+site. The brand site's `icon.svg` is installed as `favicon.svg`; the other four
+keep their names. The command **verifies before it writes**: it downloads all
+five files, checks each one's size and sha256 against the manifest, and only
+then writes. A missing file, a non-200 answer, or a size or sha256 mismatch
+**refuses**: it prints the file and the expected vs actual hash (exit 1) and
+writes nothing — no file copied, `public/` not created, `index.html` untouched.
+An unknown slug prints the available slugs (exit 2). `--check` does the same
+fetch and verification, then compares with the disk and exits 0 or 1.
+
+The network code lives in its own bundle (`dist/favicon-remote.js`), loaded
+only when `--app` is given; `dist/cli.js` stays free of network primitives
+(`scripts/check-cli-bundle-offline.mjs`).
+
+The mini-app icons are black rounded tiles, so show them without the amber box
+in `AppSidebar`:
+
+```tsx
+<AppSidebar logo="/favicon.svg" logoMode="tile" … />
+```
 
 The mark itself is DS-native: an `--p-sand-900` plate at `--p-radius-lg`, the
 `DFL` wordmark in Barlow Condensed Bold (`--p-sand-50`) and the brand `/` in

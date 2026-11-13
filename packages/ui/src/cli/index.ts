@@ -16,4 +16,4 @@ registerUxPaths(program);
 registerCheckStyleImports(program);
 registerFavicon(program);
 
-program.parse();
+await program.parseAsync();

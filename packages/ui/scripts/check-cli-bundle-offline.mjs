@@ -27,6 +27,17 @@
  * defence — a test that `raw.githubusercontent.com` does not appear in its
  * bundle — and it is the reason that repo never acquired this bug.
  *
+ * THE ONE ALLOWED NETWORK MODULE
+ * -------------------------------
+ * `dfl-components favicon --app <slug>` downloads a mini-app icon set from
+ * brand.devfellowship.com (bytes + sha256 verified before anything is written).
+ * That code lives ONLY in `dist/favicon-remote.js` (own tsup entry), which
+ * `dist/cli.js` loads lazily when `--app` is given. So:
+ *   • dist/cli.js            — checked exactly as before: NO network primitive;
+ *   • dist/favicon-remote.js — must exist (hard failure, never a skip); may
+ *     contain `fetch(`, but none of the other primitives; and must name
+ *     brand.devfellowship.com as its default source.
+ *
  * FAILURE MODE
  * ------------
  * Hard failure, always. A missing `dist/cli.js` is an ERROR telling you to
@@ -41,13 +52,16 @@ import { dirname, resolve } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const BUNDLE = resolve(here, '..', 'dist', 'cli.js');
+const REMOTE = resolve(here, '..', 'dist', 'favicon-remote.js');
 
-if (!existsSync(BUNDLE)) {
-  console.error(
-    `ERROR: ${BUNDLE} does not exist, so the bundle could not be checked.\n` +
-      `This is a failure, not a skip — run \`npm run build:cli\` first.`,
-  );
-  process.exit(2);
+for (const file of [BUNDLE, REMOTE]) {
+  if (!existsSync(file)) {
+    console.error(
+      `ERROR: ${file} does not exist, so the bundle could not be checked.\n` +
+        `This is a failure, not a skip — run \`npm run build:cli\` first.`,
+    );
+    process.exit(2);
+  }
 }
 
 const src = readFileSync(BUNDLE, 'utf8');
@@ -75,6 +89,22 @@ for (const { pattern, what } of FORBIDDEN) {
     const line = src.split('\n').findIndex((l) => l.includes(pattern)) + 1;
     violations.push(`${what} — found \`${pattern}\` at dist/cli.js:${line}`);
   }
+}
+
+// The lazily loaded network module: `fetch(` is its whole job, nothing else
+// network-shaped is allowed (no http/https client, no third-party HTTP lib).
+const remoteSrc = readFileSync(REMOTE, 'utf8');
+for (const { pattern, what } of FORBIDDEN.filter((f) => f.pattern !== 'fetch(')) {
+  if (remoteSrc.includes(pattern)) {
+    const line = remoteSrc.split('\n').findIndex((l) => l.includes(pattern)) + 1;
+    violations.push(`${what} — found \`${pattern}\` at dist/favicon-remote.js:${line}`);
+  }
+}
+if (!remoteSrc.includes('brand.devfellowship.com')) {
+  violations.push(
+    'dist/favicon-remote.js does not reference brand.devfellowship.com as the ' +
+      'default icon source.',
+  );
 }
 
 // The schema must actually be inlined. A bundle with no network I/O *and* no
@@ -117,5 +147,6 @@ if (violations.length > 0) {
 
 console.log(
   `OK: dist/cli.js is offline-safe — no network primitives, vendored schema ` +
-    `inlined, ${rawRefs} identity-only raw.githubusercontent reference.`,
+    `inlined, ${rawRefs} identity-only raw.githubusercontent reference. ` +
+    `dist/favicon-remote.js is the only network module (brand.devfellowship.com).`,
 );
