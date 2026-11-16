@@ -12,3 +12,18 @@ export type {
   UsePasteImageUploadOptions,
   UsePasteImageUploadResult,
 } from "./use-paste-image-upload";
+export {
+  AppsRegistryProvider,
+  useAppsRegistry,
+  fetchAppsRegistry,
+  APP_REGISTRY_COLUMNS,
+  DEFAULT_APP_ICON_BASE_URL,
+} from "./use-apps-registry";
+export type {
+  AppKind,
+  AppRegistryRow,
+  AppsRegistryProviderProps,
+  AppsRegistryStatus,
+  AppsRegistrySupabase,
+  AppsRegistryValue,
+} from "./use-apps-registry";

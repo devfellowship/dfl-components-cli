@@ -18,8 +18,8 @@ export * from "./components";
 export { cn } from "./lib/utils";
 
 // Hooks re-export for convenience (full set at @dfl/components/hooks)
-export { useIsMobile, useToast, toast, useAuth, useSession, useIframeAuth, useIframeNavigate, usePasteImageUpload } from "./hooks";
-export type { ToastProps, ToastVariant, AuthContextType, UserProfile } from "./hooks";
+export { useIsMobile, useToast, toast, useAuth, useSession, useIframeAuth, useIframeNavigate, usePasteImageUpload, AppsRegistryProvider, useAppsRegistry } from "./hooks";
+export type { ToastProps, ToastVariant, AuthContextType, UserProfile, AppRegistryRow, AppsRegistryProviderProps } from "./hooks";
 
 // Providers re-export for convenience
 export { AuthProvider, FeatureFlagProvider, useFeatureFlag, useFeatureFlags } from "./providers";
