@@ -1,0 +1,223 @@
+/* DecisionCard of @devfellowship/components — moved from dfl-os
+   ui/src/styles/decision-card.css (plan 20261115-dc-p2-one-decision-card T3,
+   DC P4 T2 diagram box, DC P4 T5 chart). Import once:
+     import "@devfellowship/components/decision-card.css";
+   Tokens: the DS tokens of @devfellowship/components/styles (--p-* --s-*).
+
+   The slots are layout-neutral wrappers (display: contents): each size keeps
+   the spacing of the surface it replaced. Only the strip is new: slot ① of
+   the approved canvas (app, type, door, blocking · plan link, question number). */
+
+.dc-slot { display: contents; }
+
+.dc-strip {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px;
+  min-width: 0; padding-bottom: 10px; margin-bottom: 12px;
+  border-bottom: 1px solid var(--s-border-subtle);
+  font: 500 10.5px/1.4 var(--p-font-mono); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--s-ink-muted);
+}
+.dc-card--focus .dc-strip { margin-bottom: 16px; }
+
+.dc-app { color: var(--s-ink-primary); text-transform: none; letter-spacing: 0; font: 500 12px/1.3 var(--p-font-sans); }
+.dc-type { color: var(--s-ink-secondary); }
+.dc-type--icon,
+.dc-door,
+.dc-block {
+  display: inline-grid; place-items: center; width: 20px; height: 20px; flex: none;
+  border-radius: 4px; box-shadow: inset 0 0 0 1px var(--s-border-subtle); color: var(--s-ink-secondary);
+}
+.dc-marks { display: inline-flex; align-items: center; gap: 6px; }
+.dc-door--one_way { background: var(--s-ink-primary); color: var(--s-ink-inverse); box-shadow: none; }
+.dc-block { color: var(--s-ink-disabled); }
+.dc-block.is-on { color: var(--s-danger-fg); box-shadow: inset 0 0 0 1px var(--s-danger-solid); }
+
+.dc-meta { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; min-width: 0; max-width: 100%; }
+.dc-plan {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font: 500 12.5px/1.3 var(--p-font-sans); text-transform: none; letter-spacing: 0;
+  color: var(--s-ink-secondary); text-decoration: underline; text-decoration-color: var(--s-border-strong); text-underline-offset: 3px;
+}
+.dc-plan:hover { color: var(--s-ink-primary); text-decoration-color: var(--s-brand-solid); }
+.dc-qn { flex: none; color: var(--s-ink-secondary); }
+
+/* The marks draw their SVG at 12 px inside the 20 px tile (the word form has no svg). */
+.dc-strip svg { width: 12px; height: 12px; display: block; }
+
+/* The visual slot: the diagram of card.diagram_id (DC P4 T2). Empty (no
+   diagram, or it cannot be read) → hidden. The loading box and the drawn
+   diagram have the same height, so the options do not move when it arrives. */
+.dc-visual:empty { display: none; }
+.dc-visual { margin: 0 0 12px; min-width: 0; }
+.dc-diagram {
+  --dc-diagram-h: 220px;
+  display: flex; flex-direction: column; gap: 6px; margin: 0;
+  height: var(--dc-diagram-h); box-sizing: border-box; padding: 8px 10px;
+  border: 1px solid var(--s-border-subtle, var(--s-border-strong)); border-radius: 8px;
+  background: var(--s-surface-sunken, transparent); overflow: hidden;
+}
+.dc-diagram--loading .dc-diagram-frame { border-radius: 4px; background: var(--s-border-subtle, rgba(127,127,127,.12)); opacity: .5; }
+.dc-diagram--link { height: auto; padding: 8px 10px; }
+.dc-diagram-frame { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.dc-diagram-frame svg { width: 100%; height: 100%; max-height: 100%; }
+.dc-diagram-cap { flex: none; margin: 0; text-align: right; }
+.dc-diagram-open {
+  font: 500 12.5px/1.3 var(--p-font-sans); color: var(--s-ink-secondary);
+  text-decoration: underline; text-decoration-color: var(--s-border-strong); text-underline-offset: 3px;
+}
+.dc-diagram-open:hover { color: var(--s-ink-primary); text-decoration-color: var(--s-brand-solid); }
+
+/* The micro-chart in the visual slot (DC P4 T5, DecisionChart.tsx). It uses the
+   220 px box of the diagram (.dc-diagram), so the options do not move. Colours
+   are the status tokens: green / red / amber / neutral, and a neutral palette
+   (n0..n2) for a series with no status. Dark is the app theme; the DS light
+   scope (.editorial / [data-surface='editorial']) maps the same names to the
+   darker steps, so a light surface keeps the contrast. */
+.dc-chart {
+  --dc-chart-green: var(--s-success-solid);
+  --dc-chart-red: var(--s-danger-solid);
+  --dc-chart-amber: var(--s-warning-solid);
+  --dc-chart-neutral: var(--p-sand-300);
+  --dc-chart-n0: var(--s-info-solid);
+  --dc-chart-n1: var(--p-sand-300);
+  --dc-chart-n2: var(--p-sand-100);
+  --dc-chart-ink: var(--s-ink-secondary);
+  --dc-chart-muted: var(--s-ink-muted);
+  --dc-chart-grid: var(--s-border-subtle, var(--s-border-strong));
+  --dc-chart-axis: var(--s-border-strong);
+  --dc-chart-gap: var(--s-surface-sunken, var(--s-bg-base));
+  --dc-chart-mark-bg: var(--s-ink-primary);
+  --dc-chart-mark-fg: var(--s-ink-inverse);
+  position: relative; gap: 6px; color: var(--dc-chart-ink);
+}
+.editorial .dc-chart, [data-surface='editorial'] .dc-chart {
+  --dc-chart-green: var(--p-green-700);
+  --dc-chart-red: var(--p-red-700);
+  --dc-chart-amber: var(--p-yellow-700);
+  --dc-chart-neutral: var(--p-sand-400);
+  --dc-chart-n0: var(--p-blue-700);
+  --dc-chart-n1: var(--p-sand-400);
+  --dc-chart-n2: var(--p-sand-600);
+  --dc-chart-ink: var(--ink-on-paper);
+  --dc-chart-muted: var(--p-sand-500);
+  --dc-chart-grid: var(--p-sand-100);
+  --dc-chart-axis: var(--p-sand-300);
+  --dc-chart-gap: var(--paper);
+  --dc-chart-mark-bg: var(--ink-on-paper);
+  --dc-chart-mark-fg: var(--paper);
+  background: var(--paper); border-color: var(--p-sand-200);
+}
+.dc-chart-t--green { --dc-tone: var(--dc-chart-green); }
+.dc-chart-t--red { --dc-tone: var(--dc-chart-red); }
+.dc-chart-t--amber { --dc-tone: var(--dc-chart-amber); }
+.dc-chart-t--neutral { --dc-tone: var(--dc-chart-neutral); }
+.dc-chart-t--n0 { --dc-tone: var(--dc-chart-n0); }
+.dc-chart-t--n1 { --dc-tone: var(--dc-chart-n1); }
+.dc-chart-t--n2 { --dc-tone: var(--dc-chart-n2); }
+.dc-chart-head {
+  flex: none; display: flex; align-items: baseline; gap: 8px; min-width: 0;
+  font: 500 13px/1.3 var(--p-font-sans); white-space: nowrap;
+}
+.dc-chart-title { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--dc-chart-ink); }
+.dc-chart-unit { flex: none; font-size: 11px; font-weight: 400; color: var(--dc-chart-muted); }
+.dc-chart-legend { flex: none; margin-left: auto; display: flex; gap: 8px; font-size: 11px; font-weight: 400; color: var(--dc-chart-muted); }
+.dc-chart-key { display: inline-flex; align-items: center; gap: 4px; }
+.dc-chart-sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: var(--dc-tone); }
+.dc-chart-svg { flex: none; display: block; overflow: visible; font-family: var(--p-font-sans); }
+.dc-chart-grid { stroke: var(--dc-chart-grid); stroke-width: 1; }
+.dc-chart-axis { stroke: var(--dc-chart-axis); stroke-width: 1; }
+.dc-chart-ticklabel, .dc-chart-catlabel { fill: var(--dc-chart-muted); font-size: 11px; }
+.dc-chart-catlabel { fill: var(--dc-chart-ink); }
+/* A 1 px gap of the box colour between stacked segments and grouped bars. */
+.dc-chart-bar { fill: var(--dc-tone); stroke: var(--dc-chart-gap); stroke-width: 1; }
+.dc-chart-line { fill: none; stroke: var(--dc-tone); stroke-width: 2; stroke-linejoin: round; }
+.dc-chart-dot { fill: var(--dc-tone); stroke: var(--dc-chart-gap); stroke-width: 1; }
+.dc-chart-markline { stroke: var(--dc-chart-mark-bg); stroke-width: 1; stroke-dasharray: 3 3; }
+.dc-chart-markdot { fill: var(--dc-chart-mark-bg); }
+.dc-chart-markletter { fill: var(--dc-chart-mark-fg); font-size: 11px; font-weight: 600; }
+.dc-chart-source {
+  flex: none; margin: 0; font: 400 11px/1.4 var(--p-font-sans); color: var(--dc-chart-muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dc-chart--link { display: flex; flex-direction: column; gap: 4px; }
+.dc-chart--link .dc-chart-source { white-space: normal; }
+/* Visually hidden, read by a screen reader. */
+.dc-chart-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* Tooltips: hover, focus (a tap focuses: every icon has tabIndex=0). */
+.dc-strip [data-tip] { position: relative; cursor: help; }
+.dc-strip a[data-tip] { cursor: pointer; }
+.dc-strip [data-tip]:focus-visible { outline: 2px solid var(--s-brand-solid); outline-offset: 2px; }
+.dc-strip [data-tip]::after {
+  content: attr(data-tip);
+  position: absolute; left: 0; top: calc(100% + 6px); z-index: 30;
+  width: max-content; max-width: min(240px, 70vw);
+  padding: 5px 8px; border-radius: 4px;
+  background: var(--s-ink-primary); color: var(--s-ink-inverse);
+  font: 500 11.5px/1.3 var(--p-font-sans); letter-spacing: 0; text-transform: none; white-space: normal;
+  pointer-events: none; opacity: 0; visibility: hidden;
+}
+.dc-meta [data-tip]::after { left: auto; right: 0; }
+.dc-strip [data-tip]:hover::after,
+.dc-strip [data-tip]:focus::after { opacity: 1; visibility: visible; }
+
+@media (max-width: 560px) {
+  .dc-meta { margin-left: 0; flex-basis: 100%; }
+}
+
+/* App marks in the strip (appDisplay="mark"). */
+.dc-app--marks { display: inline-flex; align-items: center; }
+
+/* ── size "display": the read-only card of a host that only shows decisions
+   (no answer controls). It owns its frame; the other sizes keep the frame of
+   the host surface. ── */
+.dc-card--display {
+  display: block; box-sizing: border-box; min-width: 0;
+  padding: 16px; border: 1px solid var(--s-border-subtle); border-radius: 8px;
+  background: var(--s-surface-sunken, var(--s-bg-base)); color: var(--s-ink-primary);
+  font: 400 14px/1.45 var(--p-font-sans);
+}
+.dc-headline { margin: 0 0 12px; font: 600 17px/1.3 var(--p-font-sans); color: var(--s-ink-primary); overflow-wrap: anywhere; }
+.dc-options { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.dc-option {
+  display: flex; gap: 10px; align-items: flex-start; min-width: 0;
+  padding: 10px 12px; border: 1px solid var(--s-border-subtle); border-radius: 6px;
+}
+.dc-option--rec { border-color: var(--s-brand-solid); }
+.dc-option-letter {
+  flex: none; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 4px;
+  font: 600 12px/1 var(--p-font-mono); color: var(--s-ink-secondary); box-shadow: inset 0 0 0 1px var(--s-border-strong);
+}
+.dc-option--rec .dc-option-letter { background: var(--s-brand-solid); color: var(--s-ink-inverse); box-shadow: none; }
+.dc-option-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 auto; }
+.dc-option-label { font-weight: 500; color: var(--s-ink-primary); overflow-wrap: anywhere; }
+.dc-option-rec {
+  margin-left: 8px; font: 500 10.5px/1.4 var(--p-font-mono); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--s-brand-solid);
+}
+.dc-option-desc { color: var(--s-ink-secondary); font-size: 13px; overflow-wrap: anywhere; }
+.dc-option-details { margin: 4px 0 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 12px; font-size: 12.5px; }
+.dc-option-detail { display: contents; }
+.dc-option-details dt { color: var(--s-ink-muted); }
+.dc-option-details dd { margin: 0; color: var(--s-ink-primary); overflow-wrap: anywhere; }
+.dc-rec { margin: 0 0 12px; font-size: 13px; color: var(--s-ink-secondary); }
+.dc-rec-label {
+  margin-right: 6px; font: 500 10.5px/1.4 var(--p-font-mono); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--s-ink-muted);
+}
+.dc-answer { display: flex; justify-content: flex-end; }
+.dc-answer-link {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 6px;
+  background: var(--s-brand-solid); color: var(--s-ink-inverse); text-decoration: none;
+  font: 500 13px/1 var(--p-font-sans);
+}
+.dc-answer-link:hover { filter: brightness(1.08); }
+.dc-answer-link:focus-visible { outline: 2px solid var(--s-brand-solid); outline-offset: 2px; }
+/* Visually hidden, read by a screen reader. */
+.dc-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}

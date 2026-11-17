@@ -86,6 +86,9 @@ export default defineConfig({
     // Canvas chrome skin — only meaningful on a page that renders <FlowCanvas>,
     // so it is a separate sheet rather than part of theme.css.
     copyFileSync('src/styles/canvas.css', 'dist/styles/canvas.css');
+    // DecisionCard skin — only meaningful on a page that renders <DecisionCard>
+    // (or its strip and marks), so it is a separate opt-in sheet like canvas.css.
+    copyFileSync('src/styles/decision-card.css', 'dist/styles/decision-card.css');
     console.log('CSS files copied to dist/styles/');
 
     // Brand icons — the fleet's single favicon source. Apps install them with
