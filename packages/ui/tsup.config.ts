@@ -30,6 +30,8 @@ export default defineConfig({
     // bundle would make two optional peer dependencies mandatory for every
     // consumer of the design system, including the ones that draw no graph.
     canvas: 'src/canvas/index.ts',
+    // The Decision Card chart limits: no import, so a service reads them without React.
+    'chart-limits': 'src/components/organisms/decision-card/chart-limits.ts',
   },
   format: ['esm', 'cjs'],
   target: 'es2020',

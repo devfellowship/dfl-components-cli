@@ -37,6 +37,11 @@
       "import": "./dist/canvas.js",
       "require": "./dist/canvas.cjs"
     },
+    "./chart-limits": {
+      "types": "./dist/chart-limits.d.ts",
+      "import": "./dist/chart-limits.js",
+      "require": "./dist/chart-limits.cjs"
+    },
     "./canvas.css": "./dist/styles/canvas.css",
     "./decision-card.css": "./dist/styles/decision-card.css",
     "./styles": "./dist/styles/theme.css",
