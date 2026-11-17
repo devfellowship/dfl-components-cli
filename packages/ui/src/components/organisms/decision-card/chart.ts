@@ -11,10 +11,13 @@
  * it again here, because the card is the last reader: a chart that is not
  * valid, or is over a limit, renders NOTHING (no error text).
  *
- * SYNC HAZARD: keep QUESTION_CHART_LIMITS equal to the post-path chart limits.
+ * The limits live in ./chart-limits (one source, its own package entry). The post path has a
+ * test that fails when its limits differ from them.
  *
  * Pure functions only: the component maps `chartLayout` to SVG.
  */
+
+import { QUESTION_CHART_LIMITS } from "./chart-limits";
 
 export type ChartKind = "bar" | "stacked_bar" | "line";
 export type ChartStatus = "green" | "red" | "amber" | "neutral";
@@ -30,16 +33,7 @@ export interface QuestionChart {
   source: string;
 }
 
-export const QUESTION_CHART_LIMITS = Object.freeze({
-  kinds: Object.freeze(["bar", "stacked_bar", "line"] as const),
-  statuses: Object.freeze(["green", "red", "amber", "neutral"] as const),
-  seriesMax: 3,
-  categoriesMax: 8,
-  labelMax: 30,
-  sourceMax: 120,
-  // The title is a sentence, not a label.
-  titleMax: 120,
-});
+export { QUESTION_CHART_LIMITS };
 
 /** Under this slot width a diagram or a chart is not legible: the slot shows a link. */
 export const MIN_CHART_WIDTH = 320;
@@ -70,12 +64,12 @@ export function readChart(raw: unknown, optionLetters: readonly string[] | null 
 
   if (!Array.isArray(raw.categories)) return null;
   const cats = raw.categories.map((c) => text(c, L.labelMax));
-  const minCategories = kind === "line" ? 2 : 1;
+  const minCategories = kind === "line" ? L.lineCategoriesMin : L.categoriesMin;
   if (cats.length < minCategories || cats.length > L.categoriesMax || cats.includes(null)) return null;
   const categories = cats as string[];
   if (new Set(categories).size !== categories.length) return null;
 
-  if (!Array.isArray(raw.series) || raw.series.length < 1 || raw.series.length > L.seriesMax) return null;
+  if (!Array.isArray(raw.series) || raw.series.length < L.seriesMin || raw.series.length > L.seriesMax) return null;
   const series: QuestionChart["series"] = [];
   for (const s of raw.series) {
     if (!isObject(s)) return null;

@@ -12,7 +12,7 @@ const test = (name: string, fn: () => void) => it(name, fn);
 // The contract example of the plan (PR granularity, red / green by size band).
 const EXAMPLE = () => ({
   kind: 'stacked_bar',
-  title: 'Agent PRs red before merge, by size',
+  title: 'Agent PRs red, by size',
   unit: '% of PRs',
   categories: ['<=50', '51-200', '201-500', '501-1500', '>1500'],
   series: [
@@ -27,7 +27,8 @@ const with_ = (over: Record<string, unknown>) => ({ ...EXAMPLE(), ...over })
 test('the limits are the plan limits (keep equal to T4 in dfl-os-commands)', () => {
   assert.deepEqual(JSON.parse(JSON.stringify(QUESTION_CHART_LIMITS)), {
     kinds: ['bar', 'stacked_bar', 'line'], statuses: ['green', 'red', 'amber', 'neutral'],
-    seriesMax: 3, categoriesMax: 8, labelMax: 30, sourceMax: 120, titleMax: 120,
+    seriesMin: 1, seriesMax: 3, categoriesMin: 1, lineCategoriesMin: 2, categoriesMax: 8,
+    labelMax: 30, titleMax: 30, sourceMax: 120,
   })
   assert.ok(Object.isFrozen(QUESTION_CHART_LIMITS))
   assert.equal(MIN_CHART_WIDTH, 320)
@@ -62,7 +63,7 @@ test('readChart: over a limit or not valid → null (the slot renders nothing)',
     'a blank source': with_({ source: '   ' }),
     'a source over 120': with_({ source: 's'.repeat(121) }),
     'no unit': with_({ unit: undefined }),
-    'a title over 120': with_({ title: 't'.repeat(121) }),
+    'a title over 30': with_({ title: 't'.repeat(31) }),
     'values shorter than categories': with_({ series: [s('a', 4)], marks: [] }),
     'a value that is not a number': with_({ series: [{ name: 'a', values: [1, 2, '3', 4, 5] }], marks: [] }),
     'NaN': with_({ series: [{ name: 'a', values: [1, 2, NaN, 4, 5] }], marks: [] }),
@@ -139,3 +140,13 @@ test('chartLayout: grouped bars and lines; neutral palette by position', () => {
   assert.equal(seriesTone({ status: null }, 4), 'n1')
 })
 
+
+test('the limits are one source: readChart and the package entry use the same object', async () => {
+  const entry = await import('../chart-limits')
+  assert.equal(entry.QUESTION_CHART_LIMITS, QUESTION_CHART_LIMITS)
+  // The title is a label: no looser than the other labels, so the post path (labels of 30) and the card agree.
+  assert.equal(QUESTION_CHART_LIMITS.titleMax, QUESTION_CHART_LIMITS.labelMax)
+  // A title the post path refuses (31 characters) is never drawn; one it accepts (30) is.
+  assert.equal(readChart(with_({ title: 't'.repeat(30) }), ['A', 'B'])?.title, 't'.repeat(30))
+  assert.equal(readChart(with_({ title: 't'.repeat(31) }), ['A', 'B']), null)
+})

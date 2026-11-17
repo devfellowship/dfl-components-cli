@@ -34,7 +34,7 @@ const OPTIONS = [
 
 const CHART = {
   kind: "stacked_bar",
-  title: "Agent PRs red before merge, by size",
+  title: "Agent PRs red, by size",
   unit: "% of PRs",
   categories: ["<=50", "51-200", "201-500", "501-1500"],
   series: [
