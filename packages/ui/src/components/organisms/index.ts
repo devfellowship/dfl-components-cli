@@ -191,3 +191,9 @@ export type {
   ImprovementDraftError,
   ClipboardLike,
 } from "../../lib/improvements";
+
+// ─── Decision Card ────────────────────────────────────────────────────────────
+// The display part of the fleet Decision Card (moved from dfl-os; plan
+// 20261115-schema-p4-app-map-domain-table T7-DC-SHARED). Styles:
+// `import "@devfellowship/components/decision-card.css"`.
+export * from "./decision-card";

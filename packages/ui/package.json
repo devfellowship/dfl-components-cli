@@ -38,6 +38,7 @@
       "require": "./dist/canvas.cjs"
     },
     "./canvas.css": "./dist/styles/canvas.css",
+    "./decision-card.css": "./dist/styles/decision-card.css",
     "./styles": "./dist/styles/theme.css",
     "./shadcn": "./dist/styles/shadcn.css",
     "./tokens": "./dist/styles/tokens.css",
