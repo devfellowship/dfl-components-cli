@@ -1,5 +1,11 @@
 # @devfellowship/components
 
+## 3.17.0
+
+### Minor Changes
+
+- [#177](https://github.com/devfellowship/dfl-components-cli/pull/177) [`c0c750c`](https://github.com/devfellowship/dfl-components-cli/commit/c0c750cc3d37caef747338ffb6f088e6dc1e3c28) Thanks [@taigfs](https://github.com/taigfs)! - Decision Card strip: the canvas strip 1 in the package. `DecisionStrip` in mark mode (`appDisplay="mark"`, the default) now draws the app marks plus the app names, and keeps ONE `data-tip` and tab stop on `[data-strip="app"]` ("App · seo + campanhas", "App of the plan · os"), the same as name mode. New `typeForm="labeled"` draws the type glyph before the type word (`TypeForm` gains `"labeled"`; the default stays `"word"`). `AppMark` and `AppMarkStack` gain `tooltip` (default true); the strip passes false so a hover shows one tooltip, not two.
+
 ## 3.16.0
 
 ### Minor Changes
