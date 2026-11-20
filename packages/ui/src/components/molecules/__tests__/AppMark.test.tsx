@@ -118,6 +118,15 @@ describe("AppMark with a row", () => {
 });
 
 describe("AppMark tooltip", () => {
+  it("tooltip=false: no tab stop and no tooltip on focus (the host owns one tooltip)", async () => {
+    const { container } = render(<AppMarkStack apps={[OS]} tooltip={false} />);
+    const mark = container.querySelector("[data-appmark]") as HTMLElement;
+    expect(mark.hasAttribute("tabindex")).toBe(false);
+    act(() => mark.focus());
+    await new Promise((r) => setTimeout(r, 50));
+    expect(document.querySelector('[role="tooltip"]')).toBeNull();
+  });
+
   it("opens on keyboard focus with the app name", async () => {
     const { container } = render(<AppMark app={OS} showName={false} />);
     act(() => (container.querySelector("[data-appmark]") as HTMLElement).focus());

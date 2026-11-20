@@ -110,11 +110,16 @@ export interface AppMarkProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
   showName?: boolean;
   /** Override the brand icon base URL (default: the registry's, else brand.devfellowship.com). */
   iconBaseUrl?: string;
+  /**
+   * The name tooltip (and the tab stop). Default true. A host that already puts one tooltip on a
+   * group of marks (the Decision Card strip) passes false, so a hover shows one tooltip, not two.
+   */
+  tooltip?: boolean;
 }
 
 /** Icon (+ name) of one fleet app, with a name tooltip. */
 export const AppMark = React.forwardRef<HTMLSpanElement, AppMarkProps>(function AppMark(
-  { slug, app, size = 20, showName = true, iconBaseUrl, className, ...rest },
+  { slug, app, size = 20, showName = true, iconBaseUrl, tooltip = true, className, ...rest },
   ref,
 ) {
   const resolved = useResolved(slug, app);
@@ -126,13 +131,10 @@ export const AppMark = React.forwardRef<HTMLSpanElement, AppMarkProps>(function 
   const touchRef = React.useRef(false);
   const label = resolved.name || "App";
 
-  return (
-    <TooltipProvider delayDuration={150}>
-      <Tooltip open={open} onOpenChange={setOpen}>
-        <TooltipTrigger asChild>
+  const mark = (
           <span
             ref={ref}
-            tabIndex={0}
+            tabIndex={tooltip ? 0 : undefined}
             data-appmark=""
             data-state-icon={showIcon ? "icon" : resolved.loading ? "loading" : "fallback"}
             aria-label={showName ? undefined : label}
@@ -146,7 +148,7 @@ export const AppMark = React.forwardRef<HTMLSpanElement, AppMarkProps>(function 
             onClick={(e) => {
               rest.onClick?.(e);
               // Touch has no hover: a tap toggles the tooltip. Radix would close it on click.
-              if (touchRef.current) {
+              if (tooltip && touchRef.current) {
                 e.preventDefault();
                 setOpen((o) => !o);
               }
@@ -168,7 +170,13 @@ export const AppMark = React.forwardRef<HTMLSpanElement, AppMarkProps>(function 
             )}
             {showName ? <span className={cn("truncate", NAME_CLASS[size])}>{label}</span> : null}
           </span>
-        </TooltipTrigger>
+  );
+  if (!tooltip) return mark;
+
+  return (
+    <TooltipProvider delayDuration={150}>
+      <Tooltip open={open} onOpenChange={setOpen}>
+        <TooltipTrigger asChild>{mark}</TooltipTrigger>
         <TooltipContent>{label}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -184,10 +192,12 @@ export interface AppMarkStackProps {
   /** Icons shown before the count. Default and maximum 3. */
   max?: number;
   className?: string;
+  /** Per-icon name tooltips. Default true. See `AppMarkProps.tooltip`. */
+  tooltip?: boolean;
 }
 
 /** Up to 3 overlapped icons, then a `+N` count. Each icon has its own tooltip. */
-export function AppMarkStack({ slugs, apps, size = 20, max = 3, className }: AppMarkStackProps) {
+export function AppMarkStack({ slugs, apps, size = 20, max = 3, className, tooltip = true }: AppMarkStackProps) {
   const registry = useAppsRegistry();
   const items: Array<{ key: string; slug?: string; app?: AppRegistryRow }> = apps
     ? apps.map((a) => ({ key: a.slug, app: a }))
@@ -211,6 +221,7 @@ export function AppMarkStack({ slugs, apps, size = 20, max = 3, className }: App
           app={i.app}
           size={size}
           showName={false}
+          tooltip={tooltip}
           className={cn("rounded-[20%] ring-2 ring-background", idx > 0 && "-ml-1.5")}
         />
       ))}

@@ -168,8 +168,12 @@
   .dc-meta { margin-left: 0; flex-basis: 100%; }
 }
 
-/* App marks in the strip (appDisplay="mark"). */
-.dc-app--marks { display: inline-flex; align-items: center; }
+/* App marks in the strip (appDisplay="mark"): the icons, then the names (strip 1 of the canvas). */
+.dc-app--marks { display: inline-flex; align-items: center; gap: 7px; min-width: 0; font-weight: 600; }
+.dc-app-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The type as glyph + word (typeForm="labeled"). */
+.dc-type--labeled { display: inline-flex; align-items: center; gap: 6px; }
+.dc-type--labeled svg { flex: none; color: var(--s-ink-primary); }
 
 /* ── size "display": the read-only card of a host that only shows decisions
    (no answer controls). It owns its frame; the other sizes keep the frame of

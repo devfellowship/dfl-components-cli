@@ -4,6 +4,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { render, within } from "@testing-library/react";
 import { DecisionCard } from "../DecisionCard";
 import { DecisionStrip } from "../DecisionStrip";
+import type { AppRegistryRow } from "../../../../hooks/use-apps-registry";
 import { TypeGlyph, DoorMark, BlockingMark, looseKind, KIND_LABELS, DECISION_KINDS } from "../marks";
 
 beforeAll(() => {
@@ -188,6 +189,26 @@ describe("DecisionStrip", () => {
     expect(app.querySelectorAll("[data-appmark]")).toHaveLength(3);
   });
 
+  it("mark mode keeps ONE app tooltip (data-tip) and shows the names next to the marks", () => {
+    const { container } = render(<DecisionStrip strip={{ apps: ["seo", "campanhas"], appsFrom: "card" }} />);
+    const app = container.querySelector<HTMLElement>("[data-strip='app']")!;
+    expect(app.dataset.tip).toBe("App · seo + campanhas");
+    expect(app.tabIndex).toBe(0);
+    expect(app.querySelector(".dc-app-name")!.textContent).toBe("seo + campanhas");
+    // The inner marks carry no tooltip and no tab stop of their own: one tip, one stop.
+    expect(app.querySelectorAll("[data-appmark][tabindex]")).toHaveLength(0);
+    const plan = render(<DecisionStrip strip={{ apps: ["os"], appsFrom: "plan" }} />).container.querySelector<HTMLElement>("[data-strip='app']")!;
+    expect(plan.dataset.tip).toBe("App of the plan · os");
+  });
+
+  it("mark mode shows the registry name when the row is passed", () => {
+    const row = { slug: "seo", name: "SEO", icon_slug: "seo" } as unknown as AppRegistryRow;
+    const { container } = render(<DecisionStrip strip={{ apps: [row] }} />);
+    const app = container.querySelector<HTMLElement>("[data-strip='app']")!;
+    expect(app.querySelector(".dc-app-name")!.textContent).toBe("SEO");
+    expect(app.dataset.tip).toBe("App · seo");
+  });
+
   it("no apps, no type, no door: those parts render nothing; blocking off still renders", () => {
     const { container } = render(<DecisionStrip strip={{}} />);
     const strip = container.querySelector<HTMLElement>("[data-slot='strip']")!;
@@ -196,6 +217,16 @@ describe("DecisionStrip", () => {
     expect(strip.querySelector("[data-strip='door']")).toBeNull();
     expect(strip.querySelector<HTMLElement>("[data-strip='blocking']")!.dataset.blocking).toBe("false");
     expect(strip.querySelector(".dc-meta")).toBeNull();
+  });
+
+  it("the type renders as the glyph and the word with typeForm labeled (strip 1)", () => {
+    const { container } = render(<DecisionStrip strip={{ kind: "strategy" }} typeForm="labeled" />);
+    const t = container.querySelector<HTMLElement>("[data-strip='type']")!;
+    expect(t.className).toBe("dc-type dc-type--labeled");
+    expect(t.dataset.glyphForm).toBe("labeled");
+    expect(t.textContent).toBe("Strategy");
+    expect(t.querySelector("svg")).toBeTruthy();
+    expect(t.dataset.tip).toBe("Decision type · Strategy · direction, market, positioning");
   });
 
   it("the type renders as an icon with strip 2", () => {

@@ -7,11 +7,12 @@
  * `decision-card.css`; `tabIndex=0` makes a tap focus it). A missing type or
  * door renders nothing, no placeholder.
  *
- * The apps show as `AppMark` icons (`appDisplay="mark"`, default; each icon has
- * its own name tooltip) or as their slugs in text (`appDisplay="name"`).
+ * The apps show as `AppMark` icons plus their names (`appDisplay="mark"`, default,
+ * strip 1 of the canvas) or as their names in text only (`appDisplay="name"`). Both
+ * forms carry ONE `data-tip` on `[data-strip="app"]` ("App · os + schema").
  */
 import { AppMarkStack } from "../../molecules/AppMark";
-import type { AppRegistryRow } from "../../../hooks/use-apps-registry";
+import { useAppsRegistry, type AppRegistryRow } from "../../../hooks/use-apps-registry";
 import { BlockingMark, DoorMark, TypeGlyph, MAX_DECISION_APPS, type DecisionDoor, type DecisionKind, type TypeForm } from "./marks";
 
 export type DecisionApp = string | AppRegistryRow;
@@ -35,9 +36,9 @@ export interface DecisionStripData {
 
 export interface DecisionStripProps {
   strip: DecisionStripData;
-  /** The type as a word (default) or an icon. */
+  /** The type as a word (default), an icon, or `labeled`: the glyph and the word. */
   typeForm?: TypeForm;
-  /** Apps as `AppMark` icons (default) or as their slugs in text. */
+  /** Apps as `AppMark` icons plus names (default) or as their slugs in text. */
   appDisplay?: "mark" | "name";
   /** Open the plan link in a new tab. */
   planLinkNewTab?: boolean;
@@ -46,9 +47,12 @@ export interface DecisionStripProps {
 const appSlug = (a: DecisionApp) => (typeof a === "string" ? a : a.slug);
 
 export function DecisionStrip({ strip, typeForm = "word", appDisplay = "mark", planLinkNewTab = false }: DecisionStripProps) {
+  const registry = useAppsRegistry();
   const apps = (strip.apps ?? []).slice(0, appDisplay === "mark" ? MAX_DECISION_APPS : undefined);
   const slugs = apps.map(appSlug);
   const appNames = slugs.join(" + ");
+  // The visible name: the registry name when a provider has the row, else the slug.
+  const shownNames = apps.map((a) => (typeof a === "string" ? registry.find(a)?.name || a : a.name || a.slug)).join(" + ");
   const appsFrom = strip.appsFrom ?? (apps.length ? "card" : "none");
   const blocking = Boolean(strip.blocking);
   const door = strip.door ?? null;
@@ -67,14 +71,22 @@ export function DecisionStrip({ strip, typeForm = "word", appDisplay = "mark", p
             {appNames}
           </span>
         ) : (
-          <span className="dc-app dc-app--marks" data-strip="app" data-apps-from={appsFrom} data-apps={slugs.join(" ")}>
-            <AppMarkStack apps={rows} slugs={rows ? undefined : slugs} size={16} />
+          <span
+            className="dc-app dc-app--marks"
+            data-strip="app"
+            data-apps-from={appsFrom}
+            data-apps={slugs.join(" ")}
+            tabIndex={0}
+            data-tip={appsFrom === "plan" ? `App of the plan · ${appNames}` : `App · ${appNames}`}
+          >
+            <AppMarkStack apps={rows} slugs={rows ? undefined : slugs} size={20} tooltip={false} />
+            <span className="dc-app-name">{shownNames}</span>
           </span>
         ))}
       <TypeGlyph
         kind={strip.kind ?? null}
         form={typeForm}
-        className={`dc-type${typeForm === "icon" ? " dc-type--icon" : ""}`}
+        className={`dc-type${typeForm === "icon" ? " dc-type--icon" : typeForm === "labeled" ? " dc-type--labeled" : ""}`}
         attrs={{ "data-strip": "type" }}
       />
       <span className="dc-marks">
