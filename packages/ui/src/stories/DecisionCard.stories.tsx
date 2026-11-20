@@ -52,7 +52,7 @@ const meta: Meta<typeof DecisionCard> = {
   title: "Components/Organisms/DecisionCard",
   component: DecisionCard,
   argTypes: {
-    typeForm: { control: "select", options: ["word", "icon"] },
+    typeForm: { control: "select", options: ["word", "icon", "labeled"] },
     appDisplay: { control: "select", options: ["mark", "name"] },
   },
   args: {
@@ -82,6 +82,8 @@ export const WithChart: Story = { args: { contextFacets: { kind: "process", door
 
 /** The type as an icon (strip 2). */
 export const TypeAsIcon: Story = { args: { typeForm: "icon" } };
+/** The type as a glyph and a word (strip 1). */
+export const TypeLabeled: Story = { args: { typeForm: "labeled" } };
 
 /** Blocking: agents wait on this answer. */
 export const Blocking: Story = { args: { strip: { blocking: true, number: 2, round: 1 } } };

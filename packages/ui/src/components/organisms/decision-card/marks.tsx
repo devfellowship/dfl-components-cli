@@ -10,7 +10,8 @@
  * (`data-tip`, `tabIndex=0`; `decision-card.css` shows it inside the strip).
  * A mark whose value is absent renders NOTHING: pass `null`, get `null`.
  *
- * The type renders in two forms by one prop: `word` or `icon`.
+ * The type renders in three forms by one prop: `word`, `icon`, or `labeled` (the glyph
+ * and the word, strip 1 of the approved canvas).
  */
 import type { ReactNode } from "react";
 
@@ -23,7 +24,7 @@ export type DecisionKind =
   | "money"
   | "process";
 export type DecisionDoor = "one_way" | "two_way";
-export type TypeForm = "word" | "icon";
+export type TypeForm = "word" | "icon" | "labeled";
 
 /** The seven decision types (contract in dfl-os-commands). */
 export const DECISION_KINDS: DecisionKind[] = [
@@ -146,6 +147,14 @@ export function TypeGlyph({
   if (form === "word") {
     return (
       <span className={className} tabIndex={0} title={tip} data-tip={tip} data-testid={testId} data-glyph-form="word" data-kind={kind ?? undefined} {...attrs}>
+        {label}
+      </span>
+    );
+  }
+  if (form === "labeled") {
+    return (
+      <span className={className} tabIndex={0} title={tip} data-tip={tip} data-testid={testId} data-glyph-form="labeled" data-kind={kind ?? undefined} {...attrs}>
+        <Svg>{kind ? KIND_GLYPHS[kind] : <circle cx="8" cy="8" r="3.5" />}</Svg>
         {label}
       </span>
     );
