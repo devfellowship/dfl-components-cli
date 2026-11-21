@@ -77,6 +77,7 @@
     "check:brand-tokens": "node scripts/sync-brand-tokens.mjs --check && node ../../scripts/lint-tokens.mjs src/styles/tokens.v2.css --strict",
     "check:canvas-isolated": "node scripts/check-canvas-entry-isolated.mjs",
     "check:consumer-single-copy": "node scripts/check-consumer-single-copy.mjs",
+    "check:esm-treeshake": "node scripts/check-esm-treeshake.mjs",
     "test:e2e": "playwright test"
   },
   "peerDependencies": {
