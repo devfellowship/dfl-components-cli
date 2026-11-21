@@ -34,27 +34,36 @@
 @import './theme-mappings.css';
 
 /* ─── Base resets ────────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  border-color: var(--s-border-subtle);
-  box-sizing: border-box;
-}
+/* These rules MUST stay inside `@layer base`. Tailwind v4 utilities live in
+ * `@layer utilities`, and ANY unlayered rule beats every layered one no matter
+ * its specificity. An unlayered `* { border-color: ... }` therefore overrides
+ * `border-transparent`, `border-input` and the ghost Button variant in every
+ * consumer app, so each of them drew a 1px border (found on the dfl-financing
+ * refactor-ui preview). The test `src/__tests__/styles-layers.test.ts` fails
+ * when an element-level rule is added outside a layer. */
+@layer base {
+  *, *::before, *::after {
+    border-color: var(--s-border-subtle);
+    box-sizing: border-box;
+  }
 
-html {
-  font-family: var(--s-font-body);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  html {
+    font-family: var(--s-font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-body {
-  background-color: var(--s-surface-page);
-  color: var(--s-ink-primary);
-  line-height: var(--p-leading-normal);
-}
+  body {
+    background-color: var(--s-surface-page);
+    color: var(--s-ink-primary);
+    line-height: var(--p-leading-normal);
+  }
 
-/* DS v0 is a dark-only design system. `.dark` is a no-op alias for parity
- * with downstream apps that still wire `<html class="dark">`. */
-.dark {
-  /* All tokens already render dark at :root. Intentionally empty. */
+  /* DS v0 is a dark-only design system. `.dark` is a no-op alias for parity
+   * with downstream apps that still wire `<html class="dark">`. */
+  .dark {
+    /* All tokens already render dark at :root. Intentionally empty. */
+  }
 }
 
 /* Roadmap sizes follow container width, including narrow embedded panels.
