@@ -157,6 +157,18 @@ jobs:
         working-directory: packages/ui
         run: node scripts/check-canvas-entry-isolated.mjs
 
+      # ── Root entry: a consumer keeps only the components it imports ──────
+      #
+      # `dist/index.js` was one file with every component. A bundler cannot
+      # drop a top-level forwardRef(...) / displayName statement, so an app
+      # that imported Button shipped the whole design system (99 KB gzip on
+      # itera-player /login). tsup now emits one chunk per module; this guard
+      # bundles { Button, cn } and asserts no other component's dependencies
+      # are in it. Runs against the Build step above. Release-blocking.
+      - name: Guard — root entry is tree-shakeable
+        working-directory: packages/ui
+        run: node scripts/check-esm-treeshake.mjs
+
       # ── Consumer install: ONE copy of sonner, toasts show on both paths ───
       #
       # A unit test in this workspace cannot see the bug: here `sonner` resolves

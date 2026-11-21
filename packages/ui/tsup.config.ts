@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsup';
-import { copyFileSync, mkdirSync } from 'fs';
-import { resolve } from 'path';
+import { copyFileSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync } from 'fs';
+import { join, relative } from 'path';
 // The UX Paths `data-source` stamp. Off unless UX_PATHS_SOURCE_STAMP is set in
 // the process environment. See scripts/source-stamp.mjs for the whole rationale.
 import { sourceStampEsbuildPlugin } from './scripts/source-stamp.mjs';
@@ -13,10 +13,55 @@ import { sourceStampEsbuildPlugin } from './scripts/source-stamp.mjs';
 // scripts/check-no-playground-export.mjs
 // (workflow .github/workflows/guard-playground-export.yml).
 
-export default defineConfig({
-  // NOTE: entries are an explicit allow-list. Do NOT add any
-  // design-playground module here — see the IGNORE GLOB comment above.
-  entry: {
+// ═════════════════════════════════════════════════════════════════════════
+// TREE-SHAKING — one output module per source module
+// ═════════════════════════════════════════════════════════════════════════
+// esbuild puts every module that ONE entry reaches into that entry's file. So
+// `dist/index.js` was a single 400 KB file with every component in it. Each
+// component is a top-level `React.forwardRef(...)` call plus a
+// `X.displayName = "X"` assignment. A bundler cannot prove that these
+// statements have no side effects, so a consumer that imports only `Button`
+// kept EVERY component, and with them vaul, react-day-picker, cmdk,
+// embla-carousel, react-resizable-panels and date-fns. On itera-player's
+// /login that was 99 KB gzip of dead code (plan 20261003-itera-player-mobile,
+// W4-CUT-A).
+//
+// `"sideEffects": ["**/*.css"]` in package.json lets a bundler drop a whole
+// FILE that nothing uses. It cannot drop a statement inside a file that is
+// used. The fix is to give the bundler files: every library module below is
+// also an entry (under `dist/_m/`). With `splitting: true`, esbuild then emits
+// each module as its own chunk, and `dist/index.js` becomes a list of
+// re-exports from those chunks. A consumer bundle keeps only the chunks it
+// imports. `dist/_m/` itself is deleted after the build (nothing imports an
+// entry file; `scripts/check-esm-treeshake.mjs` asserts that and the result).
+//
+// The folders are an allow-list: the canvas, testing and CLI entries keep
+// their own graphs, and design-playground is never an entry (see above).
+const MODULE_ROOTS = ['src/components', 'src/hooks', 'src/lib', 'src/providers', 'src/utils'];
+const MODULES_DIR = '_m';
+
+function libraryModules(publicFiles: Set<string>): Record<string, string> {
+  const out: Record<string, string> = {};
+  const walk = (dir: string) => {
+    for (const name of readdirSync(dir)) {
+      const p = join(dir, name);
+      if (statSync(p).isDirectory()) {
+        if (!name.startsWith('__')) walk(p); // __tests__, __fixtures__
+        continue;
+      }
+      if (!/\.tsx?$/.test(name) || /\.d\.ts$/.test(name)) continue;
+      if (/\.(test|spec|stories)\.tsx?$/.test(name)) continue;
+      if (publicFiles.has(p)) continue;
+      out[join(MODULES_DIR, relative('src', p).replace(/\.tsx?$/, ''))] = p;
+    }
+  };
+  MODULE_ROOTS.forEach(walk);
+  return out;
+}
+
+// NOTE: entries are an explicit allow-list. Do NOT add any
+// design-playground module here — see the IGNORE GLOB comment above.
+const PUBLIC_ENTRIES: Record<string, string> = {
     index: 'src/index.ts',
     hooks: 'src/hooks/index.ts',
     utils: 'src/utils/index.ts',
@@ -32,11 +77,15 @@ export default defineConfig({
     canvas: 'src/canvas/index.ts',
     // The Decision Card chart limits: no import, so a service reads them without React.
     'chart-limits': 'src/components/organisms/decision-card/chart-limits.ts',
-  },
+};
+
+export default defineConfig({
+  entry: { ...PUBLIC_ENTRIES, ...libraryModules(new Set(Object.values(PUBLIC_ENTRIES))) },
   format: ['esm', 'cjs'],
   target: 'es2020',
   clean: true,
-  dts: true,
+  // Types for the public entries only; the `_m/` entries are a build device.
+  dts: { entry: PUBLIC_ENTRIES },
   // One shared chunk per module that two entries import. With `false`, a module
   // reachable from several entries was INLINED into each, so module-level state
   // (use-toast listeners, AuthContext, FeatureFlag context) existed once per
@@ -75,6 +124,15 @@ export default defineConfig({
     options.jsx = 'automatic';
   },
   async onSuccess() {
+    // The `_m/` entry files only exist to make esbuild split per module (see
+    // TREE-SHAKING above). Every output imports the chunks, never an entry
+    // file; refuse to delete them if that ever stops being true.
+    const users = readdirSync('dist').filter(
+      (f) => /\.c?js$/.test(f) && readFileSync(join('dist', f), 'utf8').includes(`/${MODULES_DIR}/`),
+    );
+    if (users.length) throw new Error(`dist files import ${MODULES_DIR}/ entries: ${users.join(', ')}`);
+    rmSync(join('dist', MODULES_DIR), { recursive: true, force: true });
+
     // Copy CSS files to dist
     mkdirSync('dist/styles', { recursive: true });
     copyFileSync('src/styles/theme.css', 'dist/styles/theme.css');

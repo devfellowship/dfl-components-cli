@@ -14,7 +14,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import * as React from "react";
 import { act, render } from "@testing-library/react";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -69,7 +69,11 @@ describe("built entries share one store", () => {
     const pkg = JSON.parse(readFileSync(join(dist, "..", "package.json"), "utf8"));
     expect(pkg.dependencies?.sonner).toBeUndefined();
     expect(pkg.peerDependencies?.sonner).toBeTruthy();
-    // and the bundle must import it, not inline it
-    expect(readFileSync(join(dist, "index.js"), "utf8")).toMatch(/from ["']sonner["']/);
+    // and the bundle must import it, not inline it. The ESM build emits one chunk per
+    // source module (tsup.config.ts, TREE-SHAKING), so the import sits in the chunk of
+    // the module that uses sonner, not in dist/index.js.
+    const esm = readdirSync(dist).filter((f) => f.endsWith(".js"));
+    const importers = esm.filter((f) => /from ["']sonner["']/.test(readFileSync(join(dist, f), "utf8")));
+    expect(importers.length).toBeGreaterThan(0);
   });
 });
