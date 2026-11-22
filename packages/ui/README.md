@@ -21,4 +21,9 @@ npm run sync:brand-tokens   # fetches the upstream, rewrites the file and the lo
 npm run check:brand-tokens  # offline check + strict token lint
 ```
 
+The package build writes the file that apps import (`dist/styles/tokens.v2.css`) through
+`scripts/layer-base-rules.mjs`: the element-level base rules (`button`, `*`, `html`, `body`, ...) are
+unlayered upstream, and an unlayered rule beats every Tailwind v4 utility, so the shipped copy has them
+inside `@layer base`. The source file in `src/styles` stays byte-identical to the brand.
+
 `tokens.css` (the hand-written token file, `@devfellowship/components/tokens`) is unchanged.

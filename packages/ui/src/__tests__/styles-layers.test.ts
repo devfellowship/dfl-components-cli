@@ -2,6 +2,14 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import {
+  LAYER_CLOSE,
+  LAYER_OPEN,
+  closeOf,
+  layerBaseRules,
+  maskComments,
+  unlayeredElementSelectors,
+} from "../../scripts/layer-base-rules.mjs";
 
 /**
  * Cascade-layer guard for the shipped stylesheets.
@@ -16,85 +24,15 @@ import { describe, expect, it } from "vitest";
  * a DFL/own class, `:root`, or a `[data-*]` attribute. Element-level and
  * universal selectors (`*`, `html`, `body`, `button`, `::selection`, ...) must
  * sit inside `@layer base`.
+ *
+ * The scanner and the wrapper live in `scripts/layer-base-rules.mjs`, because
+ * `tsup.config.ts` applies the wrapper to the generated `tokens.v2.css` mirror.
  */
 
 const here = dirname(fileURLToPath(import.meta.url));
 const stylesDir = resolve(here, "../styles");
-// Built copies (tsup copies the files verbatim). Checked when a build exists.
+// Built copies (tsup writes them). Checked when a build exists; CI builds first.
 const distStylesDir = resolve(here, "../../dist/styles");
-
-const SAFE_SELECTOR = /^(\.|:root\b|\[data-)/;
-// At-rules whose body is plain rules that stay unlayered.
-const TRANSPARENT_AT = /^@(media|container|supports|scope)\b/;
-
-function stripComments(css: string): string {
-  return css.replace(/\/\*[\s\S]*?\*\//g, "");
-}
-
-/** Index of the `}` that closes the block opened at `open` (a `{`). */
-function closeOf(css: string, open: number): number {
-  let depth = 0;
-  for (let i = open; i < css.length; i++) {
-    const c = css[i];
-    if (c === "{") depth++;
-    else if (c === "}" && --depth === 0) return i;
-  }
-  throw new Error("unbalanced braces in stylesheet");
-}
-
-/** Split a selector list on top-level commas (not the ones inside `:where(...)`). */
-function splitSelectorList(list: string): string[] {
-  const out: string[] = [];
-  let depth = 0;
-  let start = 0;
-  for (let i = 0; i < list.length; i++) {
-    const c = list[i];
-    if (c === "(" || c === "[") depth++;
-    else if (c === ")" || c === "]") depth--;
-    else if (c === "," && depth === 0) {
-      out.push(list.slice(start, i).trim());
-      start = i + 1;
-    }
-  }
-  out.push(list.slice(start).trim());
-  return out.filter(Boolean);
-}
-
-/** Selectors of rules that sit outside every `@layer`, nested @media included. */
-export function unlayeredElementSelectors(source: string): string[] {
-  const css = stripComments(source);
-  const found: string[] = [];
-
-  const walk = (text: string): void => {
-    let i = 0;
-    while (i < text.length) {
-      const open = text.indexOf("{", i);
-      const semi = text.indexOf(";", i);
-      // Statement without a block (`@import ...;`, `@layer a, b;`): skip it.
-      if (semi !== -1 && (open === -1 || semi < open)) {
-        i = semi + 1;
-        continue;
-      }
-      if (open === -1) return;
-      const prelude = text.slice(i, open).trim();
-      const close = closeOf(text, open);
-      const body = text.slice(open + 1, close);
-      i = close + 1;
-
-      if (prelude.startsWith("@")) {
-        if (TRANSPARENT_AT.test(prelude)) walk(body);
-        // @layer (safe), @keyframes, @font-face, @theme, @variant, @property: skip.
-        continue;
-      }
-      for (const selector of splitSelectorList(prelude)) {
-        if (selector && !SAFE_SELECTOR.test(selector)) found.push(selector);
-      }
-    }
-  };
-
-  walk(css);
-  return found;
-}
 
 describe("unlayeredElementSelectors (the scanner itself)", () => {
   it("flags the old universal border reset", () => {
@@ -129,6 +67,65 @@ describe("unlayeredElementSelectors (the scanner itself)", () => {
   });
 });
 
+describe("layerBaseRules (the build step for the generated mirror)", () => {
+  const sample = `/* a comment { with a brace */
+:root { --a: 1; }
+button { border: none; background: transparent; }
+.mono { font-family: x; }
+@media (pointer: coarse) {
+  input, select { font-size: 16px; }
+}
+@keyframes k { from { opacity: 0 } to { opacity: 1 } }
+:where(button, a):focus-visible { outline: 2px solid red; }
+`;
+
+  it("wraps each element-level rule and leaves the others where they are", () => {
+    const out = layerBaseRules(sample);
+    expect(out).toContain(`${LAYER_OPEN}button { border: none; background: transparent; }${LAYER_CLOSE}`);
+    expect(out).toContain(`${LAYER_OPEN}@media (pointer: coarse) {\n  input, select { font-size: 16px; }\n}${LAYER_CLOSE}`);
+    expect(out).toContain(`${LAYER_OPEN}:where(button, a):focus-visible { outline: 2px solid red; }${LAYER_CLOSE}`);
+    // Scoped rules, keyframes and comments stay unlayered, in their place.
+    expect(out.startsWith("/* a comment { with a brace */\n:root { --a: 1; }\n@layer base {\nbutton")).toBe(true);
+    expect(out).toContain(`${LAYER_CLOSE}\n.mono { font-family: x; }\n@layer base {\n@media`);
+    expect(out).toContain(`${LAYER_CLOSE}\n@keyframes k { from { opacity: 0 } to { opacity: 1 } }\n`);
+    expect(unlayeredElementSelectors(out)).toEqual([]);
+  });
+
+  it("changes nothing but the wrapper text (values, order and comments survive)", () => {
+    // Remove each wrapper by brace matching ("\n}" also ends ordinary blocks).
+    let text = layerBaseRules(sample);
+    let at = text.indexOf(LAYER_OPEN);
+    while (at !== -1) {
+      const open = at + LAYER_OPEN.indexOf("{");
+      const close = closeOf(maskComments(text), open);
+      text = text.slice(0, at) + text.slice(at + LAYER_OPEN.length, close - LAYER_CLOSE.length + 1) + text.slice(close + 1);
+      at = text.indexOf(LAYER_OPEN);
+    }
+    expect(text).toBe(sample);
+  });
+
+  it("is idempotent", () => {
+    const once = layerBaseRules(sample);
+    expect(layerBaseRules(once)).toBe(once);
+  });
+
+  it("returns a stylesheet with no element rule unchanged", () => {
+    const css = ":root { --a: 1 }\n.btn { color: red }\n";
+    expect(layerBaseRules(css)).toBe(css);
+  });
+
+  it("refuses an @media that mixes element rules with class rules", () => {
+    expect(() => layerBaseRules("@media print { button { color: red } .x { color: blue } }")).toThrow(
+      /mixes element selectors/,
+    );
+  });
+
+  it("keeps the braces balanced", () => {
+    const out = layerBaseRules(sample);
+    expect(closeOf(maskComments(`{${out}}`), 0)).toBe(out.length + 1);
+  });
+});
+
 // Files imported by `@devfellowship/components/styles` and its siblings.
 const SHIPPED = [
   "theme.css",
@@ -142,10 +139,12 @@ const SHIPPED = [
 ];
 
 // `tokens.v2.css` is a GENERATED mirror of the brand site (scripts/
-// sync-brand-tokens.mjs; CI compares it with brand.lock.json), so it cannot be
-// edited here. Its unlayered base block is a known gap that has to be fixed in
-// the brand record. The list is exact: a NEW unlayered rule still fails.
-const GENERATED_MIRROR_KNOWN_UNLAYERED: Record<string, string[]> = {
+// sync-brand-tokens.mjs; CI compares it with brand.lock.json), so its source
+// cannot be edited here. Its base block is unlayered upstream. The package
+// build wraps it in `@layer base` (tsup.config.ts), and `dist/styles/
+// tokens.v2.css` is the file a consumer imports. The list below pins the
+// SOURCE exactly, so a NEW unlayered rule upstream still fails this test.
+const GENERATED_MIRROR_UNLAYERED_IN_SOURCE: Record<string, string[]> = {
   "tokens.v2.css": [
     "html",
     "body",
@@ -168,26 +167,43 @@ const GENERATED_MIRROR_KNOWN_UNLAYERED: Record<string, string[]> = {
 };
 
 describe("shipped stylesheets keep element-level rules inside a cascade layer", () => {
-  const dirs = [stylesDir, ...(existsSync(distStylesDir) ? [distStylesDir] : [])];
+  for (const file of SHIPPED) {
+    it(`src/styles/${file}`, () => {
+      expect(unlayeredElementSelectors(readFileSync(resolve(stylesDir, file), "utf8"))).toEqual([]);
+    });
+  }
 
-  for (const dir of dirs) {
-    const label = dir === stylesDir ? "src/styles" : "dist/styles";
+  for (const [file, known] of Object.entries(GENERATED_MIRROR_UNLAYERED_IN_SOURCE)) {
+    it(`src/styles/${file} has no NEW unlayered element rule (generated mirror, wrapped at build)`, () => {
+      expect(unlayeredElementSelectors(readFileSync(resolve(stylesDir, file), "utf8"))).toEqual(known);
+    });
 
+    it(`the build step layers every element rule of src/styles/${file}`, () => {
+      const wrapped = layerBaseRules(readFileSync(resolve(stylesDir, file), "utf8"));
+      expect(unlayeredElementSelectors(wrapped)).toEqual([]);
+      // The brand rule that drew a border on every ghost button.
+      expect(wrapped).toContain(`${LAYER_OPEN}button { border: none; background: transparent; cursor: pointer; }${LAYER_CLOSE}`);
+    });
+  }
+
+  if (existsSync(distStylesDir)) {
     for (const file of SHIPPED) {
-      it(`${label}/${file}`, () => {
-        expect(unlayeredElementSelectors(readFileSync(resolve(dir, file), "utf8"))).toEqual([]);
+      it(`dist/styles/${file}`, () => {
+        expect(unlayeredElementSelectors(readFileSync(resolve(distStylesDir, file), "utf8"))).toEqual([]);
       });
     }
 
-    for (const [file, known] of Object.entries(GENERATED_MIRROR_KNOWN_UNLAYERED)) {
-      it(`${label}/${file} has no NEW unlayered element rule (known gap: generated mirror)`, () => {
-        expect(unlayeredElementSelectors(readFileSync(resolve(dir, file), "utf8"))).toEqual(known);
+    for (const file of Object.keys(GENERATED_MIRROR_UNLAYERED_IN_SOURCE)) {
+      it(`dist/styles/${file} is the source with every element rule in @layer base`, () => {
+        const dist = readFileSync(resolve(distStylesDir, file), "utf8");
+        expect(unlayeredElementSelectors(dist)).toEqual([]);
+        expect(dist).toBe(layerBaseRules(readFileSync(resolve(stylesDir, file), "utf8")));
       });
     }
   }
 
   it("theme.css wraps the universal border-color reset in @layer base", () => {
-    const css = stripComments(readFileSync(resolve(stylesDir, "theme.css"), "utf8"));
+    const css = maskComments(readFileSync(resolve(stylesDir, "theme.css"), "utf8"));
     const layer = css.indexOf("@layer base");
     expect(layer).toBeGreaterThanOrEqual(0);
     const open = css.indexOf("{", layer);
@@ -197,7 +213,7 @@ describe("shipped stylesheets keep element-level rules inside a cascade layer", 
 
   it("every shipped stylesheet is on the list (a new file must be classified)", () => {
     const onDisk = readdirSync(stylesDir).filter((f) => f.endsWith(".css")).sort();
-    const listed = [...SHIPPED, ...Object.keys(GENERATED_MIRROR_KNOWN_UNLAYERED)].sort();
+    const listed = [...SHIPPED, ...Object.keys(GENERATED_MIRROR_UNLAYERED_IN_SOURCE)].sort();
     expect(onDisk).toEqual(listed);
   });
 });

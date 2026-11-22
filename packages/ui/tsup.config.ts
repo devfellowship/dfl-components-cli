@@ -1,9 +1,11 @@
 import { defineConfig } from 'tsup';
-import { copyFileSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync } from 'fs';
+import { copyFileSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'fs';
 import { join, relative } from 'path';
 // The UX Paths `data-source` stamp. Off unless UX_PATHS_SOURCE_STAMP is set in
 // the process environment. See scripts/source-stamp.mjs for the whole rationale.
 import { sourceStampEsbuildPlugin } from './scripts/source-stamp.mjs';
+// Wraps the element-level rules of the generated tokens.v2.css mirror in `@layer base`.
+import { layerBaseRules } from './scripts/layer-base-rules.mjs';
 
 // Build ignore-glob — the DesignPlayground sandbox is NEVER bundled/exported.
 //   IGNORE GLOB: src/design-playground/**
@@ -141,7 +143,14 @@ export default defineConfig({
     copyFileSync('src/styles/tailwind.css', 'dist/styles/tailwind.css');
     copyFileSync('src/styles/tokens.css', 'dist/styles/tokens.css');
     // Opt-in generated mirror of the published brand DS v2 (scripts/sync-brand-tokens.mjs).
-    copyFileSync('src/styles/tokens.v2.css', 'dist/styles/tokens.v2.css');
+    // The source stays byte-identical to the brand (CI compares it with brand.lock.json).
+    // Its element-level base rules (`button { border: none; background: transparent }`,
+    // `*`, `html`, ...) are unlayered upstream, and an unlayered rule beats every Tailwind
+    // v4 utility, so the shipped copy gets them inside `@layer base`.
+    writeFileSync(
+      'dist/styles/tokens.v2.css',
+      layerBaseRules(readFileSync('src/styles/tokens.v2.css', 'utf8')),
+    );
     copyFileSync('src/styles/fonts.css', 'dist/styles/fonts.css');
     // Canvas chrome skin — only meaningful on a page that renders <FlowCanvas>,
     // so it is a separate sheet rather than part of theme.css.
